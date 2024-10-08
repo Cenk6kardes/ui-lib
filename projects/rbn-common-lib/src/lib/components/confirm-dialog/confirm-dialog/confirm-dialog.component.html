@@ -1,0 +1,14 @@
+<p-dialog class="rbn-dialog" header="{{title}}" [(visible)]="isShowConfirmDialog" [modal]="true" (onHide)="reject()"
+  [id]="confirmDialogName || 'confirmDialog'" [isFocusToOldElmOnHide]="isFocusToOldElmOnHide" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <div *ngIf="useInnerHtml" [innerHTML]="content"
+    [id]="confirmDialogName ? confirmDialogName + 'ConfirmDialogContent' : 'confirmDialogContent'"></div>
+  <div *ngIf="!useInnerHtml" [id]="confirmDialogName ? confirmDialogName + 'ConfirmDialogContent' : 'confirmDialogContent'">{{content}}</div>
+  <p-footer>
+    <button *ngIf="!hideReject" type="button" pButton (click)="reject()" label="{{titleReject || 'COMMON.NO'| translate}}"
+      class="rbn-button rbn-button-tertiary p-mr-2" [id]="confirmDialogName ? confirmDialogName + 'RejectButton' : 'rejectButton'">
+    </button>
+    <button type="button" pButton (click)="accept()" label="{{titleAccept || 'COMMON.YES'| translate}}"
+      class="p-mr-0" [id]="confirmDialogName ? confirmDialogName + 'AcceptButton' : 'acceptButton'">
+    </button>
+  </p-footer>
+</p-dialog>

@@ -1,0 +1,288 @@
+@import "../../../../../../src/sass/themes/ribbontheme/variables";
+
+@keyframes slideElement {
+  0% {
+    opacity: 0;
+    transition: opacity 300ms ease-in;
+}
+  100% {
+    opacity: 1;
+  }
+}
+.rbn-stepper {
+  font-family: var(--font-family);
+
+  .rbn-stepper-steps {
+    padding-left: 5px;
+    display: inline-block;
+    width: 0%;
+    vertical-align: top;
+    position: absolute;
+
+    p-steps {
+      display: block;
+      height: 15px;
+
+      .p-steps ul {
+        display: block;
+        position: absolute;
+
+        .p-steps-item {
+          opacity: 1;
+
+          .p-menuitem-link {
+            display: none;
+          }
+
+          &::before {
+            content: " ";
+            width: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            margin-top: 0 !important;
+            height: 100%;
+            margin-left: 4.25px;
+            border-left: 1px solid $ribbon-light-grey;
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: 0%;
+            left: 0px !important;
+            border-radius: 50%;
+            background-color: $ribbon-light-grey;
+            width: 9px;
+            height: 9px;
+          }
+
+          &:first-child {
+            &::before {
+              height: 0;
+            }
+          }
+
+          &.p-steps-current {
+            &::after {
+              width: 8px;
+              height: 8px;
+              border: 6px solid $primaryColor;
+              background-color: $ribbon-white;
+              margin-left: -6px;
+            }
+          }
+
+          &.p-state-completed {
+            &::after {
+              font-family: $fontAwesome5;
+              content: "\f00c";
+              font-style: normal;
+              text-decoration: inherit;
+              font-size: 14px;
+              padding: 3px;
+              color: $ribbon-white;
+              left: -4px;
+              width: 14px;
+              height: 14px;
+              text-align: center;
+              background-color: $primaryColor;
+              vertical-align: bottom;
+              font-weight: 900;
+              margin-left: -5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .rbn-stepper-tabs {
+    display: inline-block;
+    width: 100%;
+    padding-left: 2.5em;
+
+    .stepper-content {
+      padding: 10px 20px 25px 15px;
+      margin-bottom: 20px;
+      font-size: $fontSize;
+      transition: box-shadow 0.2s ease-out;
+      letter-spacing: 0;
+      border-radius: $borderRadius;
+
+      &.disabled {
+        background: $ribbon-lighter-grey;
+        padding: 12px;
+        cursor: pointer;
+
+        .stepper-header {
+          color: $ribbon-dark-grey;
+          font-size: 14px;
+          font-weight: $fontWeightSemiBold;
+          line-height: 22px;
+        }
+        &.invalid {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+
+      &.active {
+        box-sizing: border-box;
+        background: $ribbon-white;
+        border: $inputBorder;
+        border-color: $ribbon-light-grey;
+        animation: slideElement 300ms;
+        color: $ribbon-black;
+
+        p.description {
+          color: $ribbon-black;
+          line-height: 19px;
+          margin: 0;
+          padding: 10px 1px;
+        }
+      }
+
+      .stepper-header {
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 22px;
+        margin: 0;
+
+        span {
+          font-size: 12px;
+          color: $ribbon-dark-grey;
+        }
+      }
+
+      .stepper-body {
+        padding: 10px 0;
+
+        label {
+          display: inline-block;
+          margin-bottom: 10px;
+          font-size: 13px;
+          font-weight: $fontWeightSemiBold;
+          letter-spacing: 0;
+          line-height: 18px;
+
+          span.mandatory {
+            color: $ribbon-specific-danger;
+          }
+        }
+
+        .rbn-stepper-confirm-box {
+          .rbn-stepper-confirm-box-content {
+            background-color: $ribbon-cream;
+            .confirm-item {
+              display: flex;
+              .confirm-title {
+                font-weight: bold;
+                letter-spacing: 0.4px;
+              }
+              .confirm-value {
+                letter-spacing: 0.4px;
+              }
+            }
+          }
+          .rbn-stepper-confirm-box-edit {
+            background-color: $ribbon-lighter-grey;
+            .confirm-edit-icon {
+              color: $primaryColor;
+            }
+          }
+        }
+
+        .p-inputtext {
+          width: 100%;
+          box-sizing: border-box;
+          border-color: $ribbon-light-grey;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .p-inputtext:hover,
+        .p-inputtext:focus,
+        .p-inputtext:not(:placeholder-shown) {
+          border-color: $ribbon-dark-grey;
+        }
+      }
+    }
+  }
+
+  rbn-stepper-confirm-box {
+    display: block;
+    width: 100%;
+
+    .rbn-stepper-confirm-box {
+      position: relative;
+
+      &-content {
+        display: inline-block;
+        width: 95%;
+        background: $ribbon-lighter-grey;
+        padding: 10px;
+      }
+
+      &-edit {
+        display: inline-block;
+        width: 3em;
+        background: $ribbon-light-grey;
+        position: absolute;
+        height: 100%;
+        cursor: pointer;
+        color: $primaryColor;
+
+        .confirm-edit-icon {
+          vertical-align: bottom;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+          left: 32%;
+          color: $primaryLightColor;
+        }
+
+        &:hover {
+          background: $ribbon-grey;
+        }
+      }
+    }
+  }
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.rbn-form-footer, .stepper-footer {
+  text-align: right;
+  font-size: $fontSize;
+
+  .p-button {
+    border: 1px solid $primaryColor;
+    span {
+      font-weight: $fontWeightSemiBold;
+      letter-spacing: 0;
+      line-height: 19px;
+    }
+
+    &.hidden {
+      display: none;
+    }
+
+    &.p-button-outlined {
+      color: $ribbon-dark-grey;
+      border: 1px solid $ribbon-light-grey;
+      &:hover {
+        background: none;
+        color: $ribbon-dark-grey;
+        border: 1px solid $ribbon-light-grey;
+      }
+    }
+  }
+
+}

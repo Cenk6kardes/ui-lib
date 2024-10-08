@@ -1,0 +1,6 @@
+<p-dialog [id]="idAboutPopup" [header]="infoTitle ? infoTitle : ('COMMON.ABOUT_TITLE' | translate)" [closeAriaLabel]="'COMMON.CLOSE' | translate"
+  [(visible)]="showInfo" modal="modal" [style]="{width: '500px'}" responsive="true" class="about-info-content">
+  <div *ngFor="let parag of infoContent" class="profile-content">
+    <p class="info-item">{{parag}}</p>
+  </div>
+</p-dialog>

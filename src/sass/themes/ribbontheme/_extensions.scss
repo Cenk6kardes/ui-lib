@@ -1,0 +1,944 @@
+/* Customizations to the designer theme should be defined here */
+@mixin form-field-error {
+  margin-top: 5px;
+  display: inline-block;
+  font-size: $fontSize;
+  color: $ribbon-specific-danger !important;
+  font-style: italic;
+  font-weight: normal !important;
+}
+
+@mixin form-field-disabled {
+  color: $ribbon-specific-disbaled-color;
+  background: $ribbon-specific-disbaled-background;
+  border: 1px solid $ribbon-specific-disbaled-background;
+}
+
+@mixin form-asterisk {
+  color: $ribbon-specific-danger;
+  margin-left: 3px;
+}
+
+@mixin typography-style($fontWeight, $color, $fontSize) {
+  font-weight: $fontWeight;
+  color: $color;
+  font-size: $fontSize;
+}
+
+@mixin heading-1 {
+  @include typography-style($fontWeightSemiBold, $ribbon-cream, 20px);
+  character-space: 0.95;
+}
+
+@mixin column-headers {
+  @include typography-style($fontWeightBold, $ribbon-black, 13px);
+}
+
+@mixin form-labels {
+  @include typography-style($fontWeightSemiBold, $ribbon-black, 13px);
+}
+
+@mixin contents {
+  @include typography-style($fontWeightRegular, $ribbon-black, 14px);
+}
+
+i {
+  &.fa,
+  &.fas {
+    color: $ribbon-dark-grey;
+    cursor: pointer;
+
+    &.disabled {
+      color: $ribbon-light-grey;
+      pointer-events: none;
+    }
+    &:hover {
+      color: $ribbon-black;
+    }
+  }
+
+  &.pi {
+    cursor: pointer;
+    &.disabled {
+      color: $ribbon-light-grey;
+      pointer-events: none;
+    }
+  }
+}
+
+.rbn-help-info {
+  margin-left: 8px;
+  i {
+    font-size: 14px;
+    &.fa, &.fas {
+      &:hover {
+        color: $ribbon-blue;
+      }
+    }
+  }
+}
+
+// #region button - begin
+.rbn-normal-icon {
+  &.p-button.p-button-icon-only {
+    width: 32px;
+
+    &.p-button-rounded {
+      height: 32px;
+    }
+  }
+}
+
+.rbn-normal-icon-only {
+  &.p-button.p-button-icon-only {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background-color: $ribbon-white;
+    box-shadow:  0 0px 6px 0 rgba(0, 0, 0, 0.16);
+    color: $ribbon-dark-grey;
+    margin-right: 10px;
+    margin-bottom: 5px;
+
+    &:hover {
+      color: $ribbon-dark-pink;
+    }
+    &:focus {
+      background-color: $ribbon-white;
+    }
+  }
+}
+
+.p-button {
+  border: 1px solid $primaryColor;
+
+  &.p-button-icon-only {
+    border: none;
+  }
+
+  &.rbn-button {
+
+    &.p-disabled {
+      opacity: unset;
+    }
+
+    &:enabled:hover {
+      box-shadow: $rbnButtonHoverShadow;
+    }
+
+    &.rbn-button-primary {
+      color: $ribbon-white;
+      background: $primaryColor;
+      border: $outlinedButtonBorder $primaryColor;
+
+      &.p-disabled {
+        background: $primaryLightColor;
+        border: 1px solid $primaryLightColor;
+        color: $ribbon-cream;
+      }
+    }
+
+    &.rbn-button-secondary {
+      color: $primaryColor;
+      background: $ribbon-white;
+      border: $outlinedButtonBorder $primaryColor;
+
+      &.p-disabled {
+        color: $primaryLightColor;
+        border: 1px solid $primaryLightColor;
+      }
+      &:enabled:focus {
+        background-color: $ribbon-white;
+      }
+    }
+
+    &.rbn-button-tertiary {
+      color: $ribbon-black;
+      background: $ribbon-white;
+      border: $outlinedButtonBorder $ribbon-dark-grey;
+
+      &.p-disabled {
+        color: $ribbon-light-grey;
+        border: 1px solid $ribbon-light-grey;
+      }
+
+      &:enabled:hover {
+        box-shadow: $rbnButtonHoverShadow;
+        background: $ribbon-white;
+        color: $ribbon-black;
+        border: $outlinedButtonBorder $ribbon-dark-grey;
+      }
+    }
+  }
+
+  &.rbn-btn-top {
+    position: fixed;
+    bottom: 20px;
+    right: 17px;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.p-button.p-button-secondary,
+.p-buttonset.p-button-secondary > .p-button,
+.p-splitbutton.p-button-secondary > .p-button {
+  color: $ribbon-dark-grey;
+  background: $ribbon-white;
+  border-color: $ribbon-dark-grey;
+
+  &:enabled:hover {
+    background: $ribbon-white;
+    color: $ribbon-dark-grey;
+    box-shadow: 0 2px 10px 0 $ribbon-light-grey;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  &:enabled:focus {
+    background: $ribbon-white;
+    color: $ribbon-dark-grey;
+    box-shadow: none;
+  }
+
+  &:enabled:active {
+    background: $ribbon-white;
+    color: $ribbon-dark-grey;
+    box-shadow: 0 2px 10px 0 $ribbon-light-grey;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+}
+// #region button - End
+
+// #region Form, form element - begin
+.form-group.p-fluid {
+  .p-accordion p-accordiontab {
+    .p-accordion-tab {
+      margin-bottom: 20px;
+    }
+
+    &:not(:first-child) .p-accordion-header .p-accordion-header-link {
+      border: 1px solid $borderLighterGrey !important;
+      border-top-right-radius: 3px;
+      border-top-left-radius: 3px;
+    }
+  }
+
+  .field {
+    .error {
+      @include form-field-error;
+    }
+
+    .asterisk {
+      @include form-asterisk;
+    }
+  }
+
+  rbn-field-error {
+    display: none;
+  }
+
+  .p-button {
+    width: auto !important;
+  }
+}
+
+.rbn-form-footer {
+  text-align: right;
+
+  .p-button-outlined {
+    margin-right: 10px;
+    color: $ribbon-dark-grey;
+    border: 1px solid $ribbon-light-grey;
+  }
+}
+
+.form-elements {
+  font-family: $fontFamily;
+
+  .field {
+    > label {
+      white-space: nowrap;
+      @include form-labels;
+      margin-bottom: 0;
+    }
+    label.content {
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+
+    .error {
+      @include form-field-error;
+    }
+
+    small.error {
+      @include form-field-error;
+      position: absolute;
+      display: flex;
+      font-size: 12px;
+    }
+
+    .asterisk {
+      @include form-asterisk;
+    }
+  }
+
+  .p-field {
+    margin-bottom: 0.5rem;
+  }
+
+  .p-input-icon-right {
+    i:last-of-type {
+      right: 1rem;
+    }
+  }
+}
+
+.rbn-field > label,
+.rbn-textarea label,
+.rbn-search i,
+.rbn-panel label {
+  @include form-labels;
+}
+
+.rbn-field .p-inputtext,
+.rbn-field .p-dropdown .p-dropdown-item,
+.rbn-search input,
+.rbn-textarea textarea,
+.rbn-radio label,
+.rbn-checkbox label {
+  @include contents;
+}
+
+.p-grid .rbn-field-dynamic {
+  padding: 0px;
+  .p-inputtext.p-component,
+  .p-dropdown.p-component {
+    width: 100%;
+  }
+}
+
+.rbn-field-dynamic {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  width: 100%;
+
+  > label {
+    @include form-labels;
+    margin-bottom: 0.5rem;
+    display: flex;
+
+    i {
+      font-size: 14px;
+    }
+
+    .info-icon {
+      @extend .rbn-help-info;
+    }
+
+    .action-icon {
+      margin-left: 8px;
+    }
+  }
+
+  .error {
+    @include form-field-error;
+  }
+
+  .asterisk {
+    @include form-asterisk;
+  }
+
+  .p-inputtext.p-component,
+  .p-dropdown.p-component {
+    min-width: 280px;
+  }
+}
+
+.p-panel .p-grid {
+  margin-top: 0;
+}
+
+.rbn-field {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 265px;
+  > input {
+    width: 100%;
+  }
+
+  p-dropdown,
+  p-multiselect {
+    width: 100%;
+    .p-dropdown,
+    .p-multiselect {
+      width: 100%;
+      min-width: 245px;
+    }
+  }
+
+  .text-full-width {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+.rbn-field,
+.rbn-field-dynamic {
+  input:disabled {
+    @include form-field-disabled;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    box-shadow: 0 0 0 30px white inset !important;
+  }
+
+  .p-dropdown.p-disabled, .p-multiselect.p-disabled {
+    @include form-field-disabled;
+    .p-inputtext {
+      color: inherit;
+    }
+  }
+
+  .p-dropdown .p-dropdown-panel,
+  .p-multiselect .p-multiselect-panel {
+    border: 1px solid $ribbon-dark-grey;
+
+    .p-dropdown-header,
+    .p-multiselect-header {
+      border-bottom: 1px solid $ribbon-light-grey;
+      input {
+        padding: 0.3rem 1.6rem 0.3rem 0.5rem;
+      }
+      span {
+        font-size: 14px;
+      }
+    }
+  }
+
+  span.asterisk {
+    @include form-asterisk;
+  }
+}
+
+.rbn-search {
+  input {
+    background-color: $ribbon-cream;
+    border: unset;
+  }
+  input::-webkit-input-placeholder {
+    font-weight: lighter;
+  }
+  input::-moz-placeholder {
+    font-weight: lighter;
+  }
+  input::-ms-input-placeholder {
+    font-weight: lighter;
+  }
+}
+
+.rbn-textarea {
+  textarea {
+    width: 100%;
+    height: 130px;
+    padding: 0.5rem;
+  }
+  span {
+    @include typography-style($fontWeightSemiBold, $ribbon-dark-grey, 12px);
+  }
+}
+
+.rbn-panel {
+  .p-panel.p-component {
+    margin-bottom: 1rem;
+  }
+  h4 {
+    margin-top: 0;
+    @include typography-style($fontWeightSemiBold, $ribbon-black, 14px);
+
+  }
+  .p-panel-content {
+    border: 1px solid $ribbon-light-grey;
+    border-radius: 3px;
+    .p-field {
+      margin-bottom: 0;
+      height: fit-content;
+    }
+  }
+  .rbn-field > label,
+  .rbn-field .rbn-textarea label {
+    @include form-labels;
+  }
+  .rbn-field > input {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+}
+
+.rbn-switch {
+  vertical-align: middle;
+  .p-inputswitch {
+    height: 15px;
+    width: 23px;
+    .p-inputswitch-slider {
+      background: $ribbon-light-grey;
+      &::before {
+        width: 11px;
+        height: 11px;
+        margin-top: -5.5px;
+        left: 1.5px;
+      }
+    }
+    &.p-inputswitch-checked {
+      .p-inputswitch-slider {
+        background: $primaryDarkerColor;
+        &::before {
+          transform: translateX(9px);
+        }
+      }
+    }
+  }
+}
+
+.rbn-radio {
+  display: inline;
+  margin-right: 2rem;
+  .p-radiobutton-box.p-highlight {
+    background: none;
+  }
+
+  .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+    background: none;
+  }
+}
+
+.rbn-group {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  p-radiobutton, p-checkbox {
+    display: inline-block;
+  }
+}
+// #region Form, form element - end
+
+// #region frame  - begin
+.rbn-container {
+  > .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $headerHeight;
+    z-index: 999;
+    .protect-page-top .headerlogo > .productName {
+      @include heading-1;
+    }
+  }
+  .content-container {
+    & .container-sidebar .container-aside {
+      top: $headerHeight;
+      height: calc(100vh - #{$headerHeight});
+      min-height: calc(100vh - #{$headerHeight});
+      .container-aside--menu {
+        height: 100%;
+        height: -webkit-fill-available;
+      }
+    }
+  }
+
+  .right-content {
+    width: calc(100% - #{$sidebarWidth});
+    padding: 0.5rem 1rem;
+    margin-left: $sidebarWidth;
+    background: $ribbon-cream;
+    margin-top: $headerHeight;
+    min-height: calc(100vh - #{$headerHeight});
+  }
+}
+
+.menu-collapsed {
+  .rbn-container {
+    .right-content {
+      width: calc(100% - #{$sidebarCollapsedWidth});
+      margin-left: $sidebarCollapsedWidth;
+    }
+  }
+}
+// #region frame - end
+
+.rbn-card {
+  padding-bottom: 3rem;
+  border-bottom: 1px solid $ribbon-light-grey;
+}
+
+.rbn-tabs {
+  .p-tabview-panel {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .p-tabview-nav {
+    li {
+      .p-tabview-nav-link {
+        font-weight: $fontWeightSemiBold;
+        font-size: 13px;
+        color: $ribbon-dark-grey;
+      }
+      &:not(.p-highlight):not(.p-disabled):hover {
+        .p-tabview-nav-link {
+          color: $ribbon-black;
+        }
+      }
+      &.p-highlight .p-tabview-nav-link {
+        border-color: $highlightColorTab;
+      }
+    }
+  }
+  .p-tabview-panels {
+    .p-tabview-panel:not([hidden]) code {
+      @extend %slideInElm;
+    }
+    position: relative;
+    border: 1px solid $ribbon-light-grey;
+    box-shadow: none;
+    @extend %animationElm;
+    .copy-code {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 3px;
+      border: 1px solid $primaryColor;
+      color: $primaryColor;
+      background: $ribbon-white;
+      padding: 0.1rem 0.4rem;
+      i {
+        font-size: 15px;
+        margin-right: 0.2rem;
+      }
+    }
+    p-tabPanel {
+      white-space: break-spaces;
+    }
+    .p-tabview-panel {
+      color: $ribbon-black;
+    }
+  }
+}
+
+// #region Box style - start
+.p-b-t-1rem {
+  padding: 1rem 0;
+}
+.no-boder {
+  border: none;
+}
+// #region Box style - end
+
+.rbn-checkbox {
+  display: inline;
+  margin-right: 2rem;
+}
+
+//p-tabView
+@keyframes slideInElement {
+  from {
+    opacity: 0;
+    transition: opacity 300ms;
+    transform: translateX(-2%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+%slideInElm {
+  -webkit-animation: slideInElement 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: slideInElement 1s; /* Firefox < 16 */
+  -ms-animation: slideInElement 1s; /* Internet Explorer */
+  -o-animation: slideInElement 1s; /* Opera < 12.1 */
+  animation: slideInElement 1s;
+}
+
+//p-tabView
+@keyframes slideElement {
+  from {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+%animationElm {
+  -webkit-animation: slideElement 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: slideElement 1s; /* Firefox < 16 */
+  -ms-animation: slideElement 1s; /* Internet Explorer */
+  -o-animation: slideElement 1s; /* Opera < 12.1 */
+  animation: slideElement 1s;
+}
+
+.rbn-dialog {
+  .p-dialog {
+    box-shadow: unset;
+    min-width: 500px;
+
+    .p-dialog-title {
+      letter-spacing: 0.5px;
+      font-weight: $fontWeightSemiBold;
+    }
+
+    .p-dialog-content {
+      padding: 1rem;
+      border: none;
+    }
+
+    .p-dialog-footer {
+      border: none;
+      padding: 0 1rem 1rem;
+    }
+  }
+
+  &.footer-center {
+    .p-dialog-footer {
+      text-align: center;
+    }
+  }
+}
+
+.dynamic-tabs .p-tabmenu .p-tabmenu-nav {
+  background: none;
+  border: 0;
+}
+.dynamic-tabs .p-tabmenu .p-tabmenu-nav .p-tabmenuitem:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link {
+  background: none;
+}
+
+.dynamic-tabs .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+  background: none;
+  border-color: $primaryColor;
+  color: $ribbon-black;
+  border-bottom: 3px solid $primaryColor;
+  font-weight: 600;
+}
+
+.dynamic-tabs .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+  border: none;
+  background: none;
+  color: var(--text-color-secondary);
+  font-weight: 400;
+  padding: 0.571em 1em;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.tag-general {
+  padding: 0.25rem 0.5rem;
+  border-radius: 10rem;
+  border: solid 1px;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  font-weight: $fontWeightSemiBold;
+  text-transform: capitalize;
+  min-width: 49px;
+  display: inline-block;
+  text-align: center;
+  line-height: initial;
+}
+
+.tag-new {
+  border-color: $ribbon-dark-pink;
+  color: $ribbon-dark-pink;
+}
+
+.tag-alpha {
+  border-color: $ribbon-blue;
+  color: $ribbon-blue;
+}
+
+.tag-beta {
+  border-color: $ribbon-purple;
+  color: $ribbon-purple;
+}
+
+// hidden the text generated by LiveAnnouncer.announce
+.cdk-visually-hidden {
+  width: 0px;
+  height: 0px;
+  position: fixed;
+  overflow: hidden;
+  top: -500px;
+}
+
+.dialog-complex {
+  .p-dialog {
+    .p-dialog-title {
+      font-weight: bold;
+    }
+  }
+
+  .p-dialog-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .p-dialog-content {
+    &.allow-frozen {
+      padding: 2em 1em 0;
+    }
+
+    .container-pick-list-dialog {
+      .p-picklist {
+        .p-picklist-buttons {
+          .p-button {
+            font-size: 14px;
+            background-color: transparent;
+            color: $primaryDarkerColor;
+            box-shadow: none;
+            margin-bottom: 0.25em;
+          }
+        }
+
+        .p-picklist-list-wrapper {
+          .p-picklist-header {
+            background-color: $ribbon-white;
+            text-align: center;
+            border-radius: 3px;
+          }
+
+          .p-picklist-filter-icon {
+            display: none;
+          }
+
+          .p-picklist-filter-container {
+            margin-top: 3px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            .p-inputtext {
+              margin: 0.5rem;
+              &.p-picklist-filter-input {
+                width: auto;
+              }
+            }
+          }
+
+          .p-picklist-list {
+            overflow: auto;
+            height: 12.5em;
+            width: auto;
+            .p-picklist-item {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              color: $textColor;
+              .p-button {
+                background-color: transparent;
+                color: $primaryColor;
+                box-shadow: none;
+                width: fit-content;
+                height: fit-content;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                padding: 0 5px;
+              }
+              &:not(.p-highlight):hover {
+                background: $ribbon-lighter-grey;
+              }
+              &.p-highlight, &:focus {
+                background: $ribbon-light-grey;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .pannel-toast-message {
+      .pannel-toast-message-content {
+        border-radius: 3px;
+        padding: 0.5rem;
+      }
+    }
+  }
+
+  #cancel-columns-button {
+    .p-button {
+      background-color: $ribbon-white;
+      color: $ribbon-black;
+      border: 1px solid $ribbon-black;
+    }
+  }
+
+  #customize-columns-button {
+    .p-button {
+      width: 73px;
+      border: 1px solid $primaryColor;
+    }
+  }
+
+  .picklist-item-disabled {
+    pointer-events: none;
+    user-select: none;
+    .ui-helper-clearfix {
+      opacity: 0.5;
+    }
+    .lock-btn {
+      pointer-events: visible;
+    }
+  }
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  outline-offset: -1px;
+}
+
+.test-class {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.pt-half-rem {
+  padding-top: 0.6rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.pl-25 {
+  padding-left: 25px;
+}
+
+.display-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.display-flex-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+}
+
+.chbbox-without-label {
+  padding-top: 0.6rem;
+  display: flex;
+  align-items: flex-start;
+
+  .rbn-checkbox {
+    margin-right: 0;
+  }
+}

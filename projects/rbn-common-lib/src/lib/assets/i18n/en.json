@@ -1,0 +1,71 @@
+{
+  "LEFT_NAV": {
+    "DASHBOARD": "Dashboard",
+    "CATALOG": "VNF Catalog",
+    "LIVE_VNF": "Live VNF | VNFC",
+    "CONFIGURATION": "VNFM Configuration",
+    "CLOUD_SYSTEMS": "Cloud Systems",
+    "TENANTS": "Tenants",
+    "ADMIN": "Admin",
+    "USERS": "Users",
+    "ADMIN_CONFIGURATION": "Configuration",
+    "DATABASE": "Database",
+    "MAINTENANCE": "Maintenance",
+    "REST_API": "REST APIs"
+  },
+  "HEADER_ALERT": {
+    "ALERTS": "Alerts"
+  },
+  "HEADER_USER": {
+    "LOGOUT_MG": "Are you sure you want to log out?",
+    "NO_CANCEL": "No - Cancel",
+    "YES_LOGOUT": "Yes - Log out"
+  },
+  "HEADER_PREF": {
+    "HEADER": "Preference",
+    "SETZONE": "Set Timezone:",
+    "UTC": "UTC",
+    "LOCAL": "Local"
+  },
+  "HEADER_LOGO": {
+    "PRODUCT_NAME": "VNFM"
+  },
+  "COMMON": {
+    "YES": "Yes",
+    "NO": "No",
+    "APPLY": "Apply",
+    "SHOW_COLUMN": "Show column",
+    "CLOSE": "Close",
+    "SHOW_HIDE_FILTER_ROW": "Show/Hide Filter Row",
+    "SHOWHIDECOLUMNS": "Show/Hide Columns",
+    "ALL": "All",
+    "SELECT_ACTION": "Select Action",
+    "NO_RECORDS": "No records found",
+    "SHOWING": "Showing",
+    "OF": "of",
+    "RECORDS": "records",
+    "RECORD": "record",
+    "RESET": "Reset",
+    "ADD": "Add",
+    "REMOVE": "Remove",
+    "REFRESH": "Refresh Table",
+    "SEARCH": "Search",
+    "CANCEL": "Cancel",
+    "SHOWING_RECORDS": "Showing {0} of {1} records",
+    "SHOWING_RECORD": "Showing {0} of {1} record",
+    "SUCCESS": "Success",
+    "ERROR": "Error",
+    "SAVE": "Save",
+    "UPLOAD": "Upload",
+    "NO_FILE_SELECT": "No file selected",
+    "CHOOSE": "Choose",
+    "SELECT_ITEM": "Select Item",
+    "TO": "to"
+  },
+  "CONFIRM_DIALOG_RESET_DEFAULT": {
+    "CANCEL": "Cancel",
+    "RESET": "Reset",
+    "TITLE": "Confirmation",
+    "CONTENT": "By selecting 'Reset to Default' any changes made to show/hide columns will reset to default and applied filter will be erased."
+  }
+}

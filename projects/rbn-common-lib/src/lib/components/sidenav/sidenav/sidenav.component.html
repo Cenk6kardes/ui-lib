@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="is-animation" [ngClass]="
+      collapsed === null
+        ? 'sidenav-open non-animation'
+        : collapsed === false
+        ? 'sidenav-close animation'
+        : 'sidenav-open animation'
+    ">
+    <div class="sidenav-container" [ngClass]="
+        collapsed === false
+          ? 'sidenav-container-close'
+          : 'sidenav-container-open'
+      ">
+      <div [ngClass]="'sidenav-items'" *ngFor="let siderow of sidenavs">
+        <div [ngClass]="collapsed === false ? '' : 'sidenav-head-container'" *ngIf="siderow.type === 'html'">
+          <a *ngIf="siderow.prop.function" class="sidenav-head"
+            (click)="siderow.prop.function ? siderow.prop.function($event) : ''">
+            <div [ngClass]="
+                collapsed === false
+                  ? 'sidenav-head-icon'
+                  : 'sidenav-head-button'
+              " [innerHTML]="siderow.prop.html">
+              <!-- Element -->
+            </div>
+          </a>
+        </div>
+
+        <div *ngIf="siderow.type === 'navigator'">
+          <button (click)="clickMenu(siderow.prop)" class="accordion"
+            *ngIf="siderow.prop?.items && siderow.prop?.items?.length > 0">
+            <div [ngClass]="
+                siderow.prop.isActive ? 'sidenav-row-active' : 'sidenav-row'
+              ">
+              <div class="icon-container">
+                <i [ngClass]="siderow.prop?.icon" style="font-size: 1.5em;"></i>
+              </div>
+              <div class="title-container">
+                <span id={{siderow.prop?.label}} [ngClass]="[
+                    siderow.prop.isActive ? 'title-active' : 'title',
+                    linkText ? 'sidenav-row-show' : 'sidenav-row-hide'
+                  ]">{{ siderow.prop?.label }}
+                </span>
+              </div>
+              <i *ngIf="collapsed === true || collapsed === null"
+                  class="icon-expand" [ngClass]="[
+                  linkText ? 'sidenav-row-show' : 'sidenav-row-hide',
+                  linkText ? 'sidenav-row-show' : 'sidenav-row-hide',
+                  siderow.prop.expand ? 'pi pi-caret-down' : 'pi pi-caret-right'
+                ]"></i>
+            </div>
+          </button>
+          <button (click)="clickMenu(siderow.prop)" class="accordion" [routerLink]="siderow.prop?.link"
+            *ngIf="!siderow.prop?.items || !siderow.prop?.items.length">
+            <div [ngClass]="
+                siderow.prop.isActive ? 'sidenav-row-active' : 'sidenav-row'
+              ">
+              <div class="icon-container">
+                <i [ngClass]="siderow.prop?.icon" style="font-size: 1.5em;"></i>
+              </div>
+              <div class="title-container">
+                <span id={{siderow.prop?.label}} [ngClass]="[
+                    siderow.prop.isActive ? 'title-active' : 'title',
+                    linkText ? 'sidenav-row-show' : 'sidenav-row-hide'
+                  ]">{{ siderow.prop?.label }}
+                </span>
+              </div>
+            </div>
+          </button>
+          <div [ngClass]="[
+              collapsed === false
+                ? 'submenu-close'
+                : siderow.prop.expand
+                ? 'submenu-open'
+                : 'submenu-close'
+            ]" *ngIf="siderow.prop.items && !siderow.prop.isFirstLoad">
+            <button *ngFor="let sub of siderow.prop?.items" (click)="clickSubMenu(siderow.prop, sub)"
+              [routerLink]="sub?.link" [ngClass]=" 
+                siderow.prop.isActive ? 'container-sub-active' : 'container-sub'
+              ">
+              <div class="sub-title-container">
+                <span [ngClass]="sub.isActive ? 'sub-title-active' : 'sub-title'"
+                  id={{sub?.label}}>{{ sub.label }}</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="show-sub-items" *ngIf="collapsed === false">
+            <div class="sub-title-container-header" [ngClass]="siderow.prop.items ? 'p-b-5' : 'background-hover'">
+              <div *ngIf="siderow.prop.items; else noPropItems">
+                <span id={{siderow.prop?.label}}>{{ siderow.prop.label }}</span>
+              </div>
+              <ng-template #noPropItems>
+                <a id={{siderow.prop?.label}} [routerLink]="siderow.prop?.link" class="text-black">
+                  <span>{{ siderow.prop.label }}</span>
+                </a>
+              </ng-template>
+            </div>
+            <div class="sub-title-container-line" *ngFor="let sub of siderow.prop?.items"
+              (click)="clickSubMenu(siderow.prop, sub)" [routerLink]="sub?.link">
+              <div class="sub-title-container">
+                <span [ngClass]="sub.isActive ? 'sub-title-active' : 'sub-title'">{{ sub.label }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

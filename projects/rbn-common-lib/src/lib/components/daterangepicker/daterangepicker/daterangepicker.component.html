@@ -1,0 +1,27 @@
+<p-dialog [showHeader]="false" [modal]="true" [responsive]="true" [(visible)]="pDisplay"
+  styleClass="daterangepicker-dialog" (onHide)="onHideDialog()" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <div class="p-grid p-justify-center">
+    <div class="p-md-6">
+      <div class="rbn-calendar-title">From: </div>
+      <p-calendar class="rbn-calendar" [inline]="true" placeholder="date/time" [(ngModel)]="pFromDate"
+        [showIcon]="true" [showTime]="pShowTime" hourFormat="12">
+      </p-calendar>
+    </div>
+    <div class="p-md-6">
+      <div class="rbn-calendar-title">To: </div>
+      <p-calendar class="rbn-calendar" [inline]="true" placeholder="date/time" [(ngModel)]="pToDate"
+        [showIcon]="true" [showTime]="pShowTime" hourFormat="12">
+      </p-calendar>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton (click)="handleCancel()" label="Cancel" class="p-button-secondary" autofocus></button>
+    <button type="button" pButton (click)="handleOk()" label="OK"></button>
+  </p-footer>
+</p-dialog>
+<div class="ui-inputgroup time-picker-form">
+  <input [disabled]="disabledTimePicker" #rbninputdaterangecalendar [ngModel]="formatDateRange()"
+    class="crop" type="text" pInputText readonly
+    placeholder="Keyword" [size]="inputTextSize" [title]="rbninputdaterangecalendar.value">
+  <button [disabled]="disabledTimePicker" pButton type="button" (click)="postDialog()" icon="fa fa-calendar"></button>
+</div>

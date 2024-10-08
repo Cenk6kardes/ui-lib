@@ -1,0 +1,32 @@
+<div *ngIf="!active" [class]="canEdit() ? 'stepper-content disabled':   'stepper-content disabled invalid'"
+  id="stepperContent{{id}}" (click)="goToStep(id-1)">
+  <p *ngIf="label" class="stepper-header">
+    {{label}}<span *ngIf="subText"> ({{subText}})</span>
+  </p>
+  <div style="display: none;">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </div>
+</div>
+
+<div *ngIf="active" class="stepper-content active" id="stepperContent{{id}}">
+  <p *ngIf="label" class="stepper-header">
+    {{label}}
+  </p>
+  <div>
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </div>
+</div>
+
+<ng-template #content>
+  <p class="p-col pl-0 description">{{description}}</p>
+  <div class="stepper-body">
+    <ng-content></ng-content>
+  </div>
+  <div class="stepper-footer" *ngIf="!localValidation">
+    <button type="button" pButton class="p-button-outlined mr-10" (click)="prev()"
+      [class.hidden]="isPreviousButtonHidden()"
+      label="{{'COMMON.PREVIOUS' | translate}}"></button>
+    <button type="button" pButton (click)="next()" [class.hidden]="isNextButtonHidden()"
+      label="{{'COMMON.NEXT' | translate}}"></button>
+  </div>
+</ng-template>

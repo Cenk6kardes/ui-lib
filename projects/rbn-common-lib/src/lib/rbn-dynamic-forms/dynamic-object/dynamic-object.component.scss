@@ -1,0 +1,74 @@
+@import '../../../../../../src/sass/themes/ribbontheme/variables';
+$panelHeaderIconColor:$ribbon-dark-grey;
+
+%grey-mode {
+  background-color: $ribbon-light-grey;
+  color: $panelHeaderTextColor;
+  border: none;
+  padding: 0.571em 1em;
+  box-shadow: none;
+}
+
+%white-mode {
+  background-color: $panelContentBg;
+  color: $panelHeaderTextColor;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  margin-left: 20px;
+}
+
+.container-accordion-object ::ng-deep {
+  padding-top: 20px 0px;
+  margin-top: 20px;
+  .grey-header {
+    .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+      @extend %grey-mode
+    }
+    .p-accordion-header:not(.p-highlight):not(.p-disabled) .p-accordion-header-link {
+      @extend %grey-mode
+    }
+    .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link {
+      @extend %grey-mode
+    }
+    .p-accordion-header {
+      margin: 0px;
+      margin-top: 20px;
+    }
+    .p-accordion-content {
+      padding-bottom: 20px;
+      margin-top: -5px;
+    }
+  }
+
+  .white-header {
+    .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+      @extend %white-mode
+    }
+    .p-accordion-header:not(.p-highlight):not(.p-disabled) .p-accordion-header-link {
+      @extend %white-mode
+    }
+    .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link {
+      @extend %white-mode
+    }
+    .p-accordion-header {
+      margin: 0px;
+      display: inline-block;
+    }
+    .p-accordion-content {
+      padding: 0px;
+      border: none;
+    }
+  }
+
+  .p-button {
+    background-color: transparent;
+    margin-left: 5px;
+    outline: none;
+    border: none;
+    .p-button-icon-left {
+      color: $panelHeaderIconColor;
+      font-size: 24px;
+    }
+  }
+}

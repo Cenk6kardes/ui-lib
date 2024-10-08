@@ -1,0 +1,14 @@
+<div class="multi">
+  <p-multiSelect
+    [defaultLabel]="props.placeholder || ('COMMON.CHOOSE' | translate)"
+    [options]="props.options"
+    [formControl]="formControl"
+    [formlyAttributes]="field"
+    (onChange)="props.change && props.change(field, $event)"
+  >
+  <ng-template let-element pTemplate="item">
+    <div class="label">{{element.label}}</div>
+    <div class="description">{{getDescription(element)}}</div>
+  </ng-template>
+  </p-multiSelect>
+</div>

@@ -1,0 +1,15 @@
+<div class="rbn-stepper">
+  <div class="rbn-stepper-steps">
+    <p-steps [model]="items" [(activeIndex)]="activeIndex" styleClass="rbn-steps" [readonly]="true"></p-steps>
+  </div>
+  <div class="rbn-stepper-tabs">
+    <ng-content></ng-content>
+  </div>
+</div>
+<div class="rbn-form-footer mt-10">
+  <ng-container *ngTemplateOutlet="templateStepperFooter"></ng-container>
+  <button type="button" pButton class="p-button-outlined reset mr-10" label="{{'COMMON.CANCEL' | translate}}"
+    (click)="cancel.emit()"></button>
+  <button type="submit" pButton label="{{editMode ? ('COMMON.UPDATE' | translate) : ('COMMON.SAVE' | translate)}}"
+    [disabled]="isSubmitBtnClicked" (click)="clickSubmitBtn()"></button>
+</div>

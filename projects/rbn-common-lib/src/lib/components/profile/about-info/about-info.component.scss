@@ -1,0 +1,14 @@
+.about-info-content::ng-deep {
+  .p-dialog {
+    .p-dialog-content {
+      padding: 2em 1em;
+
+      .profile-content {
+        p.info-item {
+          text-align: center;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}

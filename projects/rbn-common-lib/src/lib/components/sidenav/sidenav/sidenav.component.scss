@@ -1,0 +1,462 @@
+@import 'variables';
+
+$tab-height: 50px;
+$lightGrey: #F5F5F5;
+
+.container {
+  flex-direction: row;
+  display: flex;
+  height: 100%;
+
+  .sidenav-container {
+    min-width: 60px;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      overflow-y: auto;
+    }
+
+    .sidenav-head-container {
+      width: 220px; // max-width sidenav - paddingLeft
+    }
+
+    .sidenav-head {
+      cursor: pointer;
+
+      :hover {
+        background-color: $ribbon-specific-light-lowlight;
+      }
+    }
+
+    .sidenav-head-button {
+      background-color: $primaryLightColor;
+      margin: 20px 0px 30px 20px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      border-radius: 2px;
+      height: 40px;
+    }
+
+    .sidenav-head-icon {
+      background-color: $primaryLightColor;
+      border-radius: 2px;
+      height: 40px;
+      padding: 10px;
+      display: flex;
+      margin: 20px 5px 30px 5px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sidenav-head-text {
+      color: $menuBg;
+      font-weight: bold;
+      font-size: $fontSize;
+      margin-left: 12px;
+    }
+
+    .accordion {
+      cursor: pointer;
+      text-decoration: none;
+      color: $primaryColor;
+      border: 0;
+      padding: 0;
+      width: 100%;
+      background-color: unset;
+      &:focus {
+        outline-offset: -1px;
+      }
+      :hover {
+        background-color: $menuitemHoverBg;
+      }
+
+      .icon-menu {
+        font-size: 1.5em;
+        color: $menuitemIconColor;
+      }
+
+      .icon-expand {
+        font-size: 1.0em;
+        color: $menuitemIconColor;
+      }
+
+      .sidenav-row {
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        min-height: $tab-height;
+      }
+
+      .sidenav-row-active {
+        flex-direction: row;
+        display: flex;
+        min-height: $tab-height;
+        align-items: center;
+        padding-left: 15px;
+        border-left: 5px solid $primaryColor;
+        background-color: $lightGrey;
+
+        &:hover {
+          background-color: $menuitemHoverBg;
+        }
+      }
+
+      .icon-container {
+        display: flex;
+        width: 25px;
+        height: 25px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .title-container {
+        display: inline-block;
+        width: 170px;
+        text-align: left;
+        font-family: $fontFamily;
+
+        .title {
+          font-size: $fontSize;
+          font-weight: $fontWeightSemiBold;
+          color: $menuitemTextColor;
+          margin-left: 15px;
+          padding-right: 12px;
+        }
+
+        .title-active {
+          font-size: $fontSize;
+          font-weight: 900;
+          color: $ribbon-black;
+          margin-left: 15px;
+          padding-right: 12px;
+        }
+      }
+    }
+
+    a:hover {
+      background-color: $menuitemHoverBg;
+    }
+
+    .container-sub-active {
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      min-height: $tab-height;
+      border-left: 5px solid $primaryColor;
+      background-color: $lightGrey;
+      border-top: none;
+      border-bottom: none;
+      border-right: none;
+      width: 100%;
+      &:focus {
+        outline-offset: -1px;
+      }
+    }
+
+    .container-sub {
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      min-height: $tab-height;
+      padding-left: 5px;
+      border: 0;
+      width: 100%;
+      background-color: unset;
+      &:focus {
+        outline-offset: -1px;
+      }
+    }
+
+    .sub-title-container {
+      display: inline-block;
+      align-items: center;
+      width: 150px;
+      margin-left: 49px;
+      text-align: left;
+      font-size:  $fontSize;
+      font-family: $fontFamily;
+
+      .sub-title {
+        color: $menuitemTextColor;
+        word-wrap: break-word;
+      }
+
+      .sub-title-active {
+        font-weight: bold;
+        color: $primaryColor;
+        word-wrap: break-word;
+      }
+    }
+
+    .sidenav-items:hover {
+      .show-sub-items {
+        display: block;
+      }
+    }
+
+    .show-sub-items {
+      display: none;
+      background-color: $lightGrey;
+      margin-top: -50px;
+      margin-left: 60px;
+      box-shadow: 7px 7px 10px 0px rgba(105, 105, 105, 1);
+      position: fixed;
+      z-index: 999;
+      overflow-y: auto;
+      max-height: 300px;
+      width: 200px;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $toggleButtonBg;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $sliderBg;
+        border-radius: 10px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: $panelHeaderBg;
+      }
+
+      &:hover {
+        display: block;
+      }
+
+      .sub-title-container-header {
+        font-weight: bold;
+        padding: 15px 10px 15px 10px;
+      }
+
+      span {
+        margin-left: 15px;
+      }
+
+      .background-hover:hover {
+        background-color: $menuitemHoverBg;
+      }
+
+      .sub-title-container-line {
+        .sub-title-container {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          height: $tab-height;
+          margin-left: 25px;
+          color: $menuitemTextColor;
+        }
+      }
+
+      .sub-title-container-line:hover {
+        background-color: $menuitemHoverBg;
+      }
+
+      .sub-title-container-line:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .contentContainer {
+    width: 100%;
+    height: 100%;
+  }
+
+  ::ng-deep .non-animation .sidenav-container-open {
+    min-width: 240px;
+  }
+
+  ::ng-deep .animation .sidenav-container-open {
+    animation: sidenav-open 250ms forwards;
+    animation-timing-function: ease-in;
+  }
+
+  ::ng-deep .non-animation .sidenav-container-close {
+    width: 62px;
+  }
+
+  ::ng-deep .animation .sidenav-container-close {
+    animation: sidenav-close 250ms forwards;
+    animation-timing-function: ease-in;
+  }
+
+  @keyframes sidenav-open {
+    0% {
+      width: 62px;
+    }
+
+    100% {
+      width: 240px;
+    }
+  }
+
+  @keyframes sidenav-close {
+    0% {
+      width: 240px;
+    }
+
+    100% {
+      width: 62px;
+    }
+  }
+
+  ::ng-deep .sidenav-row-show {
+    animation: sidenavrow-show 350ms forwards;
+    animation-timing-function: ease-in;
+    display: block;
+    opacity: 1;
+    word-wrap: break-word;
+  }
+
+  ::ng-deep .sidenav-row-hide {
+    animation: sidenavrow-hide 200ms forwards;
+    animation-timing-function: ease-out;
+    display: none;
+    opacity: 0;
+  }
+
+  ::ng-deep .submenu-open {
+    animation: submenu-open 400ms forwards;
+    animation-timing-function: ease-in;
+  }
+
+  ::ng-deep .submenu-close {
+    animation: submenu-close 300ms forwards;
+    animation-timing-function: ease-in;
+    visibility: hidden;
+  }
+
+  @keyframes submenu-open {
+    0% {
+      max-height: 0;
+      z-index: -1;
+      opacity: 0;
+      overflow: hidden;
+      display: none;
+    }
+
+    100% {
+      max-height: 900px;
+      opacity: 1;
+      display: block;
+    }
+  }
+
+  @keyframes submenu-close {
+    0% {
+      max-height: 900px;
+      opacity: 1;
+      display: block;
+    }
+
+    50% {
+      max-height: 450px;
+    }
+
+    100% {
+      max-height: 0px;
+      z-index: -1;
+      opacity: 0;
+      overflow: hidden;
+      display: none;
+    }
+  }
+}
+
+:host::ng-deep {
+  .ui-button-toggle {
+    .p-button {
+      background-color: $menuBg;
+      width: 17px;
+      height: $tab-height;
+      border: $menuBorder;
+
+      .p-button-icon-only {
+        width: 0px;
+      }
+
+      &:enabled:active,
+      &:enabled:focus {
+        background-color: $menuBg;
+        box-shadow: none
+      }
+
+      &:enabled:hover {
+        background-color: $menuitemHoverBg;
+        border: 1px solid $menuitemHoverBg;
+      }
+    }
+
+    .pi {
+      color: $menuitemIconColor;
+    }
+  }
+
+  .p-button-icon {
+    color: $menuitemIconColor
+  }
+
+  .is-animation {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: calc(100vh - 154px);
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: $toggleButtonBg;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $sliderBg;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: $panelHeaderBg;
+    }
+
+    &:hover {
+      overflow-y: auto;
+      transition: opacity 1s linear;
+
+      &.sidenav-open {
+        max-width: 240px;
+      }
+
+      &.sidenav-close {
+        max-width: 62px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .sidenav-close {
+    display: none;
+  }
+}
+
+.p-b-5 {
+  padding-bottom: 5px !important;
+}
+
+.text-black {
+  color: $ribbon-black;
+
+  &:hover {
+    color: $ribbon-black;
+    background-color: unset;
+  }
+}

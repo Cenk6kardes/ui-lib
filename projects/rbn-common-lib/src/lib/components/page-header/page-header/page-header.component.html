@@ -1,0 +1,74 @@
+<div class="page-header-container" *ngIf="data?.title || data?.breadcrumb || data?.topButton"
+  [id]="pageHeaderName || 'pageHeader'">
+  <!-- header of table -->
+  <div class="left-header">
+    <h1 *ngIf="data?.title" class="header-title"
+      [id]="pageHeaderName ? pageHeaderName + 'HeaderTitle' : 'headerTitle'">
+      {{ data?.title }}
+      <span *ngIf="data?.description" class="rbn-help-info"><i class="fa fa-info-circle" [pTooltip]="data?.description"
+        tooltipPosition="bottom"></i></span>
+    </h1>
+    <span *ngIf="tag" class="tag-general p-ml-2" [ngClass]="{
+      'tag-new': tag?.type === tagType.New,
+      'tag-alpha': tag?.type === tagType.Alpha,
+      'tag-beta': tag?.type === tagType.Beta }" [ngStyle]="tag?.color ? { 'border-color' : getTagData().color, 'color': getTagData().color } : ''">{{ getTagData().label }}</span>
+    <div class="breadcrumb-wrapper" *ngIf="data?.breadcrumb">
+      <p-button icon="fa fa-arrow-circle-left" styleClass="back-button" (onClick)="onBack()"
+        [id]="pageHeaderName ? pageHeaderName + 'BackButton' : 'backButton'" [title]="'COMMON.PREVIOUS_SCREEN' | translate" [ariaLabel]="'COMMON.PREVIOUS_SCREEN' | translate"></p-button>
+      <p-breadcrumb class="custom-breadcrumb" [model]="data?.breadcrumb"
+        [id]="pageHeaderName ? pageHeaderName + 'BreadcrumbHeader' : 'breadcrumbHeader'">
+      </p-breadcrumb>
+    </div>
+  </div>
+  <div class="right-header">
+    <!-- top dropdown -->
+    <div *ngIf="data?.topDropdown?.isDisplay" class="m-r-dot-75-rem header-dropdown p-mb-2">
+      <p-dropdown [id]="pageHeaderName ? pageHeaderName + 'TopDropdown' : 'topDropdown'"
+        [options]="data?.topDropdown?.content"
+        [optionLabel]="data?.topDropdown?.optionLabel ? data.topDropdown.optionLabel : 'label'"
+        [optionValue]="data?.topDropdown?.optionValue ? data.topDropdown.optionValue : 'value'"
+        [(ngModel)]="dropdownValue" placeholder="{{ 'COMMON.SELECT_ITEM' | translate }}"
+        (onChange)="data?.topDropdown?.onChange ? data?.topDropdown?.onChange($event) : onDropdownChange($event)">
+      </p-dropdown>
+    </div>
+    <!-- top button -->
+    <ng-template #templateTopButton let-topButtonData="contextData" let-i="index">
+      <p-button [label]="topButtonData?.label" [icon]="topButtonData?.icon" [disabled]="topButtonData?.disabled" [iconPos]="topButtonData?.iconPos"
+        (onClick)="topButtonData?.onClick($event)" title="{{ topButtonData?.title }}"
+        [id]="getIdTopButton(i)" class="add-button">
+      </p-button>
+    </ng-template>
+    <div class="header-button">
+      <div *ngIf="data?.topButton && !isArray(data?.topButton) && data?.topButton?.isDisplay" class="btn">
+        <ng-container [ngTemplateOutlet]="templateTopButton" [ngTemplateOutletContext]="{contextData:data?.topButton}">
+        </ng-container>
+      </div>
+      <ng-container *ngIf="data?.topButton && isArray(data?.topButton)">
+        <ng-container *ngFor="let item of data?.topButton; let i = index">
+          <div *ngIf="item.isDisplay" class="btn">
+            <ng-container [ngTemplateOutlet]="templateTopButton" [ngTemplateOutletContext]="{contextData:item, index: i}">
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+      <div *ngIf="data?.overlayButton?.isDisplay" class="container-button">
+        <button pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded" (click)="op.toggle($event)"
+          [id]="pageHeaderName ? pageHeaderName + 'OverlayButton' : 'overlayButton'">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay-button">
+  <p-overlayPanel #op styleClass="overlayDes" [id]="pageHeaderName ? pageHeaderName + 'OverlayPanel' : 'overlayPanel'" [appendTo]="op">
+    <p-listbox [options]="data?.overlayButton?.menuItem" (onClick)="onClickSelectedMenuItem($event)">
+      <ng-template let-item pTemplate="item">
+        <div class="country-item">
+          <i [class]="item.icon"></i>
+          <div class="label">{{item.label}}</div>
+        </div>
+      </ng-template>
+    </p-listbox>
+  </p-overlayPanel>
+</div>

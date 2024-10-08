@@ -1,0 +1,18 @@
+<rbn-common-table #rbnTable header="{{ 'ADMIN.SECURITY_REALMS' | translate }}" [tableName]="tableName" [cols]="cols"
+  [data]="data" [numberRowPerPage]="5" [selectedRows]="selectedRow" (linkClick)="onLinkClick($event)"
+  (refreshData)="refreshData()" (changeActions)="onChangeActions($event)" (rowReorder)="onEventRowReorder()"
+  [topButton]="{
+    label: 'ADMIN.ADD_REALM' | translate,
+    icon: 'pi pi-plus',
+    iconPos: 'right',
+    onClick: addRealm
+  }"></rbn-common-table>
+
+<rbn-security-realms-delete [isShowContent]="isShowDelete" [realm]="selectedRow"
+  (emitCloseDelete)="eventCloseDelete($event)">
+</rbn-security-realms-delete>
+
+<rbn-security-realms-enable-disable [isShowContent]="isShowEnableDisable" [isDisableSelected]="isDisableSelected"
+  [isEnableSelected]="isEnableSelected" [realm]="selectedRow"
+  (emitCloseEnableDisable)="eventCloseEnableDisable($event)">
+</rbn-security-realms-enable-disable>

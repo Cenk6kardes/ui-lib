@@ -1,0 +1,6 @@
+<div *ngFor="let item of jsonArray" class="container p-grid  p-nogutter">
+  <div class="obj-key">
+    {{item.key}}
+  </div>
+  <div class="p-col-7 p-nogutter" [innerHTML]="item.value"></div>
+</div>

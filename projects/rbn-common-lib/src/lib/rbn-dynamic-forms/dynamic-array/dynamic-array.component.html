@@ -1,0 +1,78 @@
+<ng-container [ngSwitch]="props?.style">
+  <ng-container *ngSwitchCase="eStyles.EMS_DM">
+    <div *ngFor="let group of field.fieldGroup; let i = index"
+      [ngStyle]="{'display': group.props.hideInterface ? 'none' : 'block' }">
+      <h4 class="interface-label">{{ group.model.interfaceType }}:</h4>
+      <div class="p-grid">
+        <ng-container *ngFor="let item of group.fieldGroup">
+          <ng-container *ngIf="item.key !== 'interfaceType'">
+            <formly-field [field]="item" class="p-col-12 p-md-6"></formly-field>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="eStyles.LIST_ARRAY_FIELD">
+    <div class="list-array-field">
+      <p *ngIf="props?.description" class="array-description"><i class="fa fa-info-circle"></i>{{props?.description}}</p>
+      <div *ngFor="let item of field.fieldGroup; let i = index;" class="p-grid">
+        <div [class]="isShowRemove() && checkHideRemoveButtonByIndex(i) && props?.wrapItem ? 'p-col array-item-container' : 'p-col'">
+          <formly-field [field]="item"></formly-field>
+        </div>
+        <div class="remove-box-elm">
+          <p-button *ngIf="isShowRemove() && checkHideRemoveButtonByIndex(i)"
+            [styleClass]="(props?.removeText ? 'btn-text rbn-button rbn-button-secondary' : 'btn-icon')"
+            icon="fa fa-minus-circle" (click)="$event.stopPropagation();remove(i);props.remove && props.remove(i)"
+            [pTooltip]="props?.removeTooltip" tooltipPosition="bottom" tooltipStyleClass="rbn-tooltip">{{props?.removeText}}</p-button>
+        </div>
+      </div>
+      <div class="p-grid btn-add-container">
+        <p-button *ngIf="isShowAdd()" icon="fa fa-plus-circle"
+          [styleClass]="props?.addText ? 'btn-text rbn-button rbn-button-secondary': 'btn-icon'"
+          (click)="$event.stopPropagation();add();props.add && props.add()" [pTooltip]="props?.addTooltip"
+          tooltipPosition="bottom" tooltipStyleClass="rbn-tooltip">{{props?.addText}}</p-button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngSwitchDefault class="container-accordion-array">
+    <p-accordion (onClose)="onTabClose();props.onTabClose && props.onTabClose(field)"
+      (onOpen)="onTabOpen();props.onTabOpen && props.onTabOpen(field)" [ngStyle]="{'display': field.props.hideTab ? 'none' : 'block' }">
+      <p-accordionTab [selected]="!props.collapse">
+        <p-header class="header">
+          <span class="label">{{props.label}}</span>
+          <ng-container>
+            <p-button *ngIf="isShowAdd()" icon="fa fa-plus-circle" styleClass="add-btn"
+              (click)="$event.stopPropagation();add();props.add && props.add();forceExpand()"></p-button>
+          </ng-container>
+        </p-header>
+        <div *ngFor="let item of field.fieldGroup; let i = index;">
+          <p-accordion *ngIf="to?.isArrayObject" (onClose)="props.onTabClose && props.onTabClose(field?.fieldGroup[i])"
+            (onOpen)="props.onTabOpen && props.onTabOpen(field?.fieldGroup[i])">
+            <p-accordionTab [selected]="!item.props.collapse">
+              <p-header>
+                <span class="label">{{field?.fieldGroup[i]?.props?.label}}</span>
+                <ng-container>
+                  <p-button *ngIf="isShowRemove() && checkHideRemoveButtonByIndex(i)" icon="fa fa-minus-circle"
+                    styleClass="add-btn" (click)="$event.stopPropagation();remove(i);props.remove && props.remove(i)">
+                  </p-button>
+                </ng-container>
+              </p-header>
+              <formly-field [field]="item"></formly-field>
+            </p-accordionTab>
+          </p-accordion>
+          <div *ngIf="!to?.isArrayObject">
+            <div class="wrapper-field">
+              <formly-field [field]="item"></formly-field>
+              <p-button *ngIf="isShowRemove() && checkHideRemoveButtonByIndex(i)" styleClass="add-btn"
+                [ngClass]="props.fielHaveLabel ? 'remove-field' : 'array-field-no-label'" icon="fa fa-minus-circle"
+                (click)="$event.stopPropagation();remove(i);props.remove && props.remove(i)"></p-button>
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+
+</ng-container>

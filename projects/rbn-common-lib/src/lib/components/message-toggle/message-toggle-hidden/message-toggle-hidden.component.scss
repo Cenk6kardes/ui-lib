@@ -1,0 +1,15 @@
+#toastMessageHidden {
+  span {
+    color: transparent;
+  }
+
+  #toastMessageHiddenButton {
+    z-index: 9999;
+    width: 10px;
+    height: 5px;
+    position: fixed;
+    top: 75px;
+    left: 250px;
+    border: 0 none;
+  }
+}

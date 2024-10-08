@@ -1,0 +1,117 @@
+@import '../../../../../../src/sass/themes/ribbontheme/variables';
+
+%css-share {
+  background-color: $tabviewHeaderBg;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  .header {
+    display: flex;
+    align-items: center;
+    .label {
+      margin-right: 20px;
+    }
+  }
+}
+
+.container-accordion-array ::ng-deep {
+  margin-top: 20px;
+  margin-left: 20px;
+  .p-accordion {
+    .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+      @extend %css-share
+    }
+    .p-accordion-header:not(.p-highlight):not(.p-disabled) .p-accordion-header-link {
+      @extend %css-share
+    }
+    .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link {
+      @extend %css-share
+    }
+    .p-accordion-header {
+      margin: 0px;
+      display: inline-block;
+    }
+    .p-accordion-content {
+      padding: 0px;
+      border: none;
+    }
+  }
+  .add-btn {
+    background-color: transparent;
+    margin-left: 5px;
+    border: none;
+    box-shadow: none;
+    color: $ribbon-dark-grey;
+    font-size: 1.25rem;
+    
+  }
+  .p-button-icon {
+    &:hover{
+      color: $linkHoverColor;
+    }
+  }
+  .p-button:enabled:focus{
+    box-shadow: none;
+  }
+
+  .wrapper-field {
+    display: flex;
+    .remove-field {
+      padding-top: 40px;
+      margin-left: 20px;
+    }
+    .array-field-no-label {
+      padding-top: 15px;
+      margin-left: 20px;
+    }
+  }
+}
+
+h4 {
+  margin-block-end: 0em;
+}
+.interface-label {
+  margin-top: 12px;
+}
+
+.list-array-field ::ng-deep {
+  margin-left: 0;
+  .array-description {
+    i {
+      cursor: auto;
+    }
+  }
+  .remove-box-elm {    
+    align-self: center;
+    .btn-text {
+      margin-left: 5px;
+    }
+  }
+  .btn-text {
+    width: auto;
+    .p-button-icon {
+      margin-left: 5px;
+      &:hover{
+        color: unset;
+      }
+    }
+  }
+  .btn-icon {
+    background-color: transparent;
+    margin-left: 5px;
+    border: none;
+    box-shadow: none;
+    color: $ribbon-dark-grey;
+    font-size: 1.25rem;
+  }
+  .array-item-container {
+    margin: auto;
+    margin-top: 15px;
+    border: 1px solid $borderLighterGrey;
+    border-radius: 5px;
+  }
+  .btn-add-container {
+    margin: unset;
+  }
+  
+}

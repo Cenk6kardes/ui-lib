@@ -1,0 +1,12 @@
+@import 'variables';
+
+.container-button ::ng-deep {
+  .p-button {
+    margin-top: 15px;
+    margin-left: 25px;
+  }
+
+  .p-button-label {
+    color: $ribbon-white;
+  }
+}

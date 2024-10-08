@@ -1,0 +1,30 @@
+@import 'variables';
+
+.container-radio ::ng-deep {
+  display: flex;
+
+  .radio-item {
+    margin-right: 20px;
+
+    .p-radiobutton {
+      .p-radiobutton-box {
+        border: 1px solid $ribbon-dark-grey;
+      }
+    }
+
+    .label {
+      margin-left: 8px;
+    }
+
+    .p-radiobutton .p-radiobutton-box.p-highlight {
+      background: $highlightBgColor;
+      border-color: $highlightBgColor;
+    }
+
+    .p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
+      background-color: $ribbon-white;
+      width: 10px;
+      height: 10px;
+    }
+  }
+}

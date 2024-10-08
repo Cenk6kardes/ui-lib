@@ -1,0 +1,32 @@
+@import 'variables';
+
+.p-grid {
+  align-items: baseline;
+}
+
+input {
+  width: 100%;
+}
+
+button {
+  border    : none;
+  background: none;
+
+  cursor: pointer;
+
+  .fa {
+    font-size: 20px;
+    color    : $primaryDarkerColor;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    .minus {
+      color : $ribbon-light-grey !important;
+      cursor: not-allowed;
+    }
+  }
+}

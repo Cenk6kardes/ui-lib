@@ -1,0 +1,82 @@
+<p-dialog id="exportCSVDialog"
+  header="Export Table Data"
+  [(visible)]="showDialog"
+  [modal]=true
+  [style]="{width: '50vw'}"
+  [closeOnEscape]="false"
+  [resizable]="(exportConfig?.resizable !== undefined && exportConfig?.resizable !== null) ? exportConfig?.resizable : true"
+  [responsive]="true"
+  showEffect="fade"
+  [draggable]="(exportConfig?.draggable !== undefined && exportConfig?.draggable !== null) ? exportConfig?.draggable : true"
+  [closable]="true"
+  (onHide)="closeDialogs()"
+  [appendTo]="(exportConfig?.appendTo !== undefined && exportConfig?.appendTo !== null) ? exportConfig?.appendTo : null"
+  [closeAriaLabel]="'COMMON.CLOSE' | translate">
+
+    <div id="exportDataForm" class="protect-form">
+        <div class="p-grid">
+            <div class="p-col-12 p-md-6">
+                <label for="filename" class="mandatory">{{'COMMON.FILENAME' | translate}}:</label>
+                <input pInputText class="lmt-rcd" id="filename" [(ngModel)]="filename" [maxlength]="filenameMaxLength">
+                <div class="text-danger" *ngIf="invalidFilename">{{'VALIDATION.FILENAME_INVALID' | translate}}</div>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <label for="availableFileTypes" class="mandatory">{{'COMMON.FILE_FORMAT_EXPORT' | translate}}:</label>
+                <p-dropdown appendTo="body" id="availableFileTypes" name="availableFileTypes" [(ngModel)]="availableFileTypes"
+                    [options]="availableFileTypesList" (onChange)="onSelectDropdownFileType($event)">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div class="p-grid">
+
+            <div class="p-col-12 p-md-6">
+                <label for="delimiter" class="mandatory">{{'COMMON.DELIMITER' | translate}}:</label>
+                <p-dropdown appendTo="body" id="delimiter" name="delimiter" [(ngModel)]="delimiter"
+                    [options]="delimiterList" [disabled] = "fileType !== 'csv'">
+                </p-dropdown>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <label for="pagescsv" class="mandatory">{{'COMMON.PAGE' | translate}}:</label>
+                <p-dropdown appendTo="body" id="pagesoption" name="pagesoption"
+                [options]="pagesCSV" [(ngModel)]="pagesoption" (onChange)="handleChangePageType()">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div class="p-grid">
+            <div class="p-col-12 p-md-6">
+                <label for="contentoption" class="mandatory">{{'COMMON.CONTENT_OPTION' | translate}}:</label>
+                <p-dropdown appendTo="body" id="contentoption" name="downloadType"
+                    [(ngModel)]="downloadType" [options]="contentType">
+                </p-dropdown>
+            </div>
+
+
+
+            <div class="p-col-12 p-md-6" *ngIf="downloadType!=='header'">
+                <label for="recordlimit" class="mandatory">{{'COMMON.LIMIT_RECORDS' | translate}}:</label>
+                <input pInputText class="lmt-rcd" id="limitrecords" type="number" [(ngModel)]="rowsToDownload"
+                    (keyup)="limitRecordVal($event)" [min]="limitRecordsValidation.min" [max]="limitRecordsValidation.max">
+                <small class="text-danger" *ngIf="noOfDwnldExceeds">
+                    {{'COMMON.EXPORT_CSV_AVAILABLE_RECORDS' | translate}}{{rowsAvailableForDownload}}.
+                    {{'COMMON.EXPORT_CSV_MAX_RECORDS' | translate}}
+                </small>
+            </div>
+        </div>
+
+        <div class="p-grid" *ngIf="showExportColumns">
+            <div class="p-col-12 p-md-6">
+                <label for="contentoption" class="mandatory">{{'COMMON.COLUMNS' | translate}}:</label>
+                <p-multiSelect (onChange)="onColumnChange()" [appendTo]="'body'" defaultLabel="Select columns" [(ngModel)]="columnsModel" [options]="columnsOptions"></p-multiSelect>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <p-button label="Close" id="close" class="mrgnright" styleClass="rbn-button rbn-button-secondary" (click)="closeDialogs()"></p-button>
+        <p-button label="Submit" styleClass="rbn-button rbn-button-primary" id="export" (onClick)="exportTableData()" [disabled]="limitValidation()"></p-button>
+    </div>
+</p-dialog>

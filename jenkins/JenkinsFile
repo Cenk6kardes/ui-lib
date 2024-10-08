@@ -1,0 +1,89 @@
+pipeline {
+  agent {
+    node {
+      label 'STORYBOOK-DEMO'
+    }
+  }
+
+  environment {
+    BUILD_RESULTS_EMAIL_LIST = "nlethi@rbbn.com;"
+    GIT_NAME = "rbn-common"
+    GIT_BRANCH_NAME = "release/ng11"
+    APP_NAME = "Storybook"
+  }
+
+  options {
+    timestamps()
+    timeout(time: 4, unit: 'HOURS')
+    buildDiscarder(logRotator(numToKeepStr:'20'))
+  }
+
+  stages {
+    stage('Install Build Dependencies') {
+      steps {
+        // Setup OS VM
+        sh '''
+          sudo yum -y install wget firefox ant
+
+          sudo yum remove -y nodejs npm
+          curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+          sudo yum -y install nodejs
+          sudo n 14
+          #npm install npm@latest -g
+          npm install npm@6.14.11 -g
+
+          npm install -g typescript pm2 tslint @angular/cli@11.1.0
+
+          sudo npm cache clean -f
+          #sudo npm install -g n
+          #sudo n stable
+
+          node --version
+        '''
+      }
+    }
+
+    stage('Build') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'f9678791-baea-418f-a23f-a4d6a55487f6', usernameVariable: 'VSEBLD', passwordVariable: 'VSEBLD_PASS')]) {
+          sh '''
+            rm -rf rbn-common
+            git clone http://$VSEBLD:$VSEBLD_PASS@bitbucket.genband.com/scm/ng/rbn-common.git
+            cd rbn-common
+            git checkout $GIT_BRANCH_NAME
+            git pull origin $GIT_BRANCH_NAME
+            npm ci
+            pm2 delete -s ${APP_NAME} || :
+            pm2 start npm --name=${APP_NAME} -- run start-storybook-remote
+          '''
+        }
+      }
+    }
+
+  }
+
+  post {
+    failure {
+      emailext body: "Build URL is: ${BUILD_URL}",
+      recipientProviders: [
+        [$class: 'DevelopersRecipientProvider']
+      ],
+      subject: "[Jenkins] STORYBOOK $GIT_NAME - Build #${BUILD_NUMBER} - BUILD FAILING # ATTENTION REQUIRED",
+      to: "$BUILD_RESULTS_EMAIL_LIST"
+    }
+
+    unstable {
+      emailext body: "STORYBOOK build UNSTABLE.\n",
+      recipientProviders: [
+        [$class: 'DevelopersRecipientProvider']
+      ],
+      subject: "[Jenkins] STORYBOOK $GIT_NAME - Build #${BUILD_NUMBER} - BUILD Unstable # ATTENTION REQUIRED",
+      to: "$BUILD_RESULTS_EMAIL_LIST"
+    }
+
+    always {
+      // Terminate Build VM
+      sh "curl -X POST http://vsebld:5f0805a88be7a448a518ae917cb9087f@gbpljnk02.genband.com:8081/computer/${env.NODE_NAME}/scheduleTermination"
+    }
+  }
+}

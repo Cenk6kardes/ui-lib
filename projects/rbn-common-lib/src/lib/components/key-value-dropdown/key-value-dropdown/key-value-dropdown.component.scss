@@ -1,0 +1,56 @@
+@import 'variables';
+
+.content {
+  .rows-edit-form {
+    ::ng-deep {
+
+      .container-dropdown,
+      .container-input {
+        display: inline-block;
+
+        .p-dropdown {
+          margin-right: 10px;
+          width: 300px;
+          max-width: 100%;
+        }
+
+        .p-inputtext {
+          min-width: 90px;
+          max-width: calc(100% - 2em);
+        }
+      }
+
+      .container-button {
+
+        .minus,
+        .plus {
+          color: $primaryDarkerColor;
+          border: none;
+          background: none;
+          font-size: 20px;
+          cursor: pointer;
+          margin-top: 5px;
+
+          &:focus {
+            outline: none;
+          }
+        }
+
+        button:disabled.minus,
+        button[disabled].minus {
+          color: $ribbon-light-grey !important;
+          border: none;
+          background: none;
+          font-size: 20px;
+          cursor: default;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    background: $ribbon-light-grey;
+  }
+}

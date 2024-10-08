@@ -1,0 +1,4 @@
+<div [id]="for+'_err'" *ngIf="error">
+  <small class="error-message text-danger">{{ error }}</small>
+  <button type="button" pButton class="view" label="View More" *ngIf = "viewDetail" (click)="detailView()"></button>
+</div>

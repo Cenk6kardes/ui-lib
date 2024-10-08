@@ -1,0 +1,43 @@
+<div class="rbn-search-container">
+  <!-- <input #searchInput class="input-search" [ngClass]="{'active': isActive === true}" type="text"
+    placeholder="Enter your search term..." />
+  <button class="button-search" type="button" (click)="(onClickSearch ? onClickSearch(): '' ) || activeInput()">
+    <i class="pi pi-search"></i>
+  </button>
+  <button class="button-search" type="button" (click)="(onClickSearch ? onClickSearch(): '' ) || activeInput()">
+    <i class="pi pi-times"></i>
+  </button> -->
+  <div #searchInputWrapper id="searchInputWrapper">
+    <input #searchInput pInputText class="input-search " [ngClass]="{'active': isActive === true}" type="text"
+      [placeholder]="searchConfig?.searchPlaceholderText ||
+                  'ADD_BK_SEARCH_TOOLTIP' | translate" [(ngModel)]="searchConfig.searchData" (input)="enterValue()"
+      (keydown)="pressEnterEv($event)"
+      [id]="searchConfig?.tableName ? searchConfig?.tableName + 'SearchGlobalInput' : 'searchGlobalInput'"
+      [tabindex]="isActive ? 0 : -1" />
+  </div>
+  <p-overlayPanel [isFocusToFirstElement]="false" #searchOverLay *ngIf="hasSearchOverLay" [appendTo]="searchInputWrapper">
+    <ng-template pTemplate>
+      <div *ngIf="searchList.length === 0; else elseBlock" class="searchItem">
+        <span [innerHTML]="getContent()"></span>
+      </div>
+    </ng-template>
+    <ng-template #elseBlock>
+      <div *ngFor="let item of searchList" class="searchItem" (click)="onSelectSearchItem(item)"
+        (keydown)="onSelectSearchItem(item, $event)" tabindex="0">
+        <span [innerHTML]="getContent(item.title)"></span>
+      </div>
+    </ng-template>
+  </p-overlayPanel>
+  <button class="button-search container-icon" type="button" [ngClass]="{'active': isActive === true}"
+    (click)="(onClickSearch ? onClickSearch(): '' ) || activeInput()" [title]="'COMMON.SEARCH' | translate"
+    [id]="searchConfig?.tableName ? searchConfig?.tableName + 'GlobalSearchBtn' : 'globalSearchBtn'"
+    *ngIf="!searchConfig?.searchData || searchConfig?.searchData && !isActive">
+    <i class="fa fa-search"></i>
+  </button>
+  <button class="button-search container-icon" type="button" [ngClass]="{'active': isActive === true}"
+    (click)="clearSearchGlobal()" [title]="'FAVORITES.CLEAR_SEARCH' | translate"
+    [id]="searchConfig?.tableName ? searchConfig?.tableName + 'ClearGlobalSearchBtn' : 'clearGlobalSearchBtn'"
+    *ngIf="searchConfig?.searchData && isActive">
+    <i class="fa fa-times"></i>
+  </button>
+</div>

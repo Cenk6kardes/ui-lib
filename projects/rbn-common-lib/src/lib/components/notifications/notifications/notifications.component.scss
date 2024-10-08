@@ -1,0 +1,264 @@
+@import "variables";
+
+%btnCloseIcon {
+  font-size: 12px;
+  color: $textSecondaryColor;
+}
+
+%bellHover {
+  color: $primaryColor;
+  background-color: $ribbon-white;
+}
+
+$successColor: limegreen;
+$warnColor: darkorange;
+$infoColor: cornflowerblue;
+$errorColor: $ribbon-red;
+
+:host ::ng-deep {
+  // Button Clear-All
+  .p-button.button-outline {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+
+    color: $primaryColor;
+    background-color: transparent;
+    border: 1px solid $primaryColor;
+
+    &:enabled:hover,
+    &:enabled:active,
+    &:enabled:focus {
+      color: $primaryColor;
+      background-color: transparent;
+      border: 1px solid $primaryColor;
+    }
+  }
+
+
+  .notification-toast {
+    &.only-toast {
+      .p-toast {
+        &.p-toast-top-right {
+          top: 5.5rem;
+          right: 1rem;
+        }
+      }
+    }
+    .p-toast {
+      width: 25rem;
+
+      &.p-toast-top-right {
+        top: 8rem;
+        right: 1rem;
+      }
+
+      .p-toast-message {
+        overflow: inherit;
+        color: $ribbon-black;
+
+        &-content {
+          display: flex;
+          padding: 1rem;
+        }
+
+        // Severity
+        &.p-toast-message {
+          &-success {
+            background: #f6ffed;
+            border: 1px solid $successColor;
+            border-radius: 6px;
+
+            .pi:not(.pi-times) {
+              color: $successColor;
+            }
+
+            .p-toast-close-icon {
+              @extend %btnCloseIcon;
+            }
+          }
+
+          &-info {
+            background: #e6f7ff;
+            border: 1px solid $infoColor;
+            border-radius: 6px;
+
+            .pi:not(.pi-times) {
+              color: $infoColor;
+            }
+
+            .p-toast-close-icon {
+              @extend %btnCloseIcon;
+            }
+          }
+
+          &-warn {
+            background: #fffbe6;
+            border: 1px solid $warnColor;
+            border-radius: 6px;
+
+            .pi:not(.pi-times) {
+              color: $warnColor;
+            }
+
+            .p-toast-close-icon {
+              @extend %btnCloseIcon;
+            }
+          }
+
+          &-error {
+            background: #fff1f0;
+            border: 0.5px solid $errorColor;
+            border-radius: 6px;
+
+            .pi:not(.pi-times) {
+              color: $errorColor;
+            }
+
+            .p-toast-close-icon {
+              @extend %btnCloseIcon;
+            }
+          }
+        }
+
+        &-text {
+          flex: 1 1 auto;
+          margin: 0 1rem;
+
+          .p-toast-summary {
+            padding: 0;
+            font-size: 15px;
+          }
+
+          .p-toast-detail {
+            color: $textSecondaryColor;
+            margin: 0;
+            word-break: break-word;
+          }
+        }
+
+        &-icon {
+          font-size: 1.25rem;
+        }
+
+        // Button Close
+        .icon-close {
+          color: $textSecondaryColor;
+          display: contents;
+          border-radius: 50%;
+          background: transparent;
+          border: none;
+          transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+
+          &:hover {
+            cursor: pointer;
+            transition: 0.3s all ease-in-out;
+          }
+
+          &:focus {
+            outline: none;
+          }
+
+          .pi {
+            font-size: 12px;
+          }
+        }
+
+        .p-toast-icon-close {
+          @extend %btnCloseIcon;
+          top: 0.75em;
+          right: 1.25em;
+          position: absolute;
+
+          .pi {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+
+  .as {
+    &-start {
+      align-self: flex-start;
+      .close-icon {
+        top: 1.25em;
+      }
+    }
+
+    &-center {
+      align-self: center;
+      .close-icon {
+        top: 50%;
+      }
+    }
+  }
+}
+
+.container {
+  .bell-container{
+    position: relative;
+    margin: auto;
+    display: inline-block;
+
+    .bell  {
+      margin: 0px 3px;
+      position: relative;
+      border-radius: 50%;
+      color: $ribbon-white;
+      background-color: $ribbon-dark-grey;
+
+      &:hover {
+        @extend %bellHover;
+      }
+
+      .pi, .fa {
+        font-size: 1.1rem;
+      }
+
+      &.disabled {
+        @extend %bellHover;
+      }
+    }
+
+    .sup-message-number {
+      position: absolute;
+      display: flex;
+      top: -13px;
+      left: 25px;
+      cursor: pointer;
+      color: $ribbon-white;
+      font-size: 10px;
+      line-height: 1;
+      z-index: 1000;
+
+      &.bell-slash-msg {
+        cursor: default;
+      }
+
+      // Message Number
+      .message {
+        &-number {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 40%;
+          padding: 3px 5px;
+          height: 1rem;
+          background: $ribbon-blue;
+
+          span {
+            font-weight: $fontWeightRegular;
+            display: flex;
+          }
+        }
+      }
+    }
+  }
+
+  #button-clear {
+    background-color: $ribbon-white;
+    top: 5.5rem;
+  }
+}

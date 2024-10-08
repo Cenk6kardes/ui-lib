@@ -1,0 +1,73 @@
+<p-breadcrumb class="container-breadcrumb" [model]="menuItems"></p-breadcrumb>
+<p-panel id="panel-securityRealm-actions" class="cus-panrl" styleClass="m-b-20 panel-common-title"
+  header="{{header_securityRealm}}">
+  <div>
+    <form [formGroup]="securityRealmForm" (ngSubmit)="onSubmit()" class="ui-g">
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid ui-g-6 padding-left-form">
+        <div>
+          <h4> {{'ADMIN.REALM_INFO' | translate }} </h4>
+          <hr>
+        </div>
+        <div class="ui-grid-row rows-edit-form">
+          <div class="ui-grid-col-4">
+            {{ 'ADMIN.SECURITY_REALM_NAME' | translate }}
+          </div>
+          <div class="ui-grid-col-8">
+            <input pInputText #name (blur)="onCheckSecurRealmName()" type="text" formControlName="SecurityRealmName" />
+            <small class="text-danger">
+              <div *ngIf="getSecurityRealmNameInput.touched && getSecurityRealmNameInput.invalid">
+                <div *ngIf="getSecurityRealmNameInput.errors.required">
+                  {{ 'ADMIN.SECURITY_REALM_NAME_REQUIRED' | translate }}
+                </div>
+              </div>
+            </small>
+          </div>
+        </div>
+        <div class="ui-grid-row rows-edit-form">
+          <div class="ui-grid-col-4">
+            {{ 'ADMIN.REALM_TYPE' | translate }}
+          </div>
+          <div class="ui-grid-col-8">
+            <p-dropdown [options]="realmTypes" [(ngModel)]="selectedRealmType" optionLabel="label" styleClass="w-full"
+              (onChange)="onChangeRealmType($event, undefined, '')" formControlName="RealmType">
+            </p-dropdown>
+            <small class="text-danger">
+              <div *ngIf="!isRealmTypeSelected">
+                {{ 'ADMIN.REALM_TYPE_REQUIRED' | translate }}
+              </div>
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="ui-fluid ui-g-6 padding-right-form" *ngIf="realmPropertiesPresent">
+        <div class="ui-grid-row rows-edit-form">
+          <div>
+            <h4> {{'ADMIN.REALM_PROPERTIES' | translate }} </h4>
+            <hr>
+          </div>
+          <div *ngFor="let setting of propertiesMapping; let i = index;" formArrayName="mappings">
+            <div class="ui-grid-row rows-edit-form" [formGroupName]="i">
+              <div class="ui-grid-col-4" style="min-width: 200px">
+                {{ setting.keypair_attribute }}
+              </div>
+              <div class="ui-grid-col-8">
+                <input pInputText #keypair_value1 type="text" [formControlName]="valueName"
+                  [(ngModel)]="keypair_valueDisplay[i]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <footer>
+    <p-toolbar>
+      <div class="ui-toolbar-group-right m-r-100">
+        <button type="button" pButton icon="fa fa-times" (click)="cancelActions()"
+          label=" {{ 'COMMON.CANCEL' | translate }} " class="p-button-secondary" style="margin-right: .5em"></button>
+        <button type="button" pButton icon="pi pi-pw pi-check" (click)="onSubmit()"
+          label=" {{ 'COMMON.SAVE' | translate }} "></button>
+      </div>
+    </p-toolbar>
+  </footer>
+</p-panel>

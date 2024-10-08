@@ -1,0 +1,312 @@
+@import "variables";
+
+.absolute-label {
+  text-transform: uppercase;
+  font-size: 11px;
+  color: $ribbon-dark-grey;
+  margin: 10px 0;
+}
+
+.time-picker-form {
+  .p-inputgroup {
+    display: unset;
+
+    &:hover {
+      .p-inputtext,
+      .p-button {
+        border-color: $ribbon-dark-grey;
+      }
+    }
+
+    .p-inputtext.p-filled ~ .p-button {
+      border-color: $ribbon-dark-grey;
+    }
+
+    .ui-width-100 {
+      width: 30%;
+    }
+  }
+
+  // .customBtn {
+  //   font-size: $fontSize;
+  //   color: $ribbon-white;
+  //   padding: $inputPadding;
+  //   &:enabled:active,
+  //   &:enabled:focus {
+  //     background-color: $primaryColor;
+  //   }
+  // }
+
+  input {
+    font-size: $fontSize;
+    padding: $inputPadding;
+    max-width: calc(100% - #{$buttonIconOnlyWidth});
+    cursor: pointer;
+  }
+}
+
+.quick-buttons {
+  ::ng-deep {
+    max-width: 660px;
+    margin: 0 auto;
+
+    .p-button-secondary {
+      &.timepicker-quick-button {
+        min-width: 150px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background-color: $ribbon-white;
+        border: 1px solid $primaryColor;
+        color: $primaryColor;
+
+        &:enabled:hover {
+          background-color: $ribbon-white;
+          border: 1px solid $primaryColor;
+          color: $primaryColor;
+          box-shadow: 0 2px 10px 0 #cbcbcb;
+          transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        &:enabled:active,
+        &:enabled:focus {
+          background-color: $ribbon-white;
+          border: 1px solid $primaryColor;
+          color: $primaryColor;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  div[role="dialog"].timepicker-dialog {
+    width: auto !important;
+
+    .defaultPanel {
+      .p-pane-content {
+        border: none;
+      }
+
+      .p-datepicker.p-datepicker-inline {
+        border: 1px solid $ribbon-dark-grey;
+      }
+    }
+
+    .pi-chevron-down:before {
+      color: unset;
+    }
+  }
+
+  div[role="dialog"].customDialog {
+    width: auto !important;
+
+    .p-datepicker.p-datepicker-inline {
+      border: 1px solid $ribbon-dark-grey;
+    }
+
+    .p-dialog-header {
+      padding: 14px;
+      height: 48px;
+    }
+
+    .p-dialog-content {
+      padding: 1em;
+
+      .quickSelectPanel,
+      .advancePanel {
+        .p-panel-content {
+          border: $panelHeaderBorder;
+          border-top: none;
+        }
+
+        margin-bottom: 10px;
+      }
+
+    }
+
+    .pi-chevron-down:before {
+      color: unset;
+    }
+  }
+
+  .p-dialog-footer {
+    top: -1px;
+    padding: 1em;
+
+    .modal-footer {
+      text-align: right;
+      display: inline-flex;
+
+      & button {
+        margin: 0 0.5em 0 0;
+        width: auto;
+        border: none;
+      }
+
+      .ui-reset {
+        padding-bottom: 7px;
+      }
+
+      .p-button-outlined,
+      .p-button.ui-state-outline {
+        color: $primaryColor;
+        background-color: $ribbon-white;
+        border: 1px solid $primaryColor;
+
+        &:enabled:hover {
+          background-color: $ribbon-white;
+          color: $primaryColor;
+        }
+
+        &:enabled:active,
+        &:enabled:focus {
+          background-color: $ribbon-white;
+          color: $primaryColor;
+        }
+      }
+
+    }
+  }
+
+  .future-picker {
+    .future-single {
+      width: 100%;
+      .p-timepicker {
+        position: relative;
+        min-height: 190px;
+        .p-hour-picker {
+          @extend .time-picker;
+          z-index: 1;
+          left: 95px;
+        }
+        .p-minute-picker {
+          @extend .time-picker;
+          left: 185px
+        }
+        .p-second-picker {
+          @extend .time-picker;
+          left: 280px;
+        }
+        .p-separator {
+          @extend .separator;
+          left: 155px;
+        }
+        .p-separator:nth-child(2) {
+          @extend .separator;
+          left: 245px;
+        }
+        .custom-time-input {
+          z-index: 2;
+          position: relative;
+          top: -50px;
+          width: 70%;
+          max-width: 70%;
+          text-align: center;
+        }
+        .error-valid {
+          position: relative;
+          top: -46px;
+          font-size: 13px;
+          padding: 5px;
+        }
+      }
+      .time-picker {
+        position: absolute;
+        top: 80px;
+      }
+      .separator {
+        position: absolute;
+        top: 112px;
+      }
+    }
+    .p-dialog-footer {
+      border-top: none;
+    }
+    .future-picker-label {
+      display: none;
+    }
+  }
+
+  .p-calendar {
+    width: 100%;
+    .p-datepicker-inline {
+      display: unset;
+    } 
+    .p-datepicker {
+      width: 430px !important;
+    }
+  }
+
+  .p-datepicker table td>span.p-highlight {
+    color: $ribbon-white;
+    background-color: $highlightBgColor;
+  }
+
+  .p-datepicker table td.p-datepicker-today>span.p-highlight {
+    color: $ribbon-white;
+    background-color: $highlightBgColor;
+    outline: $focusOutline;
+  }
+
+  .p-datepicker table td>span {
+    border-radius: 3px;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .p-datepicker {
+    .p-datepicker-header {
+      .p-datepicker-prev:enabled:hover {
+        background-color: transparent;
+        color: $linkHoverColor;
+      }
+
+      .p-datepicker-next:enabled:hover {
+        background-color: transparent;
+        color: $linkHoverColor;
+      }
+    }
+
+    .p-timepicker {
+      button:enabled:hover {
+        color: $linkHoverColor;
+        background: transparent;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  .time-picker-form {
+    input {
+      &:hover:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    .p-button {
+      background-color: $ribbon-white;
+      color: $ribbon-dark-grey;
+      border: 1px solid $ribbon-light-grey;
+      border-left: none;
+      padding: $inputPadding;
+
+      &:hover:enabled {
+        color: $linkHoverColor;
+        box-shadow: none;
+        background-color: $ribbon-white;
+      }
+
+      &:hover:disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.error {
+  color: $ribbon-red;
+  font-style: italic;
+}

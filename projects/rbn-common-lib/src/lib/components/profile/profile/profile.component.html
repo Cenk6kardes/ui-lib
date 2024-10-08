@@ -1,0 +1,7 @@
+<div id="menu-bar">
+  <button class="rbn-normal-icon p-button-icon-only p-button-rounded" [ngClass]="icon.noneBackground ? 'none-background' : 'p-button-text'" pButton icon="{{icon.name}}"
+    (click)="op.toggle($event)" [attr.aria-label]="'PROFILE_INFO.MENU' | translate"></button>
+  <p-overlayPanel #op (onShow)="onShow()" [appendTo]="op">
+    <p-panelMenu [model]="profiles" styleClass="panelMenu"></p-panelMenu>
+  </p-overlayPanel>
+</div>

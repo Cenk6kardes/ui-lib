@@ -1,0 +1,19 @@
+<p-panel [showHeader]="false" class="rbn-panel">
+    <h4>{{ card.title }}</h4>
+    <table>
+        <thead>
+            <th *ngFor="let header of card.data[0]">
+                {{ header }}
+            </th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let rowData of card.data.slice(1) || []">
+                <td *ngFor="let rowItem of rowData">
+                    <p>
+                        {{ rowItem }}
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</p-panel>

@@ -1,0 +1,72 @@
+<p-toast (onClose)="closeToasts($event)" id="toastMessage" [key]="toastKey" styleClass="toast-message-toggle"
+  [baseZIndex]="10000">
+
+  <ng-template let-message pTemplate="message">
+    <span class="p-toast-icon pi" [ngClass]="{
+      'pi-info-circle': message.severity === ISeverity.INFO,
+      'pi-exclamation-triangle': message.severity === ISeverity.WARN,
+      'pi-times-circle': message.severity === ISeverity.ERROR,
+      'pi-check-circle': message.severity === ISeverity.SUCCESS
+    }"></span>
+    <div class="p-toast-content" [id]="contentId">
+      <div class="p-toast-content-main">
+        <div class="p-toast-message-text">
+          <div class="p-toast-summary p-text-bold p-mb-1">{{ message.summary }}</div>
+          <div class="p-toast-detail">{{ message.detail }}</div>
+        </div>
+        <button [id]="contentId + 'CloseButton_' + message.severity" class="icon-close" type="button"
+          (click)="customCloseToasts(message)" *ngIf="message.data &&
+                    message.data.from === TFrom.SERVER &&
+                    message.closable === false"
+          [ngClass]="{'as-center': !message.summary, 'as-start': 'message.summary'}">
+          <span><i class="pi pi-times"></i></span>
+        </button>
+      </div>
+      <div class="p-toast-action"
+        *ngIf="messageSuccess.count > 1 && message.severity === ISeverity.SUCCESS && message.showAction">
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="this.messageSuccess.toggle">
+          {{ messageSuccess.count - 1 }} more messages
+        </button>
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="!this.messageSuccess.toggle">
+          Hide All
+        </button>
+        <button class="p-toast-clear" [id]="contentId + 'ClearAllSuccess'"
+          (click)="clearAllToggle(messageSuccess.messages)">Clear All</button>
+      </div>
+      <div class="p-toast-action"
+        *ngIf="messageError.count > 1 && message.severity === ISeverity.ERROR && message.showAction">
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="messageError.toggle">
+          {{ messageError.count - 1 }} more messages
+        </button>
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="!messageError.toggle">
+          Hide All
+        </button>
+        <button class="p-toast-clear" [id]="contentId + 'ClearAllError'"
+          (click)="clearAllToggle(messageError.messages)">Clear All</button>
+      </div>
+      <div class="p-toast-action"
+        *ngIf="messageInfo.count > 1 && message.severity === ISeverity.INFO && message.showAction">
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="messageInfo.toggle">
+          {{ messageInfo.count - 1 }} more messages
+        </button>
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="!messageInfo.toggle">
+          Hide All
+        </button>
+        <button class="p-toast-clear" [id]="contentId + 'ClearAllInfo'"
+          (click)="clearAllToggle(messageInfo.messages)">Clear All</button>
+      </div>
+      <div class="p-toast-action"
+        *ngIf="messageWarn.count > 1 && message.severity === ISeverity.WARN && message.showAction">
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="messageWarn.toggle">
+          {{ messageWarn.count - 1 }} more messages
+        </button>
+        <button class="p-toast-toggle" (click)="onToggleMessage(message.severity)" *ngIf="!messageWarn.toggle">
+          Hide All
+        </button>
+        <button class="p-toast-clear" [id]="contentId + 'ClearAllWarn'"
+          (click)="clearAllToggle(messageWarn.messages)">Clear All</button>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
+<rbn-message-toggle-hidden [key]="toastKey" [message]="recentMessage"></rbn-message-toggle-hidden>

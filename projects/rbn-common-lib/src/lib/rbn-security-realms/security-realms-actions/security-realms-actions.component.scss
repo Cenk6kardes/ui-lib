@@ -1,0 +1,17 @@
+
+.padding-right-form {
+    padding-right: 35px;
+}
+
+.padding-left-form {
+    padding-left: 35px;
+}
+#panel-securityRealm-actions::ng-deep {
+    .ui-panel {
+      .ui-panel-titlebar {
+           .ui-panel-title {
+             font-size: 20px;
+           }
+      }
+    }
+}

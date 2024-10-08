@@ -1,0 +1,15 @@
+@import 'variables';
+
+#skip-to-main-content-link {
+    position: absolute !important;
+    z-index: 99999;
+    padding: 1em;
+    background-color: $ribbon-black;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#skip-to-main-content-link:focus {
+    opacity: 1;
+    color: $ribbon-white;
+}

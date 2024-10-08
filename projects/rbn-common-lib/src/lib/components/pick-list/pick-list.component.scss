@@ -1,0 +1,190 @@
+@import "variables";
+
+:host ::ng-deep {
+  %button {
+    font-size: $fontSize;
+    background-color: transparent;
+    color: $primaryDarkerColor;
+    box-shadow: none;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-panel {
+    .p-panel-header {
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+
+      border: none;
+      border-bottom: 1px solid $ribbon-black;
+      background-color: $ribbon-white;
+
+      span {
+        font-weight: bold;
+      }
+    }
+
+    .p-panel-content {
+      padding: 0;
+    }
+  }
+
+  .btn-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      @extend %button;
+
+      &:hover {
+        @extend %button;
+      }
+    }
+  }
+
+  .height-server {
+    .p-datatable-wrapper {
+      height: 291px;
+    }
+  } 
+  
+  .height-client {
+    .p-datatable-wrapper {
+      height: 348px;
+    }
+  }
+
+  .p-datatable {
+    font-size: $fontSize;
+
+    .p-datatable-header {
+      padding: 0;
+    }
+
+    .p-datatable-thead {
+      tr {
+        th {
+          padding: 0.5rem 1rem;
+          background-color: $ribbon-lighter-grey;
+
+          &:hover {
+            background-color: $ribbon-lighter-grey;
+          }
+        }
+
+        th,
+        td {
+          border: 0;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        cursor: move;
+        &.empty-message-row {
+          cursor: unset;
+          &:hover {
+            background: unset !important;
+          }
+        }
+        td {
+          &.empty-message-content {
+            text-align: center;
+            border: unset;
+          }
+        }
+      }
+    }
+
+    tbody > .p-datatable-tbody > tr.p-highlight {
+      color: $ribbon-black;
+      background-color: $ribbon-lighter-grey;
+    }
+
+    .cursor-disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .search {
+      padding: 5px;
+      align-items: center;
+      .input-search {
+        position: relative;
+
+        input {
+          background-color: $ribbon-white;
+          border: $inputBorder;
+        }
+        .rbn-icon-btn {
+          position: absolute;
+          right: 10px;
+          bottom: 10px;
+          border: none;
+          &.rbn-button-tertiary {
+            &:hover {
+              box-shadow: none;
+            }
+          }
+        }
+        .hidden-icon {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .p-datatable-scrollable-header-box {
+    padding-right: 0 !important;
+  }
+
+  input,
+  .p-dropdown,
+  .p-multiselect,
+  p-multiselect {
+    width: 100%;
+  }
+
+  tr.ui-widget-header span {
+    word-wrap: break-word;
+  }
+}
+
+#idTempInputFocus {
+  width: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  display: block;
+}
+
+.cdk-drag-preview {
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  background-color: $ribbon-cream;
+  display: flex;
+  td {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    padding: 1rem 1rem;
+    p-multiSelect,
+    p-multiSelect ::ng-deep .p-multiselect {
+      width: 100%;
+    }
+  }
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+  display: table-column;
+}
+.cdk-drag-animating {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+.card.cdk-drop-list-dragging .p-selectable-row:not(.cdk-drag-placeholder) {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}

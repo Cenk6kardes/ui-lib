@@ -1,0 +1,131 @@
+@import 'variables';
+
+#file-upload-container::ng-deep {
+  .file-upload-contain {
+    font-family: $fontFamily;
+    text-align: center;
+    border: dashed 1px $inputGroupBorderColor;
+    position: relative;
+    margin: 0 auto;
+    padding: 1rem;
+
+    .drop-zone {
+      padding: 1rem;
+
+      .text {
+        font-size: 1rem;
+        font-weight: $fontWeightSemiBold;
+        color: $ribbon-black;
+
+        .or {
+          font-weight: normal;
+          font-size: 16px;
+        }
+      }
+
+      .fas.fa-upload {
+        display: inherit;
+      }
+
+      .input-file {
+        visibility: hidden;
+        position: absolute;
+        cursor: pointer;
+      }
+
+      .container {
+        position: relative;
+
+        .background {
+          color: lighten($ribbon-light-yellow, 15%);
+          font-size: 80px;
+        }
+
+        .text {
+          position: absolute;
+          top: 1.5rem;
+          width: 100%;
+        }
+      }
+
+      .btn-file {
+        border: 1px solid $primaryColor;
+        background-color: $ribbon-white;
+        color: $primaryColor;
+        font-size: $fontSize;
+        margin-top: 1.5rem;
+
+        &:enabled:hover {
+          box-shadow: 0 2px 10px 0 $ribbon-light-grey;
+          transition: background-color 0.2s, box-shadow 0.2s;
+        }
+      }
+
+      .txt-note {
+        font-size: 11px;
+        color: $ribbon-dark-grey;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .list-file-container {
+    max-width: 80%;
+    margin: 0 auto;
+
+    .list-container {
+      .contain {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid $ribbon-light-grey;
+        padding: 0.75rem;
+
+        .file-info {
+          word-break: break-word;
+          text-align: initial;
+
+          .file-name {
+            color: $ribbon-black;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+          }
+
+          .file-size {
+            font-style: italic;
+            font-size:  $fontSize;
+            color: $ribbon-light-grey;
+          }
+        }
+
+        .p-button {
+          color: lighten($primaryDarkerColor, 10%);
+          background-color: $ribbon-white;
+          font-size: 18px;
+          border: none;
+
+          &:enabled:hover {
+            box-shadow: 0 2px 10px 0 $ribbon-light-grey;
+            transition: background-color 0.2s, box-shadow 0.2s;
+          }
+        }
+      }
+
+      .progress {
+        .p-progressbar {
+          height: 5px;
+
+          .p-progressbar-value {
+            background: lighten($highlightBgColor, 10%);
+          }
+        }
+      }
+
+      .uploaded {
+        color: $ribbon-black;
+        margin-bottom: 1rem;
+        font-weight: bold;
+      }
+    }
+  }
+}

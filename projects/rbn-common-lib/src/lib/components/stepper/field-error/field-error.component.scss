@@ -1,0 +1,10 @@
+@import 'variables';
+
+div small.error-message {
+  font-weight: $fontWeightRegular;
+  font-style: italic;
+
+  &.text-danger {
+    color: $ribbon-specific-danger;
+  }
+}

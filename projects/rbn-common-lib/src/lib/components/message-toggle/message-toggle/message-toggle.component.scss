@@ -1,0 +1,326 @@
+@import "variables";
+
+%btnCloseIcon {
+  font-size: 12px;
+  color: $ribbon-black;
+}
+
+:host ::ng-deep {
+  // Button Clear-All
+  .p-button.button-outline {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+
+    color: $primaryColor;
+    background-color: $ribbon-white;
+    border: 1px solid $primaryColor;
+
+    &:enabled:hover,
+    &:enabled:active,
+    &:enabled:focus {
+      color: $primaryColor;
+      background-color: $ribbon-white;
+      border: 1px solid $primaryColor;
+    }
+  }
+
+  // Message Number
+  .message {
+    &-number {
+      width: 2rem;
+      height: 2rem;
+      color: $ribbon-white;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
+    }
+
+    &-success {
+      background: limegreen;
+    }
+
+    &-info {
+      background: cornflowerblue;
+    }
+
+    &-warn {
+      background: $ribbon-dark-yellow;
+    }
+
+    &-error {
+      background: $ribbon-red;
+    }
+    &-more {
+      content: "";
+      width: 80%;
+      height: 100%;
+      position: absolute;
+      top: 30px;
+      left: 10%;
+      z-index: -1;
+    }
+  }
+
+  .p-toast {
+    width: 25rem;
+    opacity: 1;
+    &.p-toast-top-right {
+      top: 1rem;
+      right: 1rem;
+      overflow-y: auto;
+      max-height: 100vh;
+      background: transparent;
+    }
+
+    .p-toast-message {
+      overflow: inherit;
+      color: $ribbon-black;
+      background: unset;
+      border: unset;
+      border-radius: 6px;
+      position: relative;
+
+      &-content {
+        display: flex;
+        padding: 1rem;
+        position: relative;
+        z-index: 3;
+        opacity: 0.99;
+      }
+
+      // Severity
+      &-success {
+        .p-toast-message-content,
+        &::before,
+        &::after {
+          background: #f6ffed;
+          border: 1px solid limegreen;
+          border-radius: 6px;
+        }
+
+        .pi:not(.pi-times) {
+          color: limegreen;
+        }
+
+        .p-toast-close-icon {
+          @extend %btnCloseIcon;
+        }
+
+        .p-toast-toggle,
+        .p-toast-clear {
+          color: #4f8a0f;
+        }
+      }
+
+      &-info {
+        .p-toast-message-content,
+        &::before,
+        &::after {
+          background: #e6f7ff;
+          border: 1px solid cornflowerblue;
+          border-radius: 6px;
+        }
+
+        .pi:not(.pi-times),
+        .p-toast-toggle,
+        .p-toast-clear {
+          color: cornflowerblue;
+        }
+
+        .p-toast-close-icon {
+          @extend %btnCloseIcon;
+        }
+      }
+
+      &-warn {
+        .p-toast-message-content,
+        &::before,
+        &::after {
+          background: #fffbe6;
+          border: 1px solid darkorange;
+          border-radius: 6px;
+        }
+        .pi:not(.pi-times),
+        .p-toast-toggle,
+        .p-toast-clear {
+          color: darkorange;
+        }
+
+        .p-toast-close-icon {
+          @extend %btnCloseIcon;
+        }
+      }
+      &-error {
+        .p-toast-message-content,
+        &::before,
+        &::after {
+          background: #fff1f0;
+          border: 0.5px solid red;
+          border-radius: 6px;
+        }
+
+        .pi:not(.pi-times),
+        .p-toast-toggle,
+        .p-toast-clear {
+          color: red;
+        }
+
+        .p-toast-close-icon {
+          @extend %btnCloseIcon;
+        }
+      }
+
+      &-text {
+        flex: 1 1 auto;
+        margin: 0 1rem;
+
+        .p-toast-summary {
+          padding: 0;
+          font-size: 15px;
+        }
+
+        .p-toast-detail {
+          color: $ribbon-black;
+          margin: auto;
+          word-break: break-word;
+        }
+      }
+
+      &-icon {
+        font-size: 1.25rem;
+      }
+
+      // Button Close
+      .icon-close {
+        color: $ribbon-black;
+        // display: contents;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+
+        &:hover {
+          cursor: pointer;
+          transition: 0.3s all ease-in-out;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        .pi {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .p-toast-message::before {
+      width: 86%;
+      height: 100%;
+      position: absolute;
+      top: 10px;
+      left: 7%;
+      z-index: 2;
+      box-shadow: 0 3px 14px 0 rgba(0, 0, 0, 0.3);
+      opacity: 0.95;
+    }
+
+    .p-toast-message::after {
+      width: 72%;
+      height: 100%;
+      position: absolute;
+      top: 22px;
+      left: 14%;
+      z-index: 1;
+      box-shadow: 0 3px 14px 0 rgba(0, 0, 0, 0.3);
+      opacity: 0.95;
+    }
+
+    .toggle-message::before,
+    .toggle-message::after {
+      content: "";
+    }
+
+    .toggle-message {
+      margin-bottom: 2.5rem;
+      &-hide {
+        margin-bottom: 1rem;
+        &::before,
+        &::after {
+          content: unset;
+        }
+      }
+      &-show {
+        &::before,
+        &::after {
+          content: "";
+        }
+      }
+    }
+    .status-message {
+      &-hide {
+        display: none !important;
+      }
+      &-show {
+        display: block !important;
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      &-main {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    &-action {
+      width: 100%;
+      margin: 0.7rem 0 0 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      .p-toast-toggle,
+      .p-toast-clear {
+        cursor: pointer;
+        user-select: none;
+        opacity: 0.6;
+        font-weight: $fontWeightSemiBold;
+        background: transparent;
+        border: none;
+      }
+      .p-toast-toggle:hover,
+      .p-toast-clear:hover,
+      .p-toast-toggle:focus,
+      .p-toast-clear:focus {
+        opacity: 1;
+      }
+    }
+  }
+
+  .as {
+    &-start {
+      align-self: flex-start;
+      .p-toast-close-icon {
+        top: 1.25em;
+        right: 1.25em;
+        position: absolute;
+      }
+    }
+
+    &-center {
+      align-self: center;
+      .p-toast-close-icon {
+        top: 50%;
+        right: 1.25em;
+        position: absolute;
+      }
+    }
+  }
+}

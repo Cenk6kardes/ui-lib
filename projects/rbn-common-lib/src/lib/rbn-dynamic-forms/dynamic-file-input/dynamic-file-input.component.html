@@ -1,0 +1,14 @@
+<div class="container-file-upload">
+  <div class="row">
+    <div class="container">
+      <input #file type="file" class="input-file" [formlyAttributes]="field"
+        (change)="handleFileInput($event.target.files)" />
+      <button *ngIf="!fileName" type="button" pButton [label]="'COMMON.UPLOAD' | translate" (click)="clickInput()">
+      </button>
+      <button *ngIf="fileName" type="button" pButton [label]="'COMMON.REMOVE' | translate" class="remove-btn"
+        (click)="removeFile()"></button>
+    </div>
+    <div class="file-name">{{fileName ? fileName : ('COMMON.NO_FILE_SELECT' | translate)}}</div>
+  </div>
+
+</div>

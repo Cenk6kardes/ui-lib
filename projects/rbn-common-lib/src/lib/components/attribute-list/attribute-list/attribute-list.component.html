@@ -1,0 +1,22 @@
+<p-panel [showHeader]="false" class="rbn-panel" >
+    <h4>{{ card.title }}</h4>
+    <div class="attribute-content">
+        <ng-container *ngFor="let attribute of card.data">
+            <div class="attribute"  *ngIf="attribute.value !== ''" [id]="attribute.id || attribute.key">
+                <div class="attribute-label">{{attribute.label}}</div>
+                <ng-container [ngSwitch]="attribute.type">
+                    <div class="attribute-value" *ngSwitchCase="eAttributeType.DATE" [innerHtml] = "attribute.value | date : 'MM/dd/yyyy HH:mm Z'"></div>
+                    <div class="attribute-value" *ngSwitchCase="eAttributeType.DATE_TIME" [innerHtml] = "attribute.value | date : 'MM/dd/yyyy HH:mm Z'"></div>
+                    <div class="attribute-value link" *ngSwitchCase="eAttributeType.LINK" >
+                        <span class="link" [innerHtml] = "attribute.value" (click)="onLinkClick(attribute)"></span>
+                    </div>
+                    <div class="attribute-value" *ngSwitchDefault [innerHtml] = "attribute.value"></div>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+    <div *ngIf="card?.action" class="card-actions">
+        <button  *ngIf="card?.action?.button" pButton type="button" class="rbn-button rbn-button-secondary" (click)="onButtonClick(card?.action?.button?.id)"
+          [label]="card?.action?.button?.label" [id]="card?.action?.button?.id"></button>
+    </div>
+</p-panel>

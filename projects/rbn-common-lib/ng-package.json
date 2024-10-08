@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/rbn-common-lib",
+  "lib": {
+    "entryFile": "src/public_api.ts",
+    "styleIncludePaths": [
+      "../../src/sass/themes/ribbontheme"
+    ]
+  }
+}

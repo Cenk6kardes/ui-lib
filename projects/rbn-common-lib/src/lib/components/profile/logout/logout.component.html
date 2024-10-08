@@ -1,0 +1,3 @@
+<rbn-confirm-dialog [id]="idLogoutPopup" *ngIf="!loadingTranslate" [title]="customMsg.title"
+  [content]="customMsg.content" [titleAccept]="customMsg.titleAccept" [titleReject]="customMsg.titleReject"
+  (emitConfirm)="onConfirmLogout($event)" [isShowConfirmDialog]="showLogout"></rbn-confirm-dialog>

@@ -1,0 +1,46 @@
+<div class="p-grid protect-page-top">
+  <div class="protect-navbar-logo">
+    <rbn-headerlogo [productName]="pageTop?.logo?.productName" [productNameSup]="pageTop?.logo?.productNameSup"
+      [noneUppercase]="pageTop?.logo?.noneUppercase">
+    </rbn-headerlogo>
+    <div class="product-info">
+      <span class="product-title"
+        *ngIf="pageTop?.productInfo?.productTitle">{{pageTop?.productInfo?.productTitle}}</span>
+      <span class="product-description"
+        *ngIf="pageTop?.productInfo?.productDescription">{{pageTop?.productInfo?.productDescription}}</span>
+    </div>
+  </div>
+  <div class="project-navbar-actions p-col">
+    <div class="custom-page-top">
+      <div *ngTemplateOutlet="customTemplate"></div>
+    </div>
+    <div class="status-indicators" *ngIf="statusIndicators.length > 0">
+      <div class="status-item" *ngFor="let item of statusIndicators">
+        <span class="status-title">{{item.title}}</span>
+        <ng-container [ngSwitch]="item.status">
+          <div class="status-circle success" *ngSwitchCase="status.SUCCESS" [pTooltip]="'COMMON.OK' | translate" tooltipPosition="bottom"></div>
+          <div class="status-circle fault" *ngSwitchCase="status.FAULT" [pTooltip]="'COMMON.FAULT' | translate" tooltipPosition="bottom"></div>
+          <div class="status-circle unknown" *ngSwitchCase="status.UNKNOWN" [pTooltip]="'COMMON.UNKNOWN' | translate" tooltipPosition="bottom"></div>
+        </ng-container>
+      </div>
+    </div>
+    <div *ngIf="pageTop?.externalSearch">
+      <rbn-search-global [searchConfig]="pageTop?.externalSearch" [hasSearchOverLay]="pageTop?.hasSearchOverLay"
+        [searchList]="pageTop?.searchList" (inputValueEvent)="inputValueEvent($event)"
+        (clearBtnEvent)="clearBtnEvent($event)" (pressEnterEvent)="pressEnterEv($event)"
+        (selectSearchItemEvent)="selectSearchItemEvent.emit($event)">
+      </rbn-search-global>
+    </div>
+    <div class="external" *ngIf="pageTop?.externalIcon">
+      <ng-container *ngFor="let item of pageTop?.externalIcon; let i = index">
+        <button [id]="'externalIcon' + i" pButton icon="{{item.icon}}" (click)="itemClick(item)"
+          class="rbn-normal-icon p-button-text p-button-icon-only p-button-rounded" [pTooltip]="item.title||''"
+          tooltipPosition="bottom"></button>
+        <label *ngIf="item?.label" [for]="'externalIcon' + i">{{item.label}}</label>
+      </ng-container>
+      <rbn-notifications *ngIf="usingNotification"></rbn-notifications>
+    </div>
+    <rbn-profile *ngIf="pageTop?.profiles && pageTop?.profiles.length > 0" [profiles]="pageTop.profiles"
+      [icon]="pageTop?.profileIcon ? pageTop?.profileIcon : defautIcon"></rbn-profile>
+  </div>
+</div>

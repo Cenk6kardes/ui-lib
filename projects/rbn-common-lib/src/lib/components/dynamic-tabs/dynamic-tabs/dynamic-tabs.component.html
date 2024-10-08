@@ -1,0 +1,9 @@
+<div class="tab-header dynamic-tabs">
+  <p-tabMenu [model]="tabs" [activeItem]="tabs[activeItemIndex]" styleClass="menu-tab"></p-tabMenu>
+  <p-button *ngIf="currentActiveItem?.displayRefresh" [id]="'refreshTabBtn'" styleClass="rbn-normal-icon-only"
+    [title]="'COMMON.REFRESH' | translate" icon="fa fa-refresh" (click)="refreshButtonClicked()"></p-button>
+</div>
+
+<div class="tab-content" [id]="tabs[activeItemIndex]?.id">
+  <ng-content></ng-content>
+</div>

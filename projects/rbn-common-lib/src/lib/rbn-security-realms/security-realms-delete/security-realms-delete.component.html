@@ -1,0 +1,17 @@
+<p-dialog id="securityRealm-delete" header=" {{ 'ADMIN.DELETE_SECURITY_REALM' | translate }}" styleClass="w-700"
+  [(visible)]="isShowContent" [modal]="true" (onHide)="securityRealmCloseDialogDelete()" [focusOnShow]="false" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <span>
+    {{ "ADMIN.DESTORY_SECURITY_REALM" | translate }}
+    <b>{{ realm?.name }}</b> ?</span>
+  <div>
+    <i>{{ "COMMON.ACTION_CANNOT_BE_UNDONE" | translate }}</i>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane">
+      <button type="button" pButton icon="fa fa-times" (click)="onClickCancel()" label="{{ 'COMMON.NO' | translate }}"
+        class="p-button-secondary"></button>
+      <button type="button" pButton icon="pi pi-pw pi-check" (click)="deleteSecurityRealm()"
+        label="{{ 'COMMON.YES' | translate }}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

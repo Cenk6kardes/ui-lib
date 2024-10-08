@@ -1,0 +1,133 @@
+<div class="timepicker" *ngIf="!showOnlyCalendar" [id]="timePickerName || 'commonTimePicker'">
+  <div class="timepicker">
+    <div class="form-group">
+      <div id="interval" name="daterange" class="interval">
+        <div [class]="'time-picker-form' + filledClass">
+          <div class="p-inputgroup">
+            <input #rbninputtimecalendar pInputText [disabled]="disabledTimePicker" type="text"
+              [(ngModel)]="displayTime" class="ui-width-100 crop" [readonly]="!inputEditable"
+              [placeholder]="placeholder || translateResults?.CHOOSE_AN_INTERVAL || ''"
+              [title]="rbninputtimecalendar.value ? rbninputtimecalendar.value : (placeholder
+              || translateResults?.CHOOSE_AN_INTERVAL)"
+              (ngModelChange)="onTextChange($event)"
+              [id]="timePickerName ? timePickerName + 'TimeInput' : 'timeInput'"
+              (keyup)="updateTimeFromTextBox($event)"
+              (blur)="emitOnblur($event)"
+              (click)="inputEditable ? '' : onShowDialog()"
+              (keydown.enter)= "rbninputtimecalendar.click()"
+              [attr.aria-label]="ariaLabelInput">
+            <button [disabled]="disabledTimePicker" (click)="onShowDialog()" pButton type="button"
+              [ngClass]="isCustomTimePicker ? 'customBtn' : ''" icon="fa fa-calendar-alt"
+              class="ui-datepicker-trigger" [attr.aria-label]="'CALENDAR.TIME_PICKER' | translate"
+              [id]="timePickerName ? timePickerName + 'TimeButton' : 'timeButton'"></button>
+          </div>
+          <p class="error" *ngIf="errMessage || showInputError">{{errMsg || translateResults?.INVALID_INTERVAL}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog [header]="headerTimePicker || translateResults?.SELECT_INTERVAL || ''" [(visible)]="showDialog" [resizable]="false"
+  [responsive]="true" showEffect="fade" [modal]="true" [contentStyle]="{'overflow-y': 'auto'}" [contentStyleClass]="contentStyleClassDialog"
+  (onHide)="onHideDialog()" (onShow)="onFocusableCellCalendar()" [appendTo]="appendToTemplate ? appendToTemplate: 'body'"
+  [styleClass]="showClassPicker()" [autoZIndex]="isAutoZIndex"
+  [id]="timePickerName ? timePickerName + 'PickerDialog' : 'pickerDialog'" [ngClass]="{'rbn-picker-dialog-visible': showDialog}"
+  [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <div class="p-grid p-justify-center" *ngIf="!hiddenQuickSelect">
+    <div *ngIf="!useFuturePicker" class="p-col-12">
+      <p-panel [header]="headerPanel || translateResults?.QUICK_SELECT || ''" [toggleable]="true" [showHeader]="isCustomTimePicker"
+        [styleClass]="isCustomTimePicker ? 'quickSelectPanel' : 'defaultPanel'">
+        <div class="p-grid quick-buttons p-justify-center" *ngIf="quickButtons?.length > 0">
+          <ng-container *ngFor="let singleButton of quickButtons">
+            <div [ngClass]="isSingleCalendar ? 'p-col-12 p-md-6 p-sm-6':'p-col-12 p-md-4 p-sm-6'">
+              <button pButton type="button"
+                class="p-button-secondary timepicker-quick-button ui-width-175px quick-button"
+                (click)="buttonDuration(singleButton.id)" id="intervalButton_{{singleButton.id}}"
+                [ngClass]="{'selected-btn': selectedButtonIndex === singleButton.id}"
+                [label]="singleButton.text"></button>
+            </div>
+          </ng-container>
+        </div>
+      </p-panel>
+      <p class="error" *ngIf="showDialogError">{{ translateResults?.INVALID_INTERVAL || '' }}!</p>
+    </div>
+  </div>
+
+  <div class="p-grid p-justify-center">
+    <div class="p-col-12">
+      <div *ngIf="!useFuturePicker">
+        <p-panel [header]="translateResults?.ADVANCED || ''" [toggleable]="true" [showHeader]="isCustomTimePicker"
+          [styleClass]="isCustomTimePicker ? 'advancePanel' : 'defaultPanel'">
+          <ng-container *ngTemplateOutlet="panelAdvanced"></ng-container>
+        </p-panel>
+      </div>
+      <div *ngIf="useFuturePicker">
+        <ng-container *ngTemplateOutlet="panelAdvanced"></ng-container>
+      </div>
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="modal-footer">
+      <span class="rbn-action-btn" *ngIf="!isHideResetButton">
+        <button pButton type="button" class="ui-reset rbn-button rbn-button-secondary" (click)="resetButtonClick()"
+          label="{{('COMMON.RESET' | translate) || ''}}" id="resetDate"></button>
+      </span>
+      <div class="ui-line" [ngClass]="isHideResetButton ? 'custom-ui-line': ''"></div>
+      <button pButton type="button" class="rbn-button rbn-button-tertiary"
+        [ngClass]="isCustomTimePicker ? '' : 'p-button-secondary' " (click)="cancelButtonClick()"
+        label="{{('COMMON.CANCEL' | translate) || ''}}" id="cancelDate"></button>
+      <button pButton type="button" class="apply-btn rbn-button rbn-button-primary" (click)="submitButtonClick()"
+        label="{{('COMMON.APPLY' | translate) || ''}}"
+        [disabled]="isDisabled(startdateValue, enddateValue)" id="applyDate">
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<ng-template #panelAdvanced>
+  <div class="p-grid p-justify-center">
+    <div class="p-md-6" *ngIf="!isSingleCalendar">
+      <p class="rbn-calendar-title absolute-label">{{ translateResults?.FROM || '' }}:</p>
+      <p-calendar #calendarElFrom class="calendar" [(ngModel)]="startdateValue"
+        [maxDate]="setMaxDateFrom()" [showSeconds]="showSeconds" (onSelect)="onFocusableCellCalendar()"
+        [showTime]="showTime" hideOnDateTimeSelect="true" [minDate]="minDate"
+        [hourFormat]="hourFormat" [inline]="true" [stepMinute]="stepMinute" id="fromDate"
+        (ngModelChange)="isCustomTimePicker && !forceCheckRemoveMaxDate ? selectFromDate(): ''" >
+      </p-calendar>
+    </div>
+
+    <div class="p-md-6" *ngIf="!isSingleCalendar">
+      <p class="rbn-calendar-title absolute-label">{{ translateResults?.TO || ''}}:</p>
+      <p-calendar #calendarElTo class="calendar" [(ngModel)]="enddateValue"
+        [maxDate]="maxdateValue" [showSeconds]="showSeconds" (onSelect)="onFocusableCellCalendar()"
+        [showTime]="showTime" [hourFormat]="hourFormat" [inline]="true"
+        [stepMinute]="stepMinute" id="toDate" [minDate]="startdateValue"
+        (ngModelChange)="isCustomTimePicker && !forceCheckRemoveMaxDate ? selectToDate(): ''" >
+      </p-calendar>
+    </div>
+
+    <div [ngClass]="['future-single', !hiddenQuickSelect ? 'p-md-6':'p-md-12']" *ngIf="isSingleCalendar">
+      <p class="rbn-calendar-title absolute-label future-picker-label">{{ label }}:</p>
+      <p-calendar #calendarElSingle class="calendar" [(ngModel)]="selectedDate"
+        [maxDate]="enddateValue" [showSeconds]="showSeconds"
+        [showTime]="showTime" [hourFormat]="hourFormat" [inline]="true" [timeOnly]="timeOnly"
+        [stepMinute]="stepMinute" id="fromDate" [minDate]="startdateValue"
+        (onSelect)="onTimeSelect($event)" [defaultDate]="defaultDateSingleCalendar"></p-calendar>
+        <div #customTimeSingle *ngIf="useFuturePicker && showTime" class="container-input">
+          <input type="text" pInputText autocomplete="off" class="custom-time-input"
+            id="timeInput" (input)="changeInputTime($event.target.value)"
+            (keypress)="onKeyPress($event)" (focus)="handleFocusTimeInput()" [(ngModel)]="timeInputConfig.timeInputValue">
+          <span *ngIf="timeInputConfig.isInvalidTime" class="error error-valid">{{ timeInputConfig.errorMessage }}</span>
+        </div>
+    </div>
+
+    <div class="p-col-12" id="datepicker_validate" hidden="hidden" style="visibility: hidden;">
+      <button pButton type="button" class="p-button-outlined button-remove-field-red"
+        id="datepicker_validate_close"></button>
+      <p id="datepicker_validate_noty">{{ translateResults?.INVALID_INTERVAL || '' }}!</p>
+      <p id="datepicker_validate_data"></p>
+    </div>
+  </div>
+</ng-template>

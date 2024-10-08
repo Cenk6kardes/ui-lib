@@ -1,0 +1,125 @@
+<div class="container" pDraggable [pDraggableDisabled]="!isConfiguring" (onDragStart)="handleDrag($event)">
+  <li *ngIf="favorite" (mouseover)="hover(true)" (mouseout)="hover(false)"
+    [ngClass]="{ 'config-cursor' : isConfiguring }">
+    <div class="menu-item-container" id="{{ createId(menuItem.title, true) }}">
+      <a #menuItemEl [routerLink]="menuItem?.route?.fullPath" (click)="onNoChildren($event, menuItem)"
+        class="menu-container" (focus)="focus(true)" (focusout)="focus(false, trashBtn)">
+        <div title="{{ menuItem.title }}">
+          <i *ngIf="isConfiguring" class="fa fa-grip-vertical" [ngClass]="{ 'draggable-blue' : isHover }"
+            pTooltip="Drag to reorder"></i>
+          <span class="menu-title" [innerHTML]="menuItem?.title"></span>
+          <span *ngIf="menuItem?.tag && isShowTag" class="tag-general p-ml-2" [ngClass]="{
+            'tag-new': menuItem?.tag?.type === tagType.New,
+            'tag-alpha': menuItem?.tag?.type === tagType.Alpha,
+            'tag-beta': menuItem?.tag?.type === tagType.Beta }"
+            [ngStyle]="menuItem?.tag?.color ? {'border-color' : getTagData().color, 'color': getTagData().color} : ''"
+            (click)="onNoChildren($event, menuItem)">{{ getTagData().label }}</span>
+        </div>
+      </a>
+      <div class="icon-container" id="{{ createId(menuItem.title) + '-icon-container'}}">
+        <button *ngIf="isConfiguring" pTooltip="Move up">
+          <i class="fa fa-arrow-up" (click)="handleReorder(menuItem, true, 'up')" (mouseover)="link('')"
+            id="{{ createId(menuItem.title, true) + '-config-fav-move-up'}}"></i>
+        </button>
+        <button *ngIf="isConfiguring" pTooltip="Move down">
+          <i class="fa fa-arrow-down" (click)="handleReorder(menuItem, true, 'down')" (mouseover)="link('')"
+            id="{{ createId(menuItem.title, true) + '-config-fav-move-down'}}"></i>
+        </button>
+        <span>
+          <button #trashBtn [ngStyle]="{ visibility: isTrashIconVisible() }" (click)="updateFavorites($event, menuItem)"
+            (focus)="childFocus(true)" (focusout)="childFocus(false, menuItemEl)" 
+            [pTooltip]="'FAVORITES.DELETE_FROM_FAVORITES' | translate">
+            <i class="fa fa-trash trash-icon" (mouseover)="link('')"></i>
+          </button>
+        </span>
+      </div>
+    </div>
+  </li>
+
+  <li *ngIf="!menuItem.children && !favorite && isShown(menuItem)" [ngClass]="{'selected' : menuItem.selected, 'searched' : menuItem.searched,
+    'config-cursor' : isConfiguring, 'disabled': menuItem.disabled }" (mouseover)="hover(true)"
+    (mouseout)="hover(false)">
+    <div class="menu-item-container">
+      <a #menuItemEl [routerLink]="menuItem?.route?.fullPath" (click)="onNoChildren($event, menuItem)"
+        class="menu-container" id="{{ createId(menuItem.title) }}" [ngClass]="{ 'isHidden': isHidden }"
+        (focus)="focus(true)" (focusout)="focus(false, favBtn)" [tabindex]="menuItem.disabled ? -1 : ''">
+        <div title="{{ menuItem.title }}">
+          <i *ngIf="isConfiguring" class="fa fa-grip-vertical" [ngClass]="{ 'draggable-blue' : isHover }"
+            pTooltip="Drag to reorder"></i>
+          <span class="menu-title" [innerHTML]="menuItem?.sidebarLabel"></span>
+          <span *ngIf="menuItem?.tag && isShowTag" class="tag-general p-ml-2" [ngClass]="{
+            'tag-new': menuItem?.tag?.type === tagType.New,
+            'tag-alpha': menuItem?.tag?.type === tagType.Alpha,
+            'tag-beta': menuItem?.tag?.type === tagType.Beta }"
+            [ngStyle]="menuItem?.tag?.color ? { 'border-color' : getTagData().color, 'color': getTagData().color} : ''"
+            (click)="onNoChildren($event, menuItem)">{{ getTagData().label }}</span>
+        </div>
+      </a>
+      <div class="icon-container" id="{{ createId(menuItem.title) + '-icon-container'}}">
+        <button *ngIf="isConfiguring" (click)="handleHide()" [tabindex]="menuItem.disabled ? -1 : ''"
+          [pTooltip]="isHidden ? 'Show' : 'Hide'">
+          <i [ngClass]="isHidden ? 'far fa-eye-slash' : 'far fa-eye'"
+            id="{{ createId(menuItem.title, true) + '-config-hide'}}"></i>
+        </button>
+        <button *ngIf="isConfiguring" (click)="handleReorder(menuItem, false, 'up')"
+          [tabindex]="menuItem.disabled ? -1 : ''" pTooltip="Move up">
+          <i class="fa fa-arrow-up" (mouseover)="link('')"
+            id="{{ createId(menuItem.title, true) + '-config-move-up'}}"></i>
+        </button>
+        <button *ngIf="isConfiguring" (click)="handleReorder(menuItem, false, 'down')"
+          [tabindex]="menuItem.disabled ? -1 : ''" pTooltip="Move down"><i class="fa fa-arrow-down"
+            (mouseover)="link('')" id="{{ createId(menuItem.title, true) + '-config-move-down'}}"></i>
+        </button>
+       <span>
+          <button #favBtn [style.visibility]="favIconisShown()? 'visible': 'hidden'"
+            (click)="updateFavorites($event, menuItem)" (focus)="childFocus(true)"
+            (focusout)="childFocus(false, menuItemEl)" [tabindex]="menuItem.disabled ? -1 : ''"
+            [attr.aria-label]="menuItem.favTip">
+            <i *ngIf="useFavorites" [class]="menuItem.favIcon" [title]="menuItem.favTip" (mouseover)="link('')"></i>
+          </button>
+       </span>
+      </div>
+    </div>
+  </li>
+
+  <li *ngIf="menuItem.children && !favorite && isShown(menuItem)" class="parent" [ngClass]="{ 'searched': menuItem.searched,
+    'opened': menuItem.expanded, 'searched-opened': isChildSearched(menuItem),'config-cursor' : isConfiguring,
+    'disabled': menuItem.disabled }">
+    <div class="menu-item-container">
+      <div title="{{ menuItem.title }}" id="{{ createId(menuItem.title) }}" (click)="onToggleSubMenu($event, menuItem)"
+        class="menu-container" [ngClass]="{ 'isHidden': isHidden}" [tabindex]="menuItem.disabled ? -1 : 0">
+        <i *ngIf="isConfiguring" class="fa fa-grip-vertical" [ngClass]="{ 'draggable-blue' : isHover }"
+          pTooltip="Drag to reorder"></i>
+        <span class="menu-title" [innerHTML]="menuItem?.display" (click)="onToggleSubMenu($event, menuItem)"></span>
+      </div>
+      <div class="icon-container" id="{{ createId(menuItem.title) + '-icon-container'}}">
+        <button *ngIf="isConfiguring" (click)="handleHide()" [pTooltip]="isHidden ? 'Show' : 'Hide'">
+          <i [ngClass]="isHidden ? 'far fa-eye-slash' : 'far fa-eye'"
+            id="{{ createId(menuItem.title, true) + '-config-hide'}}"></i>
+        </button>
+        <button *ngIf="isConfiguring" (click)="handleReorder(menuItem, false, 'up')" pTooltip="Move up">
+          <i class="fa fa-arrow-up" (mouseover)="link('')"
+            id="{{ createId(menuItem.title, true) + '-config-move-up'}}"></i>
+        </button>
+        <button *ngIf="isConfiguring" (click)="handleReorder(menuItem, false, 'down')" pTooltip="Move down">
+          <i class="fa fa-arrow-down" (mouseover)="link('')"
+            id="{{ createId(menuItem.title, true) + '-config-move-down'}}"></i>
+        </button>
+        <button (click)="onToggleSubMenu($event, menuItem, true)" [tabindex]="menuItem.disabled ? -1 : ''"
+          [attr.aria-label]="menuItem.expanded ? ('COMMON.COLLAPSE' | translate) : ('COMMON.EXPANDED' | translate)">
+          <i class="arrows arrows-btn"
+            [ngClass]="menuItem.expanded ? 'fa fa-chevron-down arrows-down' : 'fa fa-chevron-right'"></i>
+        </button>
+      </div>
+    </div>
+  </li>
+
+  <ul class="group" *ngIf="menuItem.children && !favorite" id="{{ createId(menuItem.title) }}SubTab" pDroppable>
+    <rbn-sidebar-items [menuItem]="subItem" [useFavorites]="useFavorites" [isConfiguring]="isConfiguring"
+      [useConfigurationMode]="useConfigurationMode" [isSearching]="isSearching"
+      (toggleSubMenu)="onToggleSubMenu($event, subItem)" (noChildren)="onNoChildren($event, subItem)"
+      (favoriteChanged)="updateFavorites($event, subItem)" *ngFor="let subItem of menuItem.children"
+      [idWithoutSpace]="idWithoutSpace" (reorder)="handleReorder($event)" (onDragChild)="handleDrag($event)">
+    </rbn-sidebar-items>
+  </ul>
+</div>

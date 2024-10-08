@@ -1,0 +1,28 @@
+<p-card styleclass="protect-card" class="device-card">
+    <div class="p-grid protect-card--header">
+        <div class="p-col-3 p-md-3 p-lg-2">
+            <i class="logo"><img height="65" [src]="logoPath"></i>
+        </div>
+        <div class="p-col-9 p-md-9 p-lg-10">
+            <span class="project-name">{{inforCard.title}}</span>
+        </div>
+        <div class="info-container" *ngIf="usingTooltipDesc">
+          <i *ngIf="inforCard?.description && inforCard.description?.length > 0" class="pi pi-info-circle"
+            [pTooltip]="inforCard?.description" [escape]="false" [tooltipPosition]="'bottom'"></i>
+        </div>
+    </div>
+    <hr>
+    <div class="p-grid protect-card--content">
+        <div class="p-col-3 p-md-3 p-lg-2">
+        </div>
+        <div class="p-col-9 p-md-9 p-lg-10 description">
+            <p *ngIf="!usingTooltipDesc" [innerHTML]="inforCard.description"></p>
+            <div class="button-area">
+                <div class="btn-lauch">
+                    <button class="btn-img" (click)="clickBtnForward()"><i class="fa fa-arrow-right"></i></button>
+                    <p class="label-btn">{{inforCard.labelBtnForward}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-card>

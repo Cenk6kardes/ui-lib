@@ -1,0 +1,32 @@
+@import 'variables';
+
+.protect-form label:not(.p-checkbox-label):not(.p-radiobutton-label):not(.static) {
+    display: block;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.modal-footer {
+    padding: 15px;
+    text-align: right;
+    border-top: 1px solid $ribbon-lighter-grey;
+}
+
+.p-button + .p-button {
+    margin-left: 1em;
+}
+
+.p-button.p-button-outline:enabled:hover,
+.p-buttonset.p-button-outline > .p-button.p-state-outline:enabled:hover {
+    background-color: $ribbon-white;
+    color: $ribbon-black;
+    border-color: $ribbon-dark-grey;
+}
+
+.mrgnright {
+    margin-right: 7px;
+}
+
+.text-danger {
+    color: $ribbon-specific-danger;
+}

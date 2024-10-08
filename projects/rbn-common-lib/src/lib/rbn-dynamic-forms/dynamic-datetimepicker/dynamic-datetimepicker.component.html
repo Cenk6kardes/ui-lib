@@ -1,0 +1,5 @@
+<input type="text" pInputText *ngIf="displayEpochTime" [(ngModel)]="dateTimeString" [disabled]="true"/>
+<p-calendar #calendar *ngIf="!displayEpochTime" [(ngModel)]="selectedDate" (mouseup)="setCalendarOverlayVisible(calendar)" dataType="string"
+  [showSeconds]="to.showSeconds" [readonlyInput]="to.readonlyInput" [showTime]="to.showTime" [timeOnly]="to.timeOnly"
+  [hourFormat]="to.hourFormat" timeSeparator=":" [formControl]="formControl" [formlyAttributes]="field">
+</p-calendar>

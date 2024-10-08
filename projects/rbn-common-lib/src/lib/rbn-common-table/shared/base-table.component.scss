@@ -1,0 +1,890 @@
+@import 'variables';
+
+$container-button-width: 130px;
+$btnShadow: 0 0px 6px 0 rgba(0, 0, 0, 0.16);
+
+#container-common-table,
+.rbn-table {
+  ::ng-deep {
+    margin-bottom: 1em;
+
+    .p-dropdown-panel {
+      max-width: 50vw;
+      border: 1px solid $ribbon-dark-grey;
+
+      .p-dropdown-items {
+        .p-dropdown-item {
+          white-space: normal;
+
+          > span {
+            max-width: calc(100% - 30px);
+          }
+        }
+      }
+    }
+
+    .p-dropdown {
+      .p-dropdown-label {
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      min-width: auto;
+      width: 100%;
+      max-width: 220px;
+
+      &.first-capitalize {
+        text-transform: capitalize;
+      }
+
+      .p-inputtext,
+      .p-dropdown-trigger {
+        background-color: transparent;
+      }
+    }
+
+    .p-multiselect-panel {
+      max-width: 50vw;
+      .p-multiselect-items {
+        .p-multiselect-item {
+          white-space: normal;
+
+          >span {
+            max-width: calc(100% - 30px);
+          }
+        }
+      }
+    }
+
+    .p-multiselect {
+      .p-multiselect-label {
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+
+    p-triStateCheckbox {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .p-checkbox-label {
+        margin-left: 0;
+        margin-top: 0.5em;
+        white-space: nowrap;
+      }
+    }
+
+    .card {
+      padding: 0;
+    }
+
+    .span-right {
+      padding-right: 4px;
+    }
+
+    .container-accordian {
+      .header-title {
+        font-size: 20px;
+        margin: 0.5rem 0;
+        display: block;
+      }
+
+      .button-add-action {
+        margin: 0;
+        margin-bottom: 1em;
+        .p-button-primary {
+          color: $ribbon-dark-grey;
+          background-color: $ribbon-white;
+          border: 1px solid $ribbon-dark-grey;
+        }
+      }
+    }
+
+
+    .p-datatable {
+      font-size: $fontSize;
+      font-family: $fontFamily;
+      border: 1px solid $panelHeaderBg;
+
+      .p-datatable-header {
+        padding: 0;
+      }
+
+      .p-dropdown.cl-drop-action {
+        .p-dropdown {
+          width: 137px;
+          text-align: left;
+          // float: right;
+        }
+      }
+
+      .p-datatable-scrollable-header-box {
+        padding-right: 0 !important;
+      }
+
+      .p-dropdown.child-drop-action {
+        .p-dropdown {
+          width: 137px;
+          text-align: left;
+          float: right;
+        }
+      }
+
+      .p-button.btn-action-delete {
+        .p-button {
+          &:enabled {
+
+            &:focus,
+            &:hover {
+              box-shadow: none;
+            }
+          }
+        }
+
+        // float: right;
+        margin-right: 10px;
+      }
+
+      .hd-action {
+        // float: right;
+        width: 137px;
+      }
+
+      // .hd-icon-delete {
+      //   float: right;
+      // }
+
+      .drop-bulk-action {
+        .p-dropdown {
+          max-width: 200px;
+        }
+      }
+
+      .colgroup-expand {
+        width: 2em;
+      }
+
+      .container-checkbox {
+        text-align: left;
+      }
+
+      .colgroup-action {
+        width: 12em;
+      }
+
+      .p-grid {
+        margin: 0;
+      }
+
+      .p-datatable-caption {
+        padding: 0;
+        border: 0;
+      }
+
+      .p-datatable-thead {
+        tr {
+          th {
+            padding: 0.571em 0.857em;
+            background-color: $ribbon-light-grey;
+          }
+
+          th,
+          td {
+            border: 0;
+          }
+
+          .p-multiselect {
+            display: inline-flex;
+            width: 100%;
+          }
+        }
+
+        .container-row-filters {
+          border: 0;
+
+          td,
+          th {
+            background: inherit;
+
+            .p-multiselect {
+
+              .pi-chevron-down {
+                &::before {
+                  color: $ribbon-black;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .container-caption {
+        align-items: center;
+        // padding: $tableHeaderCellPadding;
+        padding: 0.571em 0.857em;
+
+        .p-grid {
+          margin: 0;
+        }
+
+        .p-col {
+          padding: 0;
+        }
+
+        &>div {
+          &:first-child {
+            margin-right: 2em;
+          }
+        }
+
+        .container-table-dropdown {
+          display: flex;
+
+          .button-header-action {
+            margin: 0 0 1em;
+            margin-left: 10px;
+          }
+
+          .p-dropdown {
+            min-width: 13em;
+          }
+        }
+
+        .container-right {
+          text-align: right;
+
+          &>* {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0.2em;
+          }
+
+          .container-search-input {
+            .search-input {
+              border: 1px solid #a7b1c2;
+              background: $inputBgColor;
+              display: flex;
+              align-items: center;
+              width: 100%;
+
+              .icon-inside {
+                text-align: center;
+              }
+
+              .fa-search {
+                width: $buttonIconOnlyWidth;
+              }
+
+              .p-button {
+                background-color: inherit;
+
+                &:enabled:hover,
+                &:enabled:focus,
+                &:enabled:active {
+                  background-color: inherit;
+                }
+              }
+
+              input {
+                padding-left: 0;
+                background-color: transparent;
+                width: auto;
+                border: 0;
+                outline: 0;
+                flex: 1;
+              }
+            }
+          }
+
+          .container-button {
+            min-width: $container-button-width;
+            text-align: left;
+
+            &>div {
+              display: flex;
+            }
+          }
+
+          .p-button {
+            // border: 1px solid $ribbon-dark-grey;
+            box-shadow: $btnShadow;
+            // color: $ribbon-dark-grey;
+            color: inherit;
+            margin-right: 10px;
+          }
+        }
+
+        .p-button-icon-only {
+
+          &:enabled:hover,
+          &:enabled:focus,
+          &:enabled:active {
+            .fa-times {
+              color: $tableHeaderCellTextColor;
+            }
+          }
+        }
+
+        .p-button {
+          background-color: $ribbon-white;
+          border: 0;
+
+          &:enabled:hover,
+          &:enabled:focus,
+          &:enabled:active {
+            background-color: darken($color: $ribbon-cream, $amount: 20%);
+            color: $secondaryButtonTextActiveColor;
+            border: 0;
+          }
+
+          &:enabled:focus {
+            background-color: $secondaryButtonBg;
+          }
+
+          &:enabled:active {
+            background-color: darken($color: $secondaryButtonBg, $amount: 30%);
+          }
+        }
+
+        .button-filter {
+          &.button-focus {
+            .p-button {
+              background-color: $secondaryColor;
+              color: $buttonTextColor;
+              border: 0;
+
+              &:enabled:focus {
+                background-color: $secondaryColor;
+                color: $buttonTextColor;
+              }
+            }
+          }
+
+          .fa-sliders {
+            font-size: 20px;
+          }
+        }
+
+        .p-inputtext {
+          outline: none;
+          border: none;
+        }
+
+        .fa-search,
+        .fa-times {
+          color: lighten($color: $inputPlaceholderTextColor, $amount: 30%);
+        }
+      }
+
+      .p-datatable-tbody {
+        tr {
+          &.child-row {
+            background-color: inherit;
+
+            &.child-row-selected {
+              background-color: $primaryColor;
+              color: $primaryTextColor;
+            }
+
+            td {
+              justify-content: center;
+            }
+          }
+
+          &.tr-even {
+            background-color: $tableBodyRowEvenBg;
+          }
+
+          &.p-highlight {
+            background-color: unset;
+            color: $primaryTextColor;
+
+            .group-icon {
+              color: $primaryTextColor;
+            }
+          }
+
+          th,
+          td {
+            border: $tableBodyCellBorder;
+            border-right: 0;
+            border-left: 0;
+            border-color: $tableHeaderCellBg;
+            padding: 0.5em 0.75em;
+            word-wrap: break-word;
+
+            .link {
+              color: $linkActiveColor;
+              text-decoration: underline;
+              cursor: pointer;
+            }
+
+            a {
+              .pi-chevron-down {
+                color: $ribbon-light-grey;
+              }
+
+              .pi-chevron-right {
+                color: $ribbon-light-grey;
+              }
+            }
+          }
+        }
+
+        .rowGroup {
+          td {
+            padding: 0px 20px 20px 20px;
+
+            .rowGroup-content {
+              padding: 20px;
+              border: $inputListBorder;
+
+              .p-grid {
+
+                .key,
+                .value {
+                  padding: 0.5em;
+                  justify-content: center;
+                  flex-direction: column;
+                  display: flex;
+                }
+              }
+            }
+          }
+        }
+
+        .row-expanded {
+          .rbn-table {
+            .p-datatable-thead {
+              tr {
+                th {
+                  &.p-resizable-column {
+                    padding: 0.49em;
+                  }
+                }
+              }
+              .container-row-filters {
+                th {
+                  padding: 0.54em;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .p-datatable-thead,
+      .p-datatable-tbody {
+        tr {
+
+          td,
+          th {
+            display: table-cell;
+            &.column-clear {
+              text-align: right;
+              width: 4em;
+              padding: $buttonPadding;
+            }
+
+            .button-grey {
+              &.p-button {
+                width: 2em;
+                background-color: inherit;
+                border: none;
+                height: 35px;
+
+                .fa {
+                  font-size: $primeIconFontSize;
+                  color: lighten($color: $tableHeaderCellTextColor,
+                      $amount: 40%);
+                }
+
+                &:enabled:hover {
+                  .fa {
+                    color: lighten($color: $tableHeaderCellTextColor,
+                        $amount: 20%);
+                  }
+                }
+
+                &:enabled:active {
+                  .fa {
+                    color: $tableHeaderCellTextColor;
+                  }
+                }
+              }
+            }
+
+            &.tri-checkbox-check {
+              .p-chkbox-icon {
+                &::before {
+                  content: "\e909";
+                }
+              }
+            }
+
+            &.tri-checkbox-double {
+              .p-chkbox-icon {
+                font-weight: bold;
+                font-family: "Font Awesome 5 Free", sans-serif;
+
+                &::before {
+                  content: "\f560";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .p-paginator {
+      border: 0;
+
+      p-dropdown {
+        padding-left: 50px;
+      }
+
+      .p-dropdown {
+        border: 1px solid $ribbon-light-grey;
+        margin-left: 0px;
+
+        .p-dropdown-trigger {
+          .pi-chevron-down:before {
+            color: unset;
+          }
+        }
+
+        &:hover,
+        &:focus {
+          border-color: $ribbon-dark-grey;
+        }
+      }
+
+      .p-paginator-left-content {
+        padding-left: 1em;
+        text-align: left;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .p-datatable {
+        .container-caption {
+          width: 100%;
+          flex-direction: column-reverse;
+          display: flex;
+          align-items: stretch;
+
+          &>div:first-child {
+            margin-right: unset;
+
+            .p-dropdown {
+              max-width: unset;
+            }
+          }
+
+          .container-table-dropdown {
+            margin-top: 0.5em;
+          }
+
+          .container-right {
+            &>* {
+              padding: 0;
+            }
+
+            .container-search-input {
+              width: calc(100% - #{$container-button-width});
+              min-width: 200px;
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: 450px) {
+      .p-datatable {
+        .container-caption {
+          .container-right {
+            display: flex;
+            flex-wrap: wrap;
+
+            .container-search-input {
+              margin-bottom: 0.5em;
+              width: 100%;
+            }
+
+            .container-button {
+              width: 100%;
+
+              div {
+                justify-content: flex-end;
+              }
+            }
+          }
+        }
+
+        .p-paginator {
+          text-align: left;
+
+          .p-paginator-left-content {
+            width: 100%;
+            padding-bottom: 1em;
+          }
+
+          .p-paginator-first {
+            margin-bottom: 6px;
+            margin-left: 3px;
+          }
+
+          .p-dropdown {
+            padding-left: 1em;
+
+            .p-dropdown {
+              margin-left: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .button-text-only {
+      .p-button-icon-only {
+        background: transparent;
+        border: 0;
+
+        &:enabled:hover,
+        &:enabled:focus,
+        &:enabled:active {
+          background: transparent;
+          border: 0;
+        }
+      }
+    }
+
+    .p-multiselect-label {
+      font-weight: normal;
+    }
+
+    // css of calender
+    .p-calendar {
+      min-width: auto;
+
+      .p-calendar-button {
+        width: $buttonIconOnlyWidth;
+      }
+
+      input {
+        max-width: calc(100% - #{$buttonIconOnlyWidth});
+      }
+    }
+
+    .p-checkbox {
+      .p-checkbox-box {
+        &.p-highlight {
+          border-color: $ribbon-dark-grey;
+          background-color: $ribbon-white;
+          color: $highlightBgColor;
+        }
+      }
+    }
+
+    .scroll-x {
+      .p-datatable-scrollable-header {
+        overflow-x: auto;
+      }
+    }
+  }
+}
+
+.container-column-dialog {
+  .item {
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
+}
+
+::ng-deep .p-datepicker {
+  table {
+    td {
+      &.p-datepicker-today {
+        &>a {
+          &.p-state-active {
+            color: $ribbon-white;
+            background-color: $primaryLightColor;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host::ng-deep {
+  table {
+    tr {
+      &.p-highlight.trExpand {
+        background: $ribbon-white;
+        color: $ribbon-black;
+
+        &:nth-child(even) {
+          background: $tableBodyRowEvenBg;
+          color: $ribbon-black;
+        }
+      }
+    }
+  }
+}
+
+// select theme
+// as-portal
+#container-common-table.as-portal ::ng-deep {
+  .pi-chevron-down::before {
+    content: "\e906";
+    color: $primaryLightColor;
+  }
+
+  .p-datatable {
+    border: none;
+
+    table {
+      background-color: #dcdcdc;
+    }
+
+    .container-caption {
+      background-color: $tableHeaderCellBg;
+
+      .p-button {
+        background-color: $ribbon-white;
+      }
+
+      .container-right {
+        .container-search-input {
+          .fa-search {
+            color: $primaryLightColor;
+          }
+        }
+
+        .container-button {
+          min-width: calc($container-button-width / 3);
+          text-align: left;
+          padding-left: 10px;
+
+          &>div {
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          .button-refresh {
+            display: none;
+          }
+
+          .button-dialog {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .container-table-dropdown {
+      .p-dropdown {
+        padding-left: 10px;
+      }
+    }
+
+    .hd-action {
+      width: auto;
+    }
+
+    .p-datatable-thead {
+      .p-sortIcon {
+        .p-sortable-column-icon:before {
+          content: "";
+        }
+
+        .pi-sort-down:before {
+          content: "\e913";
+          color: $primaryLightColor;
+        }
+
+        .pi-sort-up:before {
+          content: "\e914";
+          color: $primaryLightColor;
+        }
+      }
+
+      tr {
+        span {
+          text-transform: uppercase;
+        }
+
+        .p-multiselect {
+          span {
+            text-transform: none;
+          }
+        }
+
+        th {
+          padding: 0.571em 0px;
+          padding-left: 14px;
+          color: $ribbon-light-grey;
+          background-color: #dcdcdc;
+        }
+
+        th:focus {
+          color: $ribbon-black;
+          outline: none;
+        }
+      }
+    }
+
+    .p-dropdown.cl-drop-action .p-dropdown {
+      padding-left: 5px;
+      border-radius: 2px;
+      border: 1px solid $primaryLightColor;
+
+      label {
+        color: $primaryLightColor;
+        font-weight: bold;
+      }
+    }
+
+    .p-dropdown.cl-drop-action .p-dropdown:hover {
+      label {
+        color: $ribbon-white;
+      }
+
+      .pi-chevron-down:before {
+        content: "\e906";
+        color: $ribbon-white;
+      }
+    }
+
+    .p-paginator {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  @media screen and (max-width: 1624px) {
+    .p-datatable {
+      .p-datatable-thead {
+        tr {
+          th {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1178px) {
+    .p-datatable {
+      .p-datatable-thead {
+        tr {
+          th {
+            font-size: 11px;
+          }
+        }
+      }
+    }
+  }
+}

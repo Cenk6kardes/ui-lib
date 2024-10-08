@@ -1,0 +1,39 @@
+@import 'variables';
+
+.attribute-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 40px;
+    row-gap: 10px;
+}
+
+.attribute {
+    // background-color: red;
+    padding: 5px 0px;
+}
+
+.attribute-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: $ribbon-black;
+    margin-bottom: 5px;
+}
+
+.attribute-value {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: $ribbon-dark-grey;
+    font-weight: 400;
+    word-break: break-word;
+
+    .link {
+        color: $linkActiveColor;
+        text-decoration: none;
+        cursor: pointer;
+    }
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: row-reverse;
+}

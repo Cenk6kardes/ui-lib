@@ -1,0 +1,9 @@
+@import '../../../../../../src/sass/themes/ribbontheme/variables';
+
+:host ::ng-deep {
+  .fa-bars {
+    font-size: 20px;
+    margin-left: 40%;
+    color: $primaryLightColor;
+  }
+}

@@ -1,0 +1,4 @@
+<rbn-file-upload [fileTypeSupport]="to.fileTypes" [fileSizeSupport]="to.fileSize"
+      (progress)="progressInfo($event)" (files)="to.change && to.change(field, $event)"
+      [fileUploadName]="to.fileUploadName" [formlyAttributes]="field">
+</rbn-file-upload>

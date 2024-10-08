@@ -1,0 +1,203 @@
+<div class="p-grid" #template [id]="pickListName || 'pickListCustom'">
+  <input type="text" id="idTempInputFocus" #tempInputFocus readonly />
+  <div class="p-col-12 p-md-6 p-lg-5">
+    <p-panel [header]="pickListLabel?.labelSource ? pickListLabel?.labelSource : messages.AVAILABLE">
+      <div class="card" cdkDropList #sourceList="cdkDropList" [cdkDropListSortingDisabled]="true" 
+      [cdkDropListData]="dataSource" [cdkDropListConnectedTo]="[targetList]" (cdkDropListDropped)="drop($event, 'source')">
+
+
+        <p-table #dtSource [columns]="colsSource" [value]="dataSource" [(selection)]="selectedRowsSource"
+          [selectionMode]="'multiple'" [scrollable]="true" [scrollHeight]="paginatorMode === PaginatorMode.Server ? '291px' : '348px'"
+          [class]="paginatorMode === PaginatorMode.Server ? 'height-server' : 'height-client'"
+          [id]="pickListName ? pickListName + 'AvailableTable' : 'availableTable'"
+          [paginator]="paginatorMode !== PaginatorMode.Server && showPaginator" [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          [rows]="paginatorConfigSource?.numberRowPerPage" [rowsPerPageOptions]="paginatorConfigSource?.rowsPerPageOptions?.length> 0
+      ? paginatorConfigSource?.rowsPerPageOptions
+      : [paginatorConfigSource?.numberRowPerPage, paginatorConfigSource?.numberRowPerPage + 5, paginatorConfigSource?.numberRowPerPage + 10]
+      ">
+          <ng-template pTemplate="header">
+            <tr>
+              <ng-container *ngFor="let col of colsSource; index as i">
+                <th *ngIf="col.sort" pResizableColumn [pSortableColumn]="col.field">
+                  <span>{{ col.header }}</span>
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th *ngIf="!col.sort" pResizableColumn>
+                  <span>{{ col.header }}</span>
+                </th>
+              </ng-container>
+            </tr>
+            <tr #filterRow class="container-row-filters ui-table-caption">
+              <ng-container *ngFor="let col of colsSource; index as i" [ngSwitch]="col.type" [ngSwitch]="col.type">
+                <th *ngSwitchCase="filterTypes.InputText">
+                  <input pInputText type="text" (input)="inputFilterSource($event, col.field, 'contains')" />
+                </th>
+                <th *ngSwitchDefault></th>
+              </ng-container>
+            </tr>
+          </ng-template>
+
+          <!-- search Source -->
+          <ng-template pTemplate="caption">
+            <div class="search p-grid" *ngIf="showSearch && paginatorMode === PaginatorMode.Server">
+              <div class="p-col-8 p-md-8 p-lg-8 input-search">
+                <input type="text" pInputText placeholder="Search" [(ngModel)]="searchSource">
+                <p-button styleClass="rbn-button rbn-button-tertiary rbn-icon-btn" icon="fas fa-times"
+                  (click)="clearSearchGlobal(TypePickList.SOURCE)" [ngClass]="searchSource?'':'hidden-icon'"></p-button>
+              </div>
+              <div class="p-col-4 p-md-4 p-lg-4">
+                <p-button label="Search" styleClass="rbn-button rbn-button-tertiary"
+                  (click)="onSearch(TypePickList.SOURCE)"></p-button>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr class="ui-widget-header" [class]="rowData.isDisabled ? 'cursor-disabled' : ''"
+              [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" cdkDrag [cdkDragData]="rowData">
+              <td *ngFor="let col of colsSource; index as i">
+                <ng-container [ngSwitch]="col.bodyTextType">
+                  <p-dropdown *ngSwitchCase="bodyTextType.Dropdown" [appendTo]="template"
+                    [options]="rowData[col.field].options" optionLabel="label" (onChange)="dropdownRowsChange($event)"
+                    (click)="$event.stopPropagation()" [(ngModel)]="rowData[col.field].ngModel">
+                  </p-dropdown>
+                  <p-multiSelect *ngSwitchCase="bodyTextType.Multiselect" [appendTo]="template"
+                    [options]="rowData[col.field].options" defaultLabel="Select" optionLabel="label"
+                    selectedItemsLabel="{0} items selected" [(ngModel)]="rowData[col.field].ngModel"
+                    (click)="$event.stopPropagation()" (onChange)="multiSelectRowsChange($event)"></p-multiSelect>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <!-- pagination SOURCE-->
+        <p-paginator #paginatorSource *ngIf="showPaginator && paginatorMode === PaginatorMode.Server"
+          [totalRecords]="paginatorConfigSource?.totalRecords" [rows]="paginatorConfigSource?.numberRowPerPage"
+          [first]="firstRowDisplayedSource"
+          [dropdownAppendTo]="paginatorConfigSource?.isUsingAppendTo ? dtSource : 'body'" [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="paginatorConfigSource?.rowsPerPageOptions?.length>
+            0
+            ? paginatorConfigSource?.rowsPerPageOptions
+            : [paginatorConfigSource?.numberRowPerPage, paginatorConfigSource?.numberRowPerPage + 5, paginatorConfigSource?.numberRowPerPage + 10]
+            " (onPageChange)="onPageChanged($event,TypePickList.SOURCE)"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}">
+        </p-paginator>
+
+
+      </div>
+    </p-panel>
+  </div>
+
+  <div class="p-col-12 p-md-6 p-lg-2 btn-container">
+    <button type="button" pButton icon="pi pi-angle-right" (click)="pickItemsToRight()" title={{messages.ADD_SELECTED}}
+      [id]="pickListName ? pickListName + 'BtnAngleRight' : 'btnAngleRight'"></button>
+    <button type="button" pButton icon="pi pi-angle-double-right" (click)="pickAllToRight()" title={{messages.ADD_ALL}}
+      [id]="pickListName ? pickListName + 'BtnAngleDoubleRight' : 'btnAngleDoubleRight'"></button>
+    <button type="button" pButton icon="pi pi-angle-left" (click)="pickItemsToLeft()" title={{messages.REMOVE_SELECTED}}
+      [id]="pickListName ? pickListName + 'BtnAngleLeft' : 'btnAngleLeft'"></button>
+    <button type="button" pButton icon="pi pi-angle-double-left" (click)="pickAllToLeft()" title={{messages.REMOVE_ALL}}
+      [id]="pickListName ? pickListName + 'BtnAngleDoubleLeft' : 'btnAngleDoubleLeft'"></button>
+  </div>
+
+  <div class="p-col-12 p-md-6 p-lg-5">
+    <p-panel [header]="pickListLabel?.labelTarget ? pickListLabel?.labelTarget : messages.SELECTED">
+      <div #cdkDropTargetList class="card" cdkDropList #targetList="cdkDropList" [cdkDropListData]="dataTarget"
+      [cdkDropListConnectedTo]="[sourceList]" (cdkDropListDropped)="drop($event, 'target')" [cdkDropListSortingDisabled]="!isReorderTarget"> 
+
+        <p-table #dtTarget [columns]="colsTarget" [value]="dataTarget" [(selection)]="selectedRowsTarget"
+          [selectionMode]="'multiple'" [scrollable]="true" [scrollHeight]="paginatorMode === PaginatorMode.Server ? '291px' : '348px'"
+          [class]="paginatorMode === PaginatorMode.Server ? 'height-server' : 'height-client'"
+          [id]="pickListName ? pickListName + 'SelectedTable' : 'selectedTable'"
+          [paginator]="paginatorMode !== PaginatorMode.Server && showPaginator" [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          [rows]="paginatorConfigTarget?.numberRowPerPage" [rowsPerPageOptions]="paginatorConfigTarget?.rowsPerPageOptions?.length> 0
+      ? paginatorConfigTarget?.rowsPerPageOptions
+      : [paginatorConfigTarget?.numberRowPerPage, paginatorConfigTarget?.numberRowPerPage + 5, paginatorConfigTarget?.numberRowPerPage + 10]
+      ">
+          <ng-template pTemplate="header">
+            <tr>
+              <ng-container *ngFor="let col of colsTarget; index as i">
+                <th *ngIf="col.sort" pResizableColumn [pSortableColumn]="col.field">
+                  <span>{{ col.header }}</span>
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th *ngIf="!col.sort" pResizableColumn>
+                  <span>{{ col.header }}</span>
+                </th>
+              </ng-container>
+            </tr>
+            <tr #filterRow class="container-row-filters ui-table-caption">
+              <ng-container *ngFor="let col of colsTarget; index as i" [ngSwitch]="col.type" [ngSwitch]="col.type">
+                <th *ngSwitchCase="filterTypes.InputText">
+                  <input pInputText type="text" (input)="inputFilterTarget($event, col.field, 'contains')" />
+                </th>
+                <th *ngSwitchDefault>
+                  <!-- <input pInputText type="text" (input)="inputFilterSource($event, col.field, 'contains')" /> -->
+                </th>
+              </ng-container>
+            </tr>
+          </ng-template>
+
+          <!-- search Target -->
+          <ng-template pTemplate="caption">
+            <div class="search p-grid" *ngIf="showSearch && paginatorMode === PaginatorMode.Server">
+              <div class="p-col-8 p-md-8 p-lg-8 input-search">
+                <input type="text" pInputText placeholder="Search" [(ngModel)]="searchTarget">
+                <p-button styleClass="rbn-button rbn-button-tertiary rbn-icon-btn" icon="fas fa-times"
+                  (click)="clearSearchGlobal(TypePickList.TARGET)" [ngClass]="searchTarget?'':'hidden-icon'"></p-button>
+
+              </div>
+              <div class="p-col-4 p-md-4 p-lg-4">
+                <p-button label="Search" styleClass="rbn-button rbn-button-tertiary"
+                  (click)="onSearch(TypePickList.TARGET)"></p-button>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr class="ui-widget-header" [class]="rowData.isDisabled ? 'cursor-disabled' : ''"
+              [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" cdkDrag [cdkDragData]="rowData">
+              <td *ngFor="let col of colsTarget; index as i">
+                <ng-container [ngSwitch]="col.bodyTextType">
+                  <p-dropdown *ngSwitchCase="bodyTextType.Dropdown" [appendTo]="template"
+                    [options]="rowData[col.field].options" optionLabel="label" (onChange)="dropdownRowsChange($event)"
+                    (click)="$event.stopPropagation()" [(ngModel)]="rowData[col.field].ngModel">
+                  </p-dropdown>
+                  <p-multiSelect *ngSwitchCase="bodyTextType.Multiselect" [appendTo]="template"
+                    [options]="rowData[col.field].options" defaultLabel="Select" optionLabel="label"
+                    selectedItemsLabel="{0} items selected" [(ngModel)]="rowData[col.field].ngModel"
+                    (click)="$event.stopPropagation()" (onChange)="multiSelectRowsChange($event)"></p-multiSelect>
+
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr *ngIf="targetConfig.emptyMessageContent" class="empty-message-row">
+              <td [attr.colspan]="cols.length" class="empty-message-content">
+                <p><i>{{targetConfig.emptyMessageContent}}</i></p>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <!-- pagination -->
+        <p-paginator #paginatorTarget *ngIf="showPaginator && paginatorMode === PaginatorMode.Server"
+          [totalRecords]="paginatorConfigTarget?.totalRecords" [rows]="paginatorConfigTarget?.numberRowPerPage"
+          [dropdownAppendTo]="paginatorConfigTarget?.isUsingAppendTo ? dtTarget : 'body'" [showCurrentPageReport]="true"
+          [first]="firstRowDisplayedTarget"
+          [rowsPerPageOptions]="paginatorConfigTarget?.rowsPerPageOptions?.length > 0 ? paginatorConfigTarget?.rowsPerPageOptions : 
+          [paginatorConfigTarget?.numberRowPerPage, paginatorConfigTarget?.numberRowPerPage + 5, paginatorConfigTarget?.numberRowPerPage + 10]"
+          (onPageChange)="onPageChanged($event,TypePickList.TARGET)"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}">
+        </p-paginator>
+
+      </div>
+    </p-panel>
+  </div>
+</div>

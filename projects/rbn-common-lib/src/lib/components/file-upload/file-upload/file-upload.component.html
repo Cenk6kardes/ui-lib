@@ -1,0 +1,59 @@
+<div id="file-upload-container">
+  <div class="file-upload-contain" pDroppable (onDrop)="onSelectFile($event.dataTransfer)">
+    <div class="drop-zone" *ngIf="!selectedFile">
+      <div class="container">
+        <div class="text">{{ translateResults.TITLE_DRAG_DROP }}
+          <div class="or">
+            {{ translateResults.OR }}
+          </div>
+        </div>
+        <div class="background">
+          <div class="fas fa-upload"></div>
+        </div>
+      </div>
+
+      <button pButton type="button" class="btn-file" #filePropBtn [label]="translateResults.BROWSER_FOR_FILE"
+        (click)="filePropRef.click()" [attr.aria-label]="translateResults.LABEL" [attr.aria-description]="noteSupport">
+        <input type="file" id="fileDropRef" #filePropRef [accept]="fileTypeSupport" class="input-file"
+          (change)="onSelectFile($event.target)">
+      </button>
+      <div class="txt-note" [id]="fileUploadName ? fileUploadName + 'TxtNote' : 'txtNote'">
+        {{ noteSupport }}
+      </div>
+    </div>
+
+    <div class="list-file-container">
+      <div class="list-container" *ngIf="selectedFile">
+        <div *ngIf="progressLoading === 100" class="uploaded">{{ translateResults.UPLOADED_FILE }}</div>
+        <div class="progress">
+          <p-progressBar [value]="progressLoading" [showValue]="false"
+            [id]="fileUploadName ? fileUploadName + 'ProgressBarFileUpload' : 'progressBarFileUpload'">
+          </p-progressBar>
+        </div>
+        <div class="contain">
+          <div class="file-info">
+            <div class="file-name" [id]="fileUploadName ? fileUploadName + 'FileName' : 'fileName'">
+              {{ selectedFile.name }}
+            </div>
+            <div class="file-size" [id]="fileUploadName ? fileUploadName + 'FileSize' : 'fileSize'">
+              {{ translateResults.SIZE }} {{ (selectedFile.size/1000).toFixed(2) }} {{ translateResults?.KB }}
+            </div>
+          </div>
+          <div>
+            <button *ngIf="showDownloadBtn" pButton type="button" icon="pi pi-download" (click)="downloadFile()">
+            </button>
+            <button #buttonClear pButton type="button" icon="fas fa-trash-alt" (click)="confirmOnRemoveFile ? onShowDialog() : removeFile()"
+              *ngIf="progressLoading === 100" [id]="fileUploadName ? fileUploadName + 'ButtonClear' : 'buttonClear'">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="confirmOnRemoveFile">
+  <rbn-confirm-dialog [isShowConfirmDialog]="isShowConfirmDialog" [title]="translateResults.CONFIRMATION_TITLE"
+  [content]="translateResults.CONFIRMATION_CONTENT" (emitConfirm)="removeFile($event)" [isFocusToOldElmOnHide]="false">
+  </rbn-confirm-dialog>
+</ng-container>

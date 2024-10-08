@@ -1,0 +1,102 @@
+<project name="rbn-common-lib" default="bump-version" basedir=".">
+    <description>
+         A place to put various helper/utility tasks that can be reused by other applications.
+         This is where any shared tasks that are used by all of the Angular 2 apps are placed.
+    </description>
+
+    <condition property="isWindows">
+       <os family="windows"/>
+    </condition>
+
+    <property name="app.name" value="vnfm"/>
+    <property environment="env"/>
+
+
+    <property name="build.dir" value="../build"/>
+    <property name="dist.dir" value="../dist"/>
+    <property name="web.dir" value="${app.src.root}/web"/>
+
+    <target name="bump-version" depends="bump-version-linux, bump-version-windows"/>
+
+    <target name="bump-version-windows" if="isWindows">
+        <echo>"Increment rbn-common-lib minor version number"</echo>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="git"/>
+            <arg value="checkout"/>
+            <arg value="feature/accessibility"/>
+        </exec>
+         <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="git"/>
+            <arg value="pull"/>
+        </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="git"/>
+            <arg value="checkout"/>
+            <arg value="--"/>
+            <arg value="../package.json"/>
+        </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="npm"/>
+            <arg value="--no-git-tag-version"/>
+            <arg value="version"/>
+            <arg value="patch"/>
+        </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="git"/>
+            <arg value="add"/>
+            <arg value="../package.json"/>
+        </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="git"/>
+            <arg value="commit"/>
+            <arg value="--message='Update minor version number'"/>
+
+        </exec>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="git"/>
+            <arg value="push"/>
+        </exec>
+    </target>
+
+    <target name="bump-version-linux" unless="isWindows">
+        <echo>"Increment rbn-common-lib minor version number"</echo>
+        <exec executable="/usr/bin/git" failonerror="false">
+            <arg value="checkout"/>
+            <arg value="feature/accessibility"/>
+        </exec>
+        <exec executable="/usr/bin/git" failonerror="false">
+            <arg value="pull"/>
+        </exec>
+        <exec executable="/usr/bin/git" failonerror="false">
+            <arg value="checkout"/>
+            <arg value="--"/>
+            <arg value="../package.json"/>
+        </exec>
+        <exec executable="/usr/bin/npm" failonerror="false">
+            <arg value="--no-git-tag-version"/>
+            <arg value="version"/>
+            <arg value="patch"/>
+        </exec>
+        <exec executable="/usr/bin/git" failonerror="false">
+            <arg value="add"/>
+            <arg value="../package.json"/>
+        </exec>
+        <exec executable="/usr/bin/git" failonerror="false">
+            <arg value="commit"/>
+            <arg value="--message='Update minor version number'"/>
+        </exec>
+        <exec executable="/usr/bin/git" failonerror="false">
+            <arg value="push"/>
+        </exec>
+    </target>
+
+
+</project>
+

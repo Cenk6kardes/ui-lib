@@ -1,0 +1,23 @@
+@import 'variables';
+
+.tab-header {
+    display: flex;
+    align-items: flex-end;
+
+    .p-dropdown.p-component {
+        width: 200px !important;
+        margin-right: 20px;
+    }
+}
+
+.tab-content {
+    background: $ribbon-white;
+    padding: 1rem;
+    border: 1px solid $ribbon-light-grey;
+    color: var(--text-color);
+    border-radius: 3px;
+}
+
+.menu-tab {
+    flex: 1;
+}

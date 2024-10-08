@@ -1,0 +1,16 @@
+<div class="container-dynamic-panel">
+  <p-panel [header]="to.label" styleClass="custom-panel" [toggleable]="true">
+    <ng-container #fieldComponent></ng-container>
+    <footer>
+      <p-toolbar>
+        <div class="p-toolbar-group-left"></div>
+        <div class="p-toolbar-group-right">
+          <button type="button" pButton icon="fa fa-times" (click)="cancelEvent()" [label]="'COMMON.CANCEL' | translate"
+            class="button-cancel"></button>
+          <button type="button" pButton icon="pi pi-pw pi-check" (click)="submitEvent()" class="button-save"
+            [label]="'COMMON.SAVE' | translate" [disabled]="to.disableSaveBtn"></button>
+        </div>
+      </p-toolbar>
+    </footer>
+  </p-panel>
+</div>

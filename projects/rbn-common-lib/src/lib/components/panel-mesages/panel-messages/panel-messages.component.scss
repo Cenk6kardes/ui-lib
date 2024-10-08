@@ -1,0 +1,84 @@
+@import "variables";
+
+.pannel-toast-message {
+    overflow: inherit;
+    color: #1d1f21;
+    background: unset;
+    border: unset;
+    border-radius: 6px;
+    position: relative;
+    margin: 1rem 0;
+    &.pannel-toast-message-info {
+        background: #e6f7ff;
+        border: 1px solid cornflowerblue;
+        .pi-info-circle {
+            color: cornflowerblue;
+        }
+    }
+    &.pannel-toast-message-success {
+        background: #f6ffed;
+        border: 1px solid limegreen;
+    }
+    &.pannel-toast-message-error {
+        background: #fff1f0;
+        border: 1px solid red;
+    }
+    &.pannel-toast-message-warn {
+        background: #fffbe6;
+        border: 1px solid darkorange;
+    }
+    .pannel-toast-message-content {
+        border-radius: 6px;
+        display: flex;
+        padding: 1rem;
+        .pi-info-circle {
+            color: cornflowerblue;
+        }
+        .pi-check-circle {
+            color: limegreen;
+        }
+        .pi-times-circle {
+            color: $ribbon-red;
+        }
+        .pi-exclamation-triangle {
+            color: $ribbon-dark-yellow;
+        }
+        .pannel-toast-content {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            .pannel-toast-content-main {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                .pannel-toast-message-text {
+                    margin: 0 0 0 1rem;
+                    .pannel-toast-summary {
+                        padding: 0;
+                        font-size: 15px;
+                        font-weight: 700;
+                        margin-bottom: 0.25rem;
+                    }
+                    .pannel-toast-detail {
+                        color: $ribbon-black;
+                        margin: auto;
+                        word-break: break-word;
+                    }
+                }
+            }
+        }
+    }
+
+    .icon-close {
+        color: $ribbon-black;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+        .pi-times {
+            font-size: 12px;
+        }
+        cursor: pointer;
+        display: contents;
+    }
+}

@@ -1,0 +1,47 @@
+@import 'variables';
+
+.multi ::ng-deep {
+  .p-multiselect {
+    min-width: 200px;
+  }
+
+  .p-inputtext {
+    min-width: unset !important;
+  }
+
+  .p-checkbox {
+    .p-checkbox-box {
+      border: 1px solid $ribbon-dark-grey;
+
+      .p-highlight {
+        border-color: $highlightBgColor;
+        background: $ribbon-white;
+        color: $ribbon-white;
+      }
+
+      .p-checkbox-icon {
+        color: $primaryDarkerColor;
+      }
+
+    }
+  }
+
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    border-color: $ribbon-dark-grey;
+  }
+
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+    border-color: $ribbon-dark-grey;
+    background: $ribbon-white;
+  }
+
+  .label {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .description {
+    margin-top: 5px;
+    margin-left: 28px;
+  }
+}

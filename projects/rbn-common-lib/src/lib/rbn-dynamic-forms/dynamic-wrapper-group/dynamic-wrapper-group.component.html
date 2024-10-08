@@ -1,0 +1,22 @@
+<div class="form-accordion">
+  <p-accordion class="accordion-panel">
+    <p-accordionTab [id]="props?.id" [header]="props?.label" [selected]="props?.selected !== false" [disabled]="props?.disabled">
+      <ng-template pTemplate="header">
+        <div  *ngIf="props?.showChangesText && numberOfElementsChanged > 0" class="changes-made-text">(Changes made)
+          <span><i class="fa fa-check-circle"></i></span>
+        </div>
+      </ng-template>
+      <ng-container #fieldComponent></ng-container>
+      <rbn-form-toolbar
+        *ngIf="props?.toolbar"
+        [disabledPrimary]="props?.toolbar?.disabledPrimary"
+        [disabledSecondary]="props?.toolbar?.disabledSecondary"
+        [displaySecondary]="displaySecondary"
+        [secondaryLabel]="props?.toolbar?.secondaryLabel"
+        [primaryLabel]="props?.toolbar?.primaryLabel"
+        [toolbarId]="props?.toolbar?.toolbarId"
+        (buttonClickedEmit)="this.props?.toolbar?.click($event)">
+      </rbn-form-toolbar>
+    </p-accordionTab>
+  </p-accordion>
+</div>

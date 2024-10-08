@@ -1,0 +1,119 @@
+<div class="container-login">
+  <div *ngIf="sessionMessage" class="message-timeout">
+    <i class="pi pi-info-circle"></i>
+    <div>
+      <p class="title-message">{{'MESSAGE_LOGIN.SESSION_STATUS' | translate}}</p>
+      <div class="content-message">{{sessionMessage}}</div>
+    </div>
+  </div>
+  <div class="content" *ngIf="!showVersion || (showVersion && version !== 'Unknown')">
+    <div class="business-info">
+      <div class="welcome-text">{{'LOGIN.WELCOME_TO'|translate}}</div>
+      <div class="horizontal">
+        <div class="login-logo"></div>
+      </div>
+      <p class="project-name" [innerHtml]="project"></p>
+      <div *ngIf="showVersion" class="version" id="product_version">
+        {{'LOGIN.VERSION'|translate}}: {{version}}
+      </div>
+      <div *ngIf="banner !== '' && bannerLocation === 'left'" class="login-banner-left">
+        <p>{{banner}}</p>
+      </div>
+      <div class="content-space"></div>
+      <p *ngIf="showGroup" class="group-name">{{groupName}}</p>
+      <a *ngIf="showGroup" class="group-url" [href]="groupUrl">{{'LOGIN.GROUP_URL'|translate}}</a>
+    </div>
+
+    <div class="form-info" [ngClass]="{'form-info-full': changePassword}">
+      <p class="sign-in" *ngIf="!changePassword">{{'LOGIN.SIGNIN'|translate}}</p>
+      <div (keyup.enter)="pressEnter()">
+        <div *ngIf="statusMessage" class="status-message">{{statusMessage}}</div>
+        <form [formGroup]="userform">
+          <div class="input-field" *ngIf="!(changePassword && hideLoginFieldInChangePwd)">
+            <span class="input-addon icon-input"><i class="fa fa-user"></i></span>
+            <input type="text" name="j_username" pInputText class="input-info"
+              placeholder="{{'LOGIN.USERNAME' | translate}}" formControlName="Username" />
+          </div>
+          <div class="input-field" *ngIf="!(changePassword && hideLoginFieldInChangePwd)">
+            <span class="input-addon icon-input"><i class="fa fa-unlock"></i></span>
+            <input type="password" name="j_password" pInputText
+              class="input-info" placeholder="{{'LOGIN.PASSWORD' | translate}}" [maxlength]="maxPasswordLength"
+              formControlName="Password" (focus)="focusPassword($event)" (focusout)="outFocusPassword()" />
+          </div>
+          <div class="input-field" *ngIf="changePassword">
+            <span class="input-addon icon-input"><i class="fa fa-unlock"></i></span>
+            <input type="password" name="newPassword" pInputText
+              class="input-info" placeholder="{{'LOGIN.NEW_PASSWORD' | translate}}" [maxlength]="maxPasswordLength"
+              formControlName="NewPassword" />
+          </div>
+          <div class="input-field" *ngIf="changePassword">
+            <span class="input-addon icon-input"><i class="fa fa-unlock"></i></span>
+            <input type="password" [maxlength]="maxPasswordLength"
+              name="newPasswordConfirm" pInputText class="input-info"
+              placeholder="{{'LOGIN.NEW_PASSWORD_CONFIRM' | translate}}" formControlName="NewPasswordConfirm" />
+          </div>
+        </form>
+      </div>
+      <div class="forgot-password-link" *ngTemplateOutlet="forgotPasswordLink"> </div>
+      <div *ngIf="showTerms" (keyup.enter)="pressEnter()" class="container-term">
+        <p-checkbox [(ngModel)]="checked" id="eula" binary="true"></p-checkbox>
+        <div class="terms-and-conditions">{{'LOGIN.I_AGREE_TO_THE'|translate}}<a href="{{'LOGIN.TERMS_LINK'|translate}}"
+            target="_blank">{{'LOGIN.TERM_AND_CONDITION'|translate}}</a></div>
+      </div>
+      <div *ngIf="banner !== '' && bannerLocation === 'right'">
+        <div class="login-banner">
+          {{banner}}
+        </div>
+      </div>
+      <div *ngIf="isError && message" class="container-error">
+        <div [innerHTML]="message" class="message-error"></div>
+      </div>
+      <div class="container-button">
+        <span>
+          <p-button id="login" name="j_security_check" (click)="login()">{{loginButtonLabel ? loginButtonLabel :
+            'LOGIN.LOGIN'|translate}}</p-button>
+        </span>
+        <span *ngIf="changePassword">
+          <p-button name="abortChange" (click)="abortChangePassword()">{{'LOGIN.ABORT_PASSWORD_CHANGE'|translate}}
+          </p-button>
+        </span>
+        <a *ngIf="helpLink" [href]="helpLink" target="_blank" class="help-link">
+          <i class="fa fa-question-circle" pTooltip="{{'LOGIN.HELP' | translate}}" tooltipPosition="bottom" tooltipStyleClass="rbn-tooltip"></i>
+        </a>
+      </div>
+
+      <div *ngIf="idp !== ''" class="third-party">
+        <div class="divide-block">
+          <span class="divide-text">{{'LOGIN.OR'|translate}}</span>
+        </div>
+        <span>
+          <p-button label="{{idp}}" styleClass="rbn-button rbn-button-secondary" id="idp" name="idp"
+            (click)="thirdPartyLogin()">
+          </p-button>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <table class="info-service-failed" *ngIf="showVersion && version === 'Unknown' && !isLogging">
+    <tr class="reload-page">
+      <td>
+        <span>
+          <p-button id="reload" (click)="getVersionAndProject()">{{'LOGIN.RELOAD_PAGE'|translate}}</p-button>
+        </span>
+      </td>
+    </tr>
+    <tr class="message-error" *ngIf="isError">
+      <td>
+        <p [innerHTML]="message"></p>
+      </td>
+    </tr>
+  </table>
+
+  <rbn-dialog-loader [loading]="isLogging"></rbn-dialog-loader>
+
+  <div class="copyright" *ngIf="displayCopyright">
+    <span> Copyright &copy; 1999 - {{fullyear}}, {{'LOGIN.COPY_RIGHT'|translate}}</span>
+  </div>
+</div>

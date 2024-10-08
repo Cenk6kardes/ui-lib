@@ -1,0 +1,132 @@
+<div class="container-sidebar">
+  <ng-container *ngIf="isUserLoggedIn && !hideSidebar">
+    <aside class="container-aside" [ngClass]="{ 'searching' : isSearching, 'no-results': isSearching && !hasResults(),
+      'menu-collapsed': isMenuCollapsed, 'container-config': isConfiguring, 'config-border' : isConfiguring }">
+      <div class="container-aside--header container-search padding">
+        <div class="container-search--group" *ngIf="useSearch === true && !isMenuCollapsed"
+          [ngClass]="{ 'use-config' : useConfigurationMode && !isConfiguring, 'configuring' : isConfiguring }">
+          <input type="text" [(ngModel)]="searchTerm" placeholder="Search" (keyup)="onKeyUpSearch($event)" />
+          <button (click)="clickClearSearch($event)" class="container-search--icons"
+            [attr.aria-label]=" isSearching ? ('FAVORITES.CLEAR_SEARCH'| translate) : ('COMMON.SEARCH' | translate)">
+            <i [class]="isSearching ? 'fa fa-times' : 'fa fa-search'"></i></button>
+        </div>
+
+        <div class="container-aside--actions"
+          [ngClass]="{ 'align-arrow' : !useSearch && !isMenuCollapsed,
+          'use-config' : useConfigurationMode && !isConfiguring,
+          'configuring' : isConfiguring }">
+          <button *ngIf="useConfigurationMode && !isConfiguring && !isMenuCollapsed" (click)="handleConfigure()" pTooltip="Configuration Mode">
+            <i class="fa fa-hammer menu-icon" id="config-mode"></i>
+          </button>
+          <button class="container-aside--actions-trigger" (click)="toggleMenuCollapse()" [pTooltip]="getIconTooltip()" >
+            <span class="toggle-icon" [ngClass]="{ 'config-mode' : useConfigurationMode }">
+              <i [ngClass]="getIconClass()"></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="container-aside--menu">
+        <div class="container-aside--menu-container">
+          <div class="group-name-collapse" *ngIf="isConfiguringAndCollapsed()">
+            <button class="group-name--link" title="Configuration Mode" (click)="handleConfigure()">
+              <i class="fa fa-hammer menu-icon" id="config-mode"></i>
+            </button>
+          </div>
+          <div *ngFor="let nav of menuItems; let i=index" [ngClass]="{'selected': nav.parentOfSelected,
+            'not-searched': !isChildSearched(nav) && isSearching && !isMenuCollapsed, 'disabled': nav.disabled }"
+            id="{{ createId(nav.sidebarLabel) }}Tab">
+            <div [ngClass]="isMenuCollapsed ? 'group-name-collapse' : (noneUppercaseParentLabel ? 'group-name txt-transform-none' : 'group-name')"
+              (mouseover)="toggleDelAllfavHover(nav)" (mouseout)="toggleDelAllfavHover(nav)">
+              <button *ngIf="!isMenuCollapsed" (click)="onToggleMenu($event, nav)" class="group-name--toggle" [tabindex]="nav.disabled ? -1 : ''"
+                [ngClass]="{'hide-element': isMenuCollapsed}" [ngStyle]="{'visibility': (!nav.children) ? 'hidden' : ''}"
+                (focus)="delAllfavFocus(true, nav)" (focusout)="delAllfavFocus(false, nav)"
+                [attr.aria-label]="isSearching || nav.expanded ? ('COMMON.COLLAPSE' | translate) : ('COMMON.EXPANDED' | translate)">
+                <i class="toggle-icon" [ngStyle]="{'visibility': (!nav.children) ? 'hidden' : ''}"
+                  [ngClass]="isSearching ? 'fa fa-chevron-down' : nav.expanded ?
+                  'fa fa-chevron-down' : 'fa fa-chevron-right'"></i>
+              </button>
+              <span *ngIf="!isMenuCollapsed" title="{{ nav.title }}" id="{{ createId(nav.title) }}" [tabindex]="nav.disabled ? -1 : 0"
+                class="group-name--link" (click)="titleClicked(nav)" (focus)="delAllfavFocus(true, nav)" (focusout)="delAllfavFocus(false, nav)">
+                <i *ngIf="nav.icon" class="{{ nav.icon }} menu-icon"></i>
+                <span class="menu-title" [innerHTML]="nav.sidebarLabel" aria-hidden="true"></span>
+              </span>
+              <span *ngIf="isMenuCollapsed" title="{{ nav.title }}" class="group-name--link"
+                (click)="onParentNavClick($event, nav)" [tabindex]="nav.disabled ? -1 : 0">
+                <i *ngIf="nav.icon; else abbrBlock" class="{{ nav.icon }} menu-icon"></i>
+                <ng-template #abbrBlock>
+                  <b *ngIf="nav.abbr">{{ nav.abbr }}</b>
+                </ng-template>
+              </span>
+              <button #delAllBtn *ngIf="showDelFavBtn(nav)" [style.visibility]="onShowDelAllFav() ? 'visible' : 'hidden'" (click)="deleteAllFavorites()"
+                (focus)="delAllfavFocus(true, nav, delAllBtn)" (focusout)="delAllfavFocus(false, nav, delAllBtn)" id="deleteAllFavsBtn" pTooltip="Delete All Favorites">
+                <i class="fa fa-trash trash-icon-large"></i>
+              </button>
+            </div>
+
+            <ul class="group"
+              [ngClass]="isMenuCollapsed ? 'hide-element' : nav.expanded || isChildSearched(nav) ? 'opened' : ''"
+              *ngIf="nav.title !== 'Favorites' && isItemsDisplayed"
+              pDroppable (onDrop)="handleDrop($event)" (onDragEnter)="addDropIndicator($event)">
+              <rbn-sidebar-items [menuItem]="item" [useFavorites]="useFavorites" [idWithoutSpace]="idWithoutSpace"
+                [useConfigurationMode]="useConfigurationMode"
+                [isConfiguring]="isConfiguring"
+                [isSearching]="isSearching"
+                (leafMenuClick)="onLeafMenuClick($event)"
+                (toggleSubMenu)="onToggleSubMenu($event)" (noChildren)="noChildren($event)"
+                (favoriteChanged)="updateFavorites($event)" *ngFor="let item of nav.children"
+                (reorder)="handleReorder($event)" (onDragChild)="handleDrag($event)">
+              </rbn-sidebar-items>
+            </ul>
+
+            <ul class="group" *ngIf="nav.title === 'Favorites'"
+              [ngClass]="isMenuCollapsed ? 'hide-element' : nav.expanded ? 'opened' : ''"
+              pDroppable (onDrop)="handleDrop($event)" (onDragEnter)="addDropIndicator($event)">
+              <p styleClass="fav-empty-message" *ngIf="favorites.length === 0">
+                <small>
+                  <div class="no-favorite">
+                    {{'FAVORITES.DONT_HAVE_FAVORITES'|translate}}
+                  </div>
+                </small>
+              </p>
+              <span *ngIf="favorites.length !== 0 && isItemsDisplayed">
+                <rbn-sidebar-items [menuItem]="item" favorite="true"
+                  [isConfiguring]="isConfiguring" [useConfigurationMode]="useConfigurationMode"
+                  [isSearching]="isSearching"
+                  (favoriteChanged)="updateFavorites($event)" *ngFor="let item of favorites"
+                  [idWithoutSpace]="idWithoutSpace" (reorder)="handleReorder($event)"
+                  (onDragChild)="handleDrag($event)">
+                </rbn-sidebar-items>
+              </span>
+            </ul>
+          </div>
+        </div>
+
+        <div class="empty"
+          [ngClass]="{ 'searching' : isSearching, 'no-results': isSearching, 'menu-collapsed': isMenuCollapsed }">
+          <p>{{'FAVORITES.NO_RESULTS_WERE_FOUND'|translate}}
+            <strong>{{searchTerm}}</strong>.
+            {{'FAVORITES.PLEASE_TRY_AGAIN'|translate}}.
+          </p>
+          <button (click)="clickClearSearch($event)"> {{'FAVORITES.CLEAR_SEARCH'|translate}} </button>
+        </div>
+      </div>
+
+      <div class="config-button-container">
+        <button pButton type="button" *ngIf="isConfiguring" label="Reset to default" (click)="handleReset()"
+          id="reset-configs" class="config-button config-button-outline-pink button-no-padding pink-outline"></button>
+        <button pButton type="button" *ngIf="isConfiguring" label="Cancel" (click)="handleCancel()"
+          id="cancel-configs" class="config-button config-button-outline-black ui-button-secondary"></button>
+        <button pButton type="button" *ngIf="isConfiguring" label="Save" (click)="handleSave()"
+          id="save-configs" class="config-button"></button>
+      </div>
+    </aside>
+  </ng-container>
+</div>
+
+<rbn-confirm-dialog [title]="'Unsaved Data'"
+  content="You have unsaved changes! If you leave, your changes will be lost.<br>Do you want to proceed?"
+  [isShowConfirmDialog]="isShowCancelDialog" (emitConfirm)="handleCancelDialog($event)" pFocusTrapDisabled="true"></rbn-confirm-dialog>
+
+<rbn-confirm-dialog [title]="'Reset to default'"
+  content="You are resetting your sidebar configurations to its default settings.<br>Do you want to proceed?"
+  [isShowConfirmDialog]="isShowResetDialog" (emitConfirm)="handleResetDialog($event)"></rbn-confirm-dialog>

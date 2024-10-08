@@ -1,0 +1,11 @@
+<div class="p-col-11 p-md-8">
+  <div class="rbn-stepper-confirm-box">
+    <div class="rbn-stepper-confirm-box-content" [id]="generateId('contentBox')">
+      <ng-content></ng-content>
+    </div>
+    <div class="rbn-stepper-confirm-box-edit" pTooltip="{{'COMMON.EDIT' | translate}}" tooltipPosition="right">
+      <i class="fa fa-edit confirm-edit-icon" aria-hidden="true" (click)="editStep(this.for-1)"
+        [id]="generateId('edit')"></i>
+    </div>
+  </div>
+</div>

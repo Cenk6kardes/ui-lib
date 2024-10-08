@@ -1,0 +1,33 @@
+<div class="p-grid topheaderContainer">
+  <div class="product-name">
+    <p-button [icon]="topBar.toogleButton.icon" styleClass="icon-button" (onClick)="
+        topBar.toogleButton.action ? topBar.toogleButton.action($event) : ''
+      " [ariaLabel]="topBar?.toogleButton?.ariaLabel || ''"></p-button>
+  </div>
+  <div class="headerlogo">
+    <img [src]="topBar.logo.image" class="logo" (click)="topBar.logo.action ? topBar.logo.action($event) : ''"
+      [alt]="topBar?.logo?.altImage ? topBar?.logo?.altImage : ''" />
+    <div class="product-label">{{topBar?.logo?.productName}}</div>
+  </div>
+  <div class="container-right p-col">
+    <div class="avatar">
+      <div class="welcome">
+        <div class="name">
+          {{ topBar?.userInfo?.label }}
+          <span class="bold">{{ topBar?.userInfo?.name }}</span>
+        </div>
+        <div class="email">{{ topBar?.userInfo?.email }}</div>
+        <div *ngIf="topBar?.userInfo?.lastLogin" class="last-login" (click)="showLastLogin()">
+          {{ topBar?.userInfo?.lastLogin
+          }}<i class="pi pi-ellipsis-h" style="font-size: 1em; padding-left: 5px;"></i>
+        </div>
+      </div>
+      <img [src]="topBar?.userInfo?.image" *ngIf="topBar?.userInfo?.image"
+        [alt]="topBar?.userInfo?.altImage ? topBar?.userInfo?.altImage: ''" />
+      <p-splitButton no-defaultbutton class="icon-button show-more" [model]="topBar?.userInfo?.model"
+        menuStyleClass="container-topbar-menu"
+        [expandAriaLabel]="topBar?.userInfo?.expandAriaLabel || ''"></p-splitButton>
+    </div>
+    <span class="content-right-text" *ngIf="topBar?.contentRightLabel"> {{ topBar?.contentRightLabel }} </span>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<div [formGroup]="searchCriteriaForm" *ngIf="searchCriteriaForm">
+  <div [ngClass]="'p-grid p-align-center protect-query-builder--row' + (bracketsEnable ? '' : ' nobrackets')"
+    [ngStyle]="{'min-width': getMinWidth() + 'px'}">
+    <div class="p-col-fixed draw-line" [ngStyle]="{'width': width80 + 'px'}">
+      <p-dropdown *ngIf="index > 0 && !searchConfig?.hideLogical && searchCriteriaForm['controls']?.logical"
+        styleClass="ui-width-100" class="ui-width-100" formControlName="logical"
+        [placeholder]="'FIELD_SEARCH.LOGICAL' | translate" [options]="conditionValues" appendTo="body"
+        panelStyleClass="psearch-dropdown" id="{{ 'operator_' + index }}">
+      </p-dropdown>
+    </div>
+    <div class="p-col-fixed draw-line padding-left-0" [ngStyle]="{'width': width60 + 'px'}" *ngIf="bracketsEnable">
+      <p-dropdown [options]="bracketsOpening" appendTo="body" panelStyleClass="psearch-dropdown"
+        styleClass="ui-width-100" class="ui-width-100"></p-dropdown>
+    </div>
+    <ng-container *ngIf="hasFieldInsertedFirstPos && otherFields">
+      <ng-container *ngTemplateOutlet="otherFieldsTemp"></ng-container>
+    </ng-container>
+    <div class="p-col item draw-line" [ngStyle]="{'min-width': itemWidth + 'px'}" #item
+    [ngClass]="{'valid': getControl(parameterField?.name)?.valid}">
+      <div class="content" *ngIf="parameterField?.name">
+        <p-dropdown *ngIf="parameterField?.type === fieldType.Dropdown" styleClass="ui-width-100" class="ui-width-100"
+          [formControlName]="parameterField?.name" [placeholder]="parameterField?.label"
+          [options]="parameterField?.data" filter="true" resetFilterOnHide="true" appendTo="body"
+          panelStyleClass="psearch-dropdown" id="{{ 'field_' + index }}" (ngModelChange)="onSelectFieldType($event, 1)">
+        </p-dropdown>
+        <input #inputFocus *ngIf="parameterField?.type !== fieldType.Dropdown" pInputText
+          [formControlName]="parameterField?.name"
+          [placeholder]="parameterField?.label" (blur)="onSelectFieldType(true)" />
+      </div>
+      <div class="text-danger required"><span
+          *ngIf="empty(parameterField?.name)">{{ 'FIELD_SEARCH.REQUIRED' | translate }}</span>
+      </div>
+    </div>
+    <div class="p-col item draw-line" [ngStyle]="{'min-width': itemWidth + 'px'}" #item
+    [ngClass]="{'valid': getControl(expressionField?.name)?.valid}">
+      <div class="content" *ngIf="expressionField?.name">
+        <p-dropdown styleClass="ui-width-100" class="ui-width-100" [formControlName]="expressionField?.name"
+          [placeholder]="expressionField?.label" [options]="expressionValues" resetFilterOnHide="true" appendTo="body"
+          panelStyleClass="psearch-dropdown" id="{{ 'expression_' + index }}"
+          (ngModelChange)="onSelectExpression($event)"></p-dropdown>
+      </div>
+      <div class="text-danger required"><span
+          *ngIf="empty(expressionField?.name)">{{ 'FIELD_SEARCH.REQUIRED' | translate }}</span>
+      </div>
+    </div>
+    <div class="p-col item draw-line" [ngStyle]="{'min-width': itemWidth + 'px'}" #item
+      *ngIf="valuesField?.type !== fieldType.MultiSelect && valuesField?.type !== fieldType.Dropdown"
+      [ngClass]="{'valid': getControl(valuesField?.name)?.valid}">
+      <div class="content" *ngIf="valuesField?.name">
+        <input #inputFocus pInputText [formControlName]="valuesField?.name" [placeholder]="valuesField?.label"
+          [type]="valuesField?.dataType === dataType.Number ? 'number' : 'text'" id="{{ 'value_' + index }}"
+          (focus)="setValueFocusState(true)" (focusout)="setValueFocusState(false)" (blur)="checkHexValue($event)"
+          (keypress)="onValidateTypeValue($event, index)" />
+      </div>
+      <div class="text-danger required">
+        <span *ngIf="empty(valuesField?.name) && getControl(valuesField?.name)?.invalid">{{ 'FIELD_SEARCH.REQUIRED' | translate }}</span>
+        <span *ngIf="hexErr && !empty(valuesField?.name)">{{ 'FIELD_SEARCH.SHOULD_BE_HEXCIMAL' | translate }}</span>
+      </div>
+      <div *ngIf="enableButton() && !empty(valuesField?.name) && isValuefocused && !hexErr" class="hit-enter">
+        {{ 'FIELD_SEARCH.HIT_ENTER' | translate }}</div>
+    </div>
+    <div class="p-col item draw-line" [ngStyle]="{'min-width': itemWidth + 'px'}" #item
+      *ngIf="valuesField?.type === fieldType.MultiSelect" [ngClass]="{'valid': getControl(valuesField?.name)?.valid}">
+      <div class="content" *ngIf="valuesField?.name">
+        <p-multiSelect styleClass="ui-width-100" class="ui-width-100" [formControlName]="valuesField?.name"
+          [defaultLabel]="valuesField?.label" [options]="multiSelectOptions" [selectionLimit]="null"
+          id="{{ 'multiselectvalue_' + index }}"></p-multiSelect>
+      </div>
+      <div class="text-danger required"><span
+          *ngIf="empty(valuesField?.name)">{{ 'FIELD_SEARCH.REQUIRED' | translate }}</span>
+      </div>
+    </div>
+    <ng-container *ngIf="!hasFieldInsertedFirstPos && otherFields">
+      <ng-container *ngTemplateOutlet="otherFieldsTemp"></ng-container>
+    </ng-container>
+    <ng-template #otherFieldsTemp >
+      <div class="p-col item draw-line padding-right-0"
+      [ngClass]="{'short': bracketsEnable || (!bracketsEnable && i < otherFields.length - 1), 'valid': getControl(field?.name)?.valid}"
+      [ngStyle]="{'min-width': itemWidth + 'px'}" #item *ngFor="let field of otherFields; let i = index">
+      <ng-container *ngIf="field?.name">
+        <div class="content">
+          <input #inputFocus *ngIf="field?.type !== fieldType.MultiSelect &&field?.type !== fieldType.Dropdown"
+            pInputText [formControlName]="field?.name" [placeholder]="field?.label"
+            [type]="field?.dataType === dataType.Number ? 'number' : 'text'" />
+          <p-multiSelect *ngIf="field?.type === fieldType.MultiSelect" styleClass="ui-width-100" class="ui-width-100"
+            [formControlName]="field?.name" [defaultLabel]="field?.label" [options]="field?.data"
+            [selectionLimit]="null">
+          </p-multiSelect>
+          <p-dropdown *ngIf="field?.type === fieldType.Dropdown" styleClass="ui-width-100" class="ui-width-100"
+            [formControlName]="field?.name" [placeholder]="field?.label" [options]="field?.data"
+            resetFilterOnHide="true" appendTo="body" panelStyleClass="psearch-dropdown" (ngModelChange)="onSelectDropdown($event, field?.name)">
+          </p-dropdown>
+        </div>
+        <div class="text-danger required" [hidden]="i === otherFields.length - 1 && !empty(field?.name)"><span
+            *ngIf="empty(field?.name)">{{ 'FIELD_SEARCH.REQUIRED' | translate }}</span></div>
+      </ng-container>
+    </div>
+    </ng-template>
+
+    <div class="p-col-fixed padding-right-0 draw-line" [ngStyle]="{'width': width60 + 'px'}" *ngIf="bracketsEnable">
+      <p-dropdown [options]="brackets" appendTo="body" panelStyleClass="psearch-dropdown" styleClass="ui-width-100"
+        class="ui-width-100">
+      </p-dropdown>
+    </div>
+
+    <div class="p-col-fixed" [ngStyle]="{'width': width60 + 'px'}">
+      <button *ngIf="index === 0" type="button" pButton [disabled]="!enableButton()" icon="fa fa-eraser"
+        [pTooltip]="'FIELD_SEARCH.CLEAR_ROW' | translate" tooltipPosition="right" id="clear-button"
+        (click)="clearItem()"></button>
+      <button *ngIf="index > 0" type="button" pButton icon="fa fa-trash"
+        [pTooltip]="'FIELD_SEARCH.REMOVE_ROW' | translate" tooltipPosition="right" id="{{ 'remove-row-' + index }}"
+        (click)="removeItem(index)"></button>
+    </div>
+  </div>
+</div>

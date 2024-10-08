@@ -1,0 +1,28 @@
+<div class="protect-query-builder"
+  *ngIf="searchForm && searchForm?.controls.length > 0">
+  <div [formGroup]="searchForm">
+    <div class="protect-query-builder--container">
+      <div *ngFor="let search of searchForm?.controls; let i=index"
+        class="protect-query-builder--form">
+        <div [formGroupName]="i">
+          <rbn-search-criteria #SearchCriteria [searchConfig]="searchConfig" [index]="i"
+            [searchCriteriaForm]="searchForm?.controls[i]" [disableEvent]="disableEvent"
+            (enableButtonCheck)="checkButton($event)" (removeSearch)="removeSearch($event)"
+            (addSearches)="addSearches($event)" (duplicateRow)="duplicateRow($event)"
+            [hasFieldInsertedFirstPos]="hasFieldInsertedFirstPos">
+          </rbn-search-criteria>
+        </div>
+      </div>
+    </div>
+    <div class="p-grid p-align-center protect-query-builder--row new">
+      <div class="p-col-fixed">
+        <button type="button" pButton id="add-button" [pTooltip]="buttonOptions?.tooltip" tooltipPosition="right"
+          [disabled]="!enableButton" (click)="addSearches()" icon="fa fa-plus"
+          [ngClass]="{'p-button-rounded': buttonOptions?.showLabel === false}"
+          [label]="buttonOptions?.showLabel !== false
+            && (buttonOptions?.label || ('FIELD_SEARCH.ADD_CRITERION' | translate))">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

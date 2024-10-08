@@ -1,0 +1,40 @@
+@import 'variables';
+
+// .container-file-upload ::ng-deep {
+//   .row {
+//     display: flex;
+//     flex-wrap: wrap;
+//     align-items: center;
+//   }
+
+//   .container {
+//     .input-file {
+//       width: 0;
+//       height: 0;
+//       display: none;
+//     }
+//     .remove-btn {
+//       background-color: $ribbon-light-grey;
+//       border: none
+//     }
+//   }
+
+//  .p-button {
+//    background-color: $primaryColor;
+//    color: $ribbon-white;
+//  }
+
+//   .file-name {
+//     padding: 10px;
+//   }
+// }
+
+.container-file-upload ::ng-deep{
+  .container {
+    display: flex;
+    align-items: center;
+    .p-button {
+      color: $ribbon-white;
+    }
+  }
+}

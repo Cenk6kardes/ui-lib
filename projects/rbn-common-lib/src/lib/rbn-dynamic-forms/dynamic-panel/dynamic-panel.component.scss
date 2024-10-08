@@ -1,0 +1,33 @@
+@import '../../../../../../src/sass/themes/ribbontheme/variables';
+
+.container-dynamic-panel ::ng-deep {
+  .custom-panel {
+    .p-panel-content{
+      padding-top: 15px;
+      padding-bottom: 0px;
+    }
+    padding-top: 0px;
+    .p-toolbar {
+      border: none;
+      margin: 20px -15px 0px -15px;
+      padding: 0.571em 1em;
+    }
+    .button-cancel {
+      margin-right: 0.5em;
+      color: $ribbon-dark-grey;
+      background-color: $ribbon-white;
+      border: 1px solid $ribbon-dark-grey;
+      .p-button-icon {
+        display: none;
+      }
+    }
+
+    .button-save {
+      color: $ribbon-white;
+      background-color: $primaryColor;
+      .p-button-icon {
+        display: none;
+      }
+    }
+  }
+}

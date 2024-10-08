@@ -1,0 +1,11 @@
+<p-toolbar [class]="className" [id]="toolbarId">
+  <div class="p-toolbar-group-left"></div>
+  <div class="p-toolbar-group-right">
+    <button *ngIf="displaySecondary" [id]="toolbarId ? (toolbarId + '-secondary-button') : 'secondary-button'" type="button" pButton pRipple
+      [label]="secondaryLabel || 'COMMON.RESET' | translate" class="m-r-dot-5em rbn-button rbn-button-tertiary"
+      (click)="secondaryClick()" [disabled]="disabledSecondary"></button>
+    <button [id]="toolbarId ? (toolbarId + '-primary-button') : 'primary-button'" type="button" pButton pRipple
+      [label]="primaryLabel || 'COMMON.SAVE' | translate" [disabled]="disabledPrimary"
+      (click)="primaryClick()" class="rbn-button rbn-button-primary"></button>
+  </div>
+</p-toolbar>

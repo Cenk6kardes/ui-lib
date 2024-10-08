@@ -1,0 +1,89 @@
+<div class="p-grid container">
+  <rbn-notifications></rbn-notifications>
+  <p-menubar [model]="items" class="headeruserMenubar"></p-menubar>
+</div>
+<p-dialog header="{{'HEADER_PREF.HEADER'|translate}}" [(visible)]="showPref" modal="modal" [style]="{width: '700px'}"
+  responsive="true" class="headerprefDialog" [closeOnEscape]="!(expiredPassword || forcedToResetPassword)"
+  [dismissableMask]="!(expiredPassword || forcedToResetPassword)" [closeAriaLabel]="'COMMON.CLOSE' | translate"
+  [blockScroll]="(expiredPassword || forcedToResetPassword)" [closable]="!(expiredPassword || forcedToResetPassword)"
+  [draggable]="!(expiredPassword || forcedToResetPassword)">
+  <div class="infoContent p-grid">
+    <div class="p-col-12">
+      <h4 class="h4header"> {{'HEADER_PREF.CHANGEPWD' | translate }} </h4>
+      <hr>
+    </div>
+    <div class="p-col-12 rows-edit-form" *ngIf="expiredPassword">
+      <small class="text-danger">{{pwdexperror}}</small>
+    </div>
+    <div class="p-col-12 rows-edit-form" *ngIf="forcedToResetPassword">
+      <small class="text-danger">{{pwdreseterror}}</small>
+    </div>
+    <div class="p-col-3 rows-edit-form">
+      {{ 'HEADER_PREF.EXTPWD' | translate }}
+    </div>
+    <div class="p-col-6 rows-edit-form">
+      <p-password placeholder="{{ 'HEADER_PREF.EXTPWD' | translate }}"
+        [toggleMask]="true" [feedback]="false" [(ngModel)]="expwd"></p-password>
+    </div>
+    <div class="p-col-3"></div>
+    <div class="p-col-3 rows-edit-form">
+      {{ 'HEADER_PREF.NEWPWD' | translate }}
+    </div>
+    <div class="p-col-6 rows-edit-form">
+      <p-password placeholder="{{ 'HEADER_PREF.NEWPWD' | translate }}"
+        [toggleMask]="true" [feedback]="false" [(ngModel)]="newpwd"></p-password>
+    </div>
+    <div class="p-col-3"></div>
+    <div class="p-col-3 rows-edit-form">
+      {{ 'HEADER_PREF.CFMNEWPWD' | translate }}
+    </div>
+    <div class="p-col-6 rows-edit-form">
+      <p-password placeholder="{{ 'HEADER_PREF.CFMNEWPWD' | translate }}"
+        [toggleMask]="true" [feedback]="false" [(ngModel)]="cnewpwd"></p-password>
+    </div>
+    <div class="p-col-3"></div>
+    <div class="p-col-12 rows-edit-form" *ngIf="pwderror">
+      <small class="text-danger">{{pwderror}}</small>
+    </div>
+    <div class="p-col-6"></div>
+    <div class="p-col-6 p-toolbar-group-right rbn-btns rows-edit-form">
+      <button pButton type="button" class="p-button-outlined" (click)="cancelPwd()"
+        label="{{('COMMON.CANCEL' | translate) || ''}}" id="cancelPwd"
+        [disabled]="(expiredPassword || forcedToResetPassword)"></button>
+      <button pButton type="button" class="p-button-secondary" (click)="logout()"
+        label="{{('HEADER_PREF.LOGOUT' | translate) || ''}}" id="logout"></button>
+      <button pButton type="button" class="" (click)="changePwd()" label="{{('COMMON.SAVE' | translate) || ''}}"
+        [disabled]="!expwd||!newpwd||!cnewpwd" id="changePwd">
+      </button>
+    </div>
+    <div class="p-col-12 padd10 timezone" *ngIf="!(expiredPassword || forcedToResetPassword)">
+      <div>
+        <h4 class="h4header"> {{'HEADER_PREF.SETZONE' | translate }} </h4>
+        <hr>
+      </div>
+      <div class="timezoneButton">
+        <p-selectButton [options]="timezones" [(ngModel)]="timezone" (onChange)="OnChangeTimezone()"></p-selectButton>
+      </div><br /><br />
+    </div>
+  </div>
+</p-dialog>
+<p-dialog header="{{infoHeader}}" [(visible)]="showInfo" modal="modal" [style]="{width: '500px'}" responsive="true"
+  class="headeruserDialog" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <div *ngFor="let parag of infoContent" class="infoContent">
+    <p class="center">{{parag}}</p>
+  </div>
+</p-dialog>
+<p-dialog header="Log out" [(visible)]="showLogout" [focusOnShow]="false" [modal]="true" [responsive]="true"
+  [style]="{width: '500px', minWidth: '500px'}" class="headeruserDialog" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <p>{{'HEADER_USER.LOGOUT_MG'|translate}}</p>
+  <p-footer>
+    <div class="p-toolbar-group-left"></div>
+    <div class="p-toolbar-group-right rbn-btns p-dialog-buttonpane p-widget-content p-helper-clearfix">
+      <button pButton type="button" class="p-button-secondary" (click)="showLogout=false"
+        label="{{('COMMON.NO' | translate) || ''}}" id="cancel"></button>
+      <button pButton type="button" class="" (click)="logout()" label="{{('COMMON.YES' | translate) || ''}}"
+        id="logout">
+      </button>
+    </div>
+  </p-footer>
+</p-dialog>

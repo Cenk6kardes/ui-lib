@@ -1,0 +1,41 @@
+// @import "../../../../../../src/sass/themes/ribbontheme/variables";
+
+// .form-group ::ng-deep {
+//   margin-top: 15px;
+//   padding-left: 25px;
+//   .asterisk {
+//     color: $ribbon-specific-danger;
+//     margin-left: 3px;
+//   }
+//   .container-label {
+//     display: flex;
+//     padding-bottom: 5px;
+//     align-items: center;
+//     .fa {
+//       color: $ribbon-light-grey;
+//       font-size: 18px;
+//       margin-left: 12px;
+//       &:hover {
+//         color: $ribbon-blue;
+//       }
+//     }
+//   }
+//   .container-input {
+//     .input-field {
+//       .p-inputtext.p-component, .p-dropdown.p-component {
+//         // width: 100%;
+//         min-width: 280px;
+//       }
+//     }
+//   }
+//   .error {
+//     flex: 1;
+//     color: $ribbon-specific-danger;
+//     margin-top: 5px;
+//     font-style: italic;
+//     font-size: 14px;
+//   }
+// }
+.rbn-field-dynamic {
+  padding-left: 25px;
+}

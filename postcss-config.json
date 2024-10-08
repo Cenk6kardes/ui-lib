@@ -1,0 +1,5 @@
+{
+  "use": ["cssnano"],
+  "input": "src/generated/theme.css",
+  "output": "src/generated/theme.min.css"
+}

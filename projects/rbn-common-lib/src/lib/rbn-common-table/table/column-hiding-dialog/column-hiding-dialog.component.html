@@ -1,0 +1,23 @@
+<div class="container-column-dialog">
+  <div class="item ckb-all" *ngIf="!config.showAdvancedOption">
+    <p-checkbox (onChange)="onChangeCheckBoxAllShowCol()" [(ngModel)]="config.checkBoxAll" binary="true"
+      [label]="'COMMON.SELECT_ALL' | translate">
+    </p-checkbox>
+  </div>
+  <div *ngFor="let col of config.cols; index as i" class="hiding-config-row"
+    [ngClass]="config.showAdvancedOption ? 'item-padding':''" [class]="col.header ? 'item' : 'hideCol item'">
+    <p-checkbox [styleClass]="col.header ? '' : 'hideCol'" [(ngModel)]="col[config.modelName]" binary="true"
+      [label]="col.header" id="{{ col.field }}" inputId="{{col.field}}_{{i}}"
+      (onChange)="onChangeCheckBoxShowCol(col)" [disabled]="setStatusCheckBoxShowHideCol(i)">
+    </p-checkbox>
+    <p-button [styleClass]="col.header ? '' : 'hideCol'" *ngIf="col.frozen !== undefined && col[config.modelName]" class="lock-button" [icon]="col.frozen === false ? 'fas fa-unlock' : 'fas fa-lock'" (click)="frozenCol(col)"
+    [ariaLabel]="(col.frozen === false ? 'TABLE.UNLOCK_COL' : 'TABLE.LOCK_COL') | translate"></p-button>
+  </div>
+</div>
+<p-footer *ngIf="!isTableChildren">
+  <p-button (onClick)="config.showAdvancedOption ? onOpenAdvancedOption(): onCloseDialog()"
+    [label]="config.showAdvancedOption ? ('COMMON.ADVANCED_OPTION' | translate):(config?.closeButtonLabel ||
+    ('COMMON.CLOSE' | translate))"
+    id="close-columns-button" [ngClass]="config.showAdvancedOption ? 'label-advance-option':''">
+  </p-button>
+</p-footer>

@@ -1,0 +1,389 @@
+@import 'variables';
+@import './_base64Img';
+
+@mixin length($height, $width) {
+  width: $width;
+  height: $height;
+}
+
+::ng-deep {
+  body {
+    margin: 0;
+    min-width: 450px;
+  }
+
+  .container-login {
+    background-image: url($ribbon-bg);
+    background-position: center;
+    background-repeat: no-repeat;
+    height: calc(100%);
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    @include length(100vh, 100%);
+
+    .message-timeout {
+      @include length(13vh, 850px);
+      display: flex;
+      background: rgba($ribbon-cream, 0.5);
+      border: 1px $infoMessageBorder;
+      border-radius: 8px;
+      margin: 0 0 29px;
+      padding: 10px 10px 0 32px;
+
+      .pi-info-circle {
+        font-size: 38px;
+        padding: 8px 12px 0 0;
+        color: $ribbon-blue;
+      }
+
+      .title-message {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+    }
+
+    .content {
+      display: flex;
+      @include length(410px, 850px);
+      border-radius: 10px;
+      overflow: hidden;
+
+      .business-info {
+        width: 50%;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.65);
+        padding-top: 50px;
+
+        .welcome-text {
+          color: $ribbon-white;
+        }
+
+        .horizontal {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 18px;
+
+          .login-logo {
+            background-image: url($ribbon-login-logo);
+            background-repeat: no-repeat;
+            @include length(40px, 150px);
+          }
+        }
+
+        .project-name {
+          color: $ribbon-white;
+          font-size: 20px;
+          margin-bottom: 0;
+        }
+
+        .version {
+          color: $ribbon-white;
+          margin-top: 5px;
+        }
+
+        .group-name {
+          color: $ribbon-white;
+          min-height: 1rem;
+        }
+
+        .content-space {
+          height: 35%;
+        }
+
+        .group-url {
+          color: $ribbon-white;
+          text-decoration: none;
+        }
+
+        .login-banner-left {
+          margin: 15px 20px;
+          max-height: 170px;
+          height: 170px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          align-content: center;
+
+          p {
+            margin: 0;
+            max-height: 147px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, .65);
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+          }
+        }
+      }
+
+      .form-info {
+        width: 50%;
+        padding: 50px 30px 20px 25px;
+        background-color: $ribbon-white;
+        overflow-y: auto;
+
+        .sign-in {
+          font-size: 16px;
+          font-family: system-ui;
+          font-weight: 500;
+          margin-bottom: 0;
+        }
+
+        .input-field {
+          display: flex;
+          align-items: center;
+          margin-top: 25px;
+
+          .input-addon {
+            margin-right: 15px;
+
+            .fa {
+              background-color: $ribbon-lighter-grey;
+              @include length(36px, 36px);
+              display: flex;
+              text-align: center;
+              justify-content: center;
+              align-items: center;
+              border-radius: 18px;
+            }
+          }
+
+          .p-inputtext {
+            width: 100%;
+            height: 36px;
+          }
+
+          .eye-icon {
+            left: -25px;
+            position: relative;
+            z-index: 2;
+            width: 0;
+
+            .fa {
+              color: $ribbon-light-grey;
+            }
+          }
+        }
+
+        .container-error {
+          margin-top: 15px;
+          display: flex;
+          justify-content: center;
+
+          .message-error {
+            color: $ribbon-specific-danger;
+            font-style: italic;
+          }
+        }
+
+        .container-term {
+          margin: 20px 10px;
+          display: flex;
+          align-items: center;
+
+          .terms-and-conditions {
+            margin-left: 15px;
+          }
+        }
+
+        .login-banner {
+          margin-top: 15px;
+        }
+
+        .container-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 15px;
+
+          .p-button {
+            color: $ribbon-white;
+            margin: 15px 0px;
+            padding: 5px 60px;
+            border: 1px solid $ribbon-white;
+            border-radius: 4px;
+
+            &:enabled:hover {
+              border: 1px solid $primaryColor;
+            }
+
+            &:enabled:active,
+            &:enabled:focus {
+              background-color: $primaryColor;
+            }
+          }
+
+          .help-link {
+            margin-left: 10px;
+          }
+        }
+        .third-party {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .divide-block {
+            text-align: center;
+            border-bottom: 1px solid $primaryDarkerColor;
+            width: 155px;
+            height: 13px;
+            margin-bottom: 25px;
+            .divide-text {
+              padding: 0 5px;
+              background-color: $ribbon-white;
+            }
+          }
+          .p-button {
+            padding: 5px 13px;
+            .p-button-text {
+              display: none;
+            }
+          }
+        }
+
+        .status-message {
+          text-align: center;
+          color: $ribbon-dark-red;
+        }
+      }
+    }
+
+    .info-service-failed {
+      .reload-page {
+        text-align: center;
+        vertical-align: middle;
+        margin-bottom: 20px;
+        display: grid;
+      }
+      .message-error {
+        td {
+          p {
+            display: table-cell;
+            padding: 20px 50px;
+            background: $primaryLightColor;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+    .copyright {
+      position: absolute;
+      left: 30px;
+      bottom: 20px;
+      color: $ribbon-white;
+    }
+  }
+
+  @media screen and (max-width: 960px) {
+    .container-login {
+      .message-timeout {
+        width: 450px;
+        height: auto;
+      }
+
+      .content {
+        display: unset;
+        width: 450px;
+        height: auto;
+
+        .business-info {
+          padding: 20px 0px;
+          @include length(180px, 450px);
+
+          .horizontal {
+            .business-text {
+              font-size: 20px;
+            }
+
+            .login-logo {
+              @include length(35px, 140px);
+              background-size: contain;
+            }
+          }
+
+          .project-name {
+            margin-top: 10px;
+            font-size: $fontSize;
+            font-size: medium;
+          }
+
+          .group-name {
+            margin-top: 15px;
+            min-height: 1rem;
+          }
+
+          .group-url {
+            display: none;
+          }
+
+          .version {
+            color: $ribbon-white;
+            font-size: $fontSize;
+            letter-spacing: 1px;
+            text-align: center;
+            width: 100%;
+          }
+
+          .grid {
+            padding-top: 20vh;
+            text-align: center;
+            margin: 0 auto;
+          }
+
+          .info-service-failed {
+            padding-top: 35vh;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            
+          }
+
+          .col {
+            padding-top: 0.5em;
+            padding-bottom: 0.5em;
+          }
+        }
+
+        .form-info {
+          @include length(250px, 450px);
+          padding-top: 5px;
+
+          .input-field {
+            .input-addon {
+              .fa {
+                @include length(28px, 28px);
+              }
+            }
+
+            .p-inputtext {
+              height: 28px;
+            }
+          }
+
+          .container-button {
+            .p-button {
+              padding: 3px 70px;
+            }
+          }
+        }
+
+        .form-info-full {
+          @include length(350px, 450px);
+
+          .container-button {
+            margin: 20px -15px 0px -5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+#loadProcessSpinner {
+  position: absolute;
+  z-index: 10;
+}

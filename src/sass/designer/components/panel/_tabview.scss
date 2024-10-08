@@ -1,0 +1,67 @@
+.p-tabview {
+    .p-tabview-nav {
+        background: none;
+        border: none;
+
+        li {
+            margin-right: $tabviewHeaderSpacing;
+
+            .p-tabview-nav-link {
+                border: none;
+                background: none;
+                color: $tabviewHeaderTextColor;
+                padding: $tabviewHeaderPadding;
+                font-weight: normal;
+                border-top-right-radius: $borderRadius;
+                border-top-left-radius: $borderRadius;
+                transition: $listItemTransition;
+
+                &:not(.p-disabled):focus {
+                    @include focused();
+                }
+            }
+
+            &:not(.p-highlight):not(.p-disabled):hover {
+                .p-tabview-nav-link {
+                    background: none;
+                    border-color: $tabviewHeaderHoverBorderColor;
+                    color: $tabviewHeaderTextHoverColor;
+                }
+            }
+
+            &.p-highlight {
+                .p-tabview-nav-link {
+                    background: none;
+                    border-color: $tabviewHeaderActiveBorderColor;
+                    color: $tabviewHeaderTextActiveColor;
+                    border-bottom: solid 3px $tabviewHeaderActiveBorderColor;
+                    font-weight: $tabviewHeaderFontWeight;
+                }
+            }
+        }
+    }
+
+    .p-tabview-left-icon {
+        margin-right: $inlineSpacing;
+    }
+
+    .p-tabview-right-icon {
+        margin-left: $inlineSpacing;
+    }
+
+    .p-tabview-close {
+        margin-left: $inlineSpacing;
+    }
+
+    .p-tabview-panels {
+        background: $tabviewContentBg;
+        padding: $tabviewContentPadding;
+        border: $tabviewContentBorder;
+        color: $tabviewContentTextColor;
+        border-radius: $borderRadius;
+        box-shadow: 0 0 6px 0 rgba(0,0,0,0.16);
+        .p-datatable .p-datatable-header {
+          background: $ribbon-white;
+        }
+    }
+}

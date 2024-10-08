@@ -1,0 +1,4 @@
+<button class="container-icon" (click)="onClickNotification ? onClickNotification(): ''">
+  <i class="fa fa-fw fa-bell icon-notification-global"></i>
+  <div *ngIf="totalNotification > 0" class="total-noti"><span>{{totalNotification}}</span></div>
+</button>

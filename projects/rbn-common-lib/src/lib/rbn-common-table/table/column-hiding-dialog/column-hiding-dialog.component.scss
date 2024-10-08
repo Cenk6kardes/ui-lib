@@ -1,0 +1,50 @@
+@import 'variables';
+
+.label-advance-option ::ng-deep {
+  .p-button {
+    background-color: $ribbon-white;
+    color: $primaryColor;
+    box-shadow: none;
+    border: none;
+
+    .p-button-label {
+      text-decoration: underline;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.container-column-dialog {
+  .item-padding {
+    padding: 5px 0;
+  }
+}
+:host ::ng-deep {
+  .hideCol {
+    visibility: hidden;
+    display: none;
+  }
+  .p-button:enabled:focus {
+    background-color: $ribbon-white;
+  }
+  .lock-button {
+    .p-button {
+      background-color: inherit;
+      color: $primaryColor !important;
+      padding: unset;
+      height: auto;
+    }
+  }
+}
+.hiding-config-row {
+  display: flex;
+  justify-content: space-between;
+  ::ng-deep .p-checkbox-label {
+    color: $textColor;
+  }
+}

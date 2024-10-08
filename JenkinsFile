@@ -1,0 +1,244 @@
+pipeline {
+    parameters {
+        choice(
+            description: 'Node Label to Build',
+            name: 'BUILD_NODE_LABEL',
+            choices: ['OTT-PC2_CN7', 'OTT-PC3_CN7']
+        )
+        string(
+            name: 'EMAIL_RECIPIENTS',
+            defaultValue: 'nlethi@rbbn.com;',
+            description: 'Email recipents'
+        )
+    }
+
+    environment {
+        BUILD_RESULTS_EMAIL_LIST = "${EMAIL_RECIPIENTS}"
+        GIT_NAME = 'rbn-common'
+        GIT_BRANCH_NAME = 'feature/accessibility'
+        PLANO_ARTIFACTORY_URL = 'https://artifactory-tx.rbbn.com/artifactory'
+        PLANO_ARTIFACTORY_REPOSITORY = 'ribbon_common-npm-prod-plano/'
+        PLANO_ARTIFACTORY_ADMIN_TOKEN = credentials('af6cf88b-80c9-4a7c-8042-a7684c7bfd74')
+        PLANO_ARTI_LOADBUILD_TOKEN = credentials('f8673777-0c46-46c1-96ff-fcdffe5084bb')
+        WGET_OPTS = "--header=Authorization: Bearer $PLANO_ARTI_LOADBUILD_TOKEN"
+        aut_FAILURETHRESHOLD = '100'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 4, unit: 'HOURS')
+        buildDiscarder(logRotator(numToKeepStr:'20'))
+    }
+
+    agent {
+        label "${BUILD_NODE_LABEL}"
+    }
+
+    stages {
+        stage('Install Build Dependencies') {
+            steps {
+                // Setup OS VM
+                sh '''
+                    sudo yum -y install wget firefox ant
+
+                    sudo yum remove -y nodejs npm
+                    curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
+                    sudo yum -y install nodejs
+                    npm install npm@8.5.5 -g
+                    npm install -g typescript protractor eslint@^8.18.0 @angular/cli@14.1.3
+
+                    sudo npm cache clean -f
+                    #sudo npm install -g n
+                    #sudo n stable
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh '''
+                    npm ci
+                    npm run prebuildlib-grey
+                    npm run buildlib-grey
+
+                    npm run prebuildlib
+                    npm run buildlib
+                '''
+            }
+        }
+
+        stage('Execute Parallel Stages') {
+            parallel {
+                stage('Unit Test FirefoxHeadless') {
+                    steps {
+                        sh '''
+                      mkdir -p $WORKSPACE/aut/junit
+                      rm -rf $WORKSPACE/aut/junit/*.xml
+                      # ls $WORKSPACE/*
+                      cd ${WORKSPACE}/projects/rbn-common-lib
+                      ng test rbn-common-lib --browsers=FirefoxHeadless --code-coverage=true --watch=false || true
+                      cp junit/*/*.xml $WORKSPACE/aut/junit/
+                      mkdir -p $WORKSPACE/firefox
+                      ls coverage
+                      cp -R coverage $WORKSPACE/firefox
+                    '''
+                        echo "Unit Test FirefoxHeadless stage status:  ${currentBuild.result}"
+                        echo 'Unit Test Code Coverage Report FirefoxHeadless - start'
+                        publishCoverage adapters: [coberturaAdapter('firefox/coverage/rbn-common-lib/cobertura-coverage.xml')], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+                        echo 'Unit Test Code Coverage Report FirefoxHeadless - done'
+                    }
+                }
+
+                // unit test is NOT testing on the ng8 code. TODO: why??
+                stage('ESLint') {
+                    steps {
+                        sh '''
+                            mkdir -p $WORKSPACE/eslint
+                            rm -rf $WORKSPACE/eslint/*.xml
+                            cd ${WORKSPACE}/projects/rbn-common-lib
+                            eslint -c .eslintrc.json -f junit src > eslint_out.xml || true
+                            cp eslint_out.xml $WORKSPACE/eslint/
+                        '''
+                    }
+                }
+
+                stage('Analyze Code (WHITESOURCE)') {
+                    when { expression { false } }
+                    steps {
+                        sh '''
+                            cd ${WORKSPACE}
+                            KEYTOOL_PATH=$(which keytool)
+
+                            wget --no-verbose "${WGET_OPTS}" "$PLANO_ARTIFACTORY_URL/sde_tools-generic-prod-plano/Whitesource/whitesource-fs-agent-18.5.1.jar"
+                            wget --no-verbose "${WGET_OPTS}" -O /usr/lib/jvm/jre/lib/security/rcplu16ws01.genband.com.cer "$PLANO_ARTIFACTORY_URL/sde_tools-generic-prod-plano/Whitesource/rcplu16ws01.genband.com.cer"
+
+                            cp /usr/lib/jvm/jre/lib/security/cacerts /usr/lib/jvm/jre/lib/security/cacerts.bak
+                            keytool -import -noprompt -trustcacerts -alias rcplu16ws01.genband.com -file "/usr/lib/jvm/jre/lib/security/rcplu16ws01.genband.com.cer" -keystore /usr/lib/jvm/jre/lib/security/cacerts -storepass "changeit"
+
+                            java -Xmx2048M -jar ${WORKSPACE}/whitesource-fs-agent-18.5.1.jar -c ${WORKSPACE}/whitesource-fs-agent.config -d ${WORKSPACE}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Unit Test Trends') {
+            steps {
+                echo " Test Trends stage status before xunit:  ${currentBuild.result}"
+
+                //xunit to parse unittest result
+                xunit testTimeMargin: '3000', thresholdMode: 1, thresholds: [[$class: 'FailedThreshold', failureNewThreshold: "$aut_FAILURETHRESHOLD", failureThreshold: "$aut_FAILURETHRESHOLD", unstableNewThreshold: "$aut_FAILURETHRESHOLD", unstableThreshold: "$aut_FAILURETHRESHOLD"],
+                [$class: 'SkippedThreshold', failureNewThreshold: "$aut_FAILURETHRESHOLD", failureThreshold: "$aut_FAILURETHRESHOLD", unstableNewThreshold: "$aut_FAILURETHRESHOLD", unstableThreshold: "$aut_FAILURETHRESHOLD"]], tools: [JUnit(deleteOutputFiles: false, failIfNotNew: false, pattern: 'aut/junit/*.xml', skipNoTestFiles: false, stopProcessingIfError: false)]
+
+                echo " Test Trends stage status after xunit:  ${currentBuild.result}"
+
+                junit allowEmptyResults: true, healthScaleFactor: 0.0, testResults: '**/eslint/eslint_out.xml'
+
+                echo "Test Trends final stage status after junit:  ${currentBuild.result}"
+            }
+        }
+
+        stage('Unit Test Code Coverage Report') {
+            steps {
+                echo 'Unit Test Code Coverage Report - start'
+                publishCoverage adapters: [coberturaAdapter('projects/rbn-common-lib/coverage/rbn-common-lib/cobertura-coverage.xml')], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'projects/rbn-common-lib/coverage/rbn-common-lib/', reportFiles: 'index.html', reportName: 'Code Coverage Report', reportTitles: ''])
+                echo 'Unit Test Code Coverage Report - done'
+            }
+        }
+
+        stage('Publish Artifact') {
+            steps {
+                sh '''
+                    cd "${WORKSPACE}"/dist/rbn-common-lib
+
+                    ##static api token
+                    wget "${WGET_OPTS}" -O ~/.npmrc "${PLANO_ARTIFACTORY_URL}"/ribbon_common-npm-prod-plano/Dependencies/.npmrc
+                    npm publish --registry "${PLANO_ARTIFACTORY_URL}"/api/npm/ribbon_common-npm-prod-plano/
+
+                    cd "${WORKSPACE}"/dist-grey/rbn-common-lib
+                    ##static api token
+                    wget "${WGET_OPTS}" -O ~/.npmrc "${PLANO_ARTIFACTORY_URL}"/ribbon_common-npm-prod-plano/Dependencies/.npmrc
+                    npm publish --registry "${PLANO_ARTIFACTORY_URL}"/api/npm/ribbon_common_grey-npm-prod-plano/
+
+
+                '''
+                findCommonLibVersion()
+            }
+        }
+
+        stage('Bump Version') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'f9678791-baea-418f-a23f-a4d6a55487f6', usernameVariable: 'VSEBLD', passwordVariable: 'VSEBLD_PASS')]) {
+                    sh '''
+                        # This shallow clone is required for version bump commit using ant script below
+                        git clone http://$VSEBLD:$VSEBLD_PASS@bitbucket.rbbn.com/scm/ng/rbn-common.git --depth=1 --branch="${GIT_BRANCH_NAME}"
+                        cd rbn-common/projects/rbn-common-lib/build
+                        # Run ant script to bump common library version
+                        ant
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext body: "RIBBON COMMON-UI FRAMEWORK ANGULAR 14 build and published.\nTest Result can be accessed on: ${BUILD_URL}testReport/\n\nBuild artifact can be found on: $PLANO_ARTIFACTORY_URL/$PLANO_ARTIFACTORY_REPOSITORY",
+            recipientProviders: [
+                [$class: 'DevelopersRecipientProvider']
+            ],
+            subject: "[Jenkins] SUCCESS: COMMON-LIB NG14 #${BUILD_NUMBER} - BUILD & PUBLISHED",
+            to: "$BUILD_RESULTS_EMAIL_LIST"
+
+            // Call VNFM-UI downstream
+            // build job: 'VNFM/ProductReleasePipelines/VNFM-UI/VNFM-UI', wait: false
+        }
+
+        failure {
+            emailext body: "Build URL is: ${BUILD_URL}",
+            recipientProviders: [
+                [$class: 'DevelopersRecipientProvider']
+            ],
+            subject: "[Jenkins] FAILED: COMMON-LIB NG14 #${BUILD_NUMBER} - BUILD FAILING # ATTENTION REQUIRED",
+            to: "$BUILD_RESULTS_EMAIL_LIST"
+        }
+
+        unstable {
+            emailext body: "RIBBON COMMON-UI FRAMEWORK build UNSTABLE.\nPossible Reason: New Unit-test failure or new ESLint issue.\nTest Result can be accessed on: ${BUILD_URL}testReport/ \n\nBuild artifact can be found on: $PLANO_ARTIFACTORY_URL/$PLANO_ARTIFACTORY_REPOSITORY",
+            recipientProviders: [
+                    [$class: 'DevelopersRecipientProvider']
+            ],
+            subject: "[Jenkins] UNSTABLE: COMMON-LIB NG14 #${BUILD_NUMBER} - BUILD Unstable # ATTENTION REQUIRED",
+            to: "$BUILD_RESULTS_EMAIL_LIST"
+
+            // Call VNFM-UI downstream
+            // build job: 'VNFM/ProductReleasePipelines/VNFM-UI/VNFM-UI', wait: false
+        }
+
+        always {
+            // Terminate Build VM
+            sh "curl -X POST http://vsebld:5f0805a88be7a448a518ae917cb9087f@gbpljnk02.genband.com:8081/computer/${env.NODE_NAME}/scheduleTermination"
+        }
+    }
+}
+
+String findCommonLibVersion() {
+    String version = ''
+    try {
+        sh "cd ${WORKSPACE}"
+        version = sh(
+            script: 'grep \'"version"\' projects/rbn-common-lib/package.json | cut -d \'"\' -f 4 | head -n 1',
+            returnStdout: true
+        )
+    } catch (err) {
+        echo 'Exception in method findCommonLibVersion'
+        echo err.getMessage()
+    } finally {
+        if (version != '') {
+            manager.addShortText(version)
+        }
+        println "NG14: Common Library Version: ${version}"
+    }
+    return version
+}

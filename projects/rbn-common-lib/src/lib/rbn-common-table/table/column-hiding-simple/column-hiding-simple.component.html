@@ -1,0 +1,15 @@
+<p-dialog *ngIf="config" [header]="config?.header || ('COMMON.SELECT_TO_HIDE' | translate)" modal=true [(visible)]="config.displayDialog"
+  (onShow)="onShowColDialog()" id="{{idSimple}}-dialog" (onHide)="onHideColumnDialog()" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <ng-container *ngTemplateOutlet="dialog"></ng-container>
+</p-dialog>
+
+<p-overlayPanel #menuHiding id="{{idSimple}}-overlay" *ngIf="config" (onHide)="onHideColumnDialog()" appendTo="body">
+  <ng-template pTemplate>
+    <ng-container *ngTemplateOutlet="dialog"></ng-container>
+  </ng-template>
+</p-overlayPanel>
+
+<ng-template #dialog>
+  <rbn-column-hiding-dialog [config]="config" [idSimple]="idSimple" [isTableChildren]="isTableChildren" (changeFrozen)="onChangeFrozen($event)">
+  </rbn-column-hiding-dialog>
+</ng-template>

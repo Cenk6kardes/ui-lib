@@ -1,0 +1,33 @@
+<div [id]="idComplex">
+  <p-dialog *ngIf="config" modal="true" [header]="config?.header || ('COMMON.CUSTOMIZE_COLUMNS' | translate)" [(visible)]="config.displayDialog "
+    (onHide)="onCloseDialog()" (onShow)="onShowColDialog()" [closeAriaLabel]="'COMMON.CLOSE' | translate"
+    [appendTo]="isUsingAppendTo ? '' : 'body'" styleClass="dialog-complex" [contentStyleClass]="allowFrozen ? 'allow-frozen' : ''">
+    <div class="container-pick-list-dialog">
+      <p-pickList [source]="possibleCols" [target]="visibleCols" filterBy="header" [showSourceFilter]="true"
+        dragdrop="true" [sourceHeader]="config?.sourceHeader || ('COMMON.POSSIBLE_COLUMNS' | translate)"
+        [targetHeader]="config?.targetHeader || ('COMMON.VISIBLE_COLUMNS' | translate)" [responsive]="true"
+        [sourceFilterPlaceholder]="'COMMON.SEARCH'| translate" [targetFilterPlaceholder]="'COMMON.SEARCH'| translate"
+        (onMoveToSource)="onMoveToSource($event)"
+        (onMoveToTarget)="onMoveToTarget($event)"
+        (onMoveAllToTarget)="onMoveToTarget($event)"
+        (onMoveAllToSource)="onMoveToSource($event)"
+        (onTargetReorder)="onTargetReorder()">
+        <ng-template let-col pTemplate="item">
+          <div class="ui-helper-clearfix" [ngClass]="col.allowHide === false ? 'hide-item' : ''">
+            <div>{{col?.header}}</div>
+          </div>
+          <p-button *ngIf="allowFrozen && col.frozen !== undefined" [icon]="col.frozen === false ? 'fas fa-unlock' : 'fas fa-lock'" class="lock-btn" (onClick)="frozenCol(col, $event)" (mousedown)="$event.stopPropagation()"
+          [ariaLabel]="(col.frozen === false ? 'TABLE.UNLOCK_COL' : 'TABLE.LOCK_COL') | translate"></p-button>
+        </ng-template>
+      </p-pickList>
+      <rbn-panel-messages *ngIf="allowFrozen" [content]="'FROZEN_INFO' | translate"
+      [typeOfMessage]="'info'"></rbn-panel-messages>
+    </div>
+    <p-footer>
+      <p-button (onClick)="onCloseDialog()" [label]="'COMMON.CANCEL' | translate" id="cancel-columns-button">
+      </p-button>
+      <p-button (onClick)="onCustomize()" [disabled]="visibleCols.length === 0" [label]="'COMMON.SAVE' | translate" id="customize-columns-button">
+      </p-button>
+    </p-footer>
+  </p-dialog>
+</div>

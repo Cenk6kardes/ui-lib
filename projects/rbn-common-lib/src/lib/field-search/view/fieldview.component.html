@@ -1,0 +1,26 @@
+<div class="protect-query-builder--container">
+  <div class="p-grid p-align-center">
+
+    <div class="p-col-fixed ui-width-80px viewboxCol" *ngIf="hideOperatorCol"></div>
+
+    <div class="p-col-2 viewboxCol headerboxcol" *ngFor="let x of viewHeader;">
+      <strong>{{x.header}}</strong>
+    </div>
+
+  </div>
+  <ng-container *ngFor="let row of viewData; let i = index;">
+    <div [ngClass]="formClass">
+      <div [ngClass]="addClass">
+        <div class="p-col-fixed ui-width-80px viewboxCol" *ngIf="hideOperatorCol">
+          <div *ngIf="i > 0 && showOperator" class="viewboxes ui-width-100">{{row.operator | titlecase}}</div>
+        </div>
+
+        <div class="p-col-2 viewboxCol" *ngFor="let x of viewHeader;">
+          <input *ngIf="inputDisable" class="viewboxes ui-width-100" id="{{row[x.value]}}" type="text" pInputText
+            [value]="row[x.value]">
+          <div *ngIf="!inputDisable" class="viewboxes ui-width-100" disabled="true">{{row[x.value]}}</div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

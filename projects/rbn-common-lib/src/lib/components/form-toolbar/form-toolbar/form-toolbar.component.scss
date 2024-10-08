@@ -1,0 +1,12 @@
+.m-r-dot-5em {
+  margin-right: 0.5em;
+}
+
+:host ::ng-deep {
+  .transparent {
+    .p-toolbar {
+      background-color: transparent;
+      border: 0;
+    }
+  }
+}

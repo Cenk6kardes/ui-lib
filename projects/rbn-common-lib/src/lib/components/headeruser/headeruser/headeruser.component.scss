@@ -1,0 +1,106 @@
+@import 'variables';
+
+::ng-deep {
+  .container {
+    float: right;
+    align-items: center;
+
+    .p-menubar {
+      padding: 0px;
+      background: $ribbon-white;
+
+      @media screen and (max-width: 960px) {
+        .p-menubar-root-list {
+          flex-direction: column;
+          top: 100%;
+          left: -103px;
+          z-index: 1;
+          width: auto;
+        }
+      }
+
+      .p-submenu-list {
+        z-index: 2000;
+      }
+    }
+  }
+
+  .rbn-btns .p-button {
+    margin-left: 15px;
+  }
+}
+
+.headeruserDialog {
+  ::ng-deep {
+    .p-dialog .p-dialog-content {
+      padding: 2em 1em;
+    }
+
+    .p-dialog .p-dialog-footer {
+      padding: 1.6em 1em;
+    }
+
+    .p-dialog .p-dialog-titlebar {
+      padding: 1.6em 1em;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    p.center {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.headerprefDialog {
+  ::ng-deep {
+    .p-dialog .p-dialog-content {
+      padding: 0.1em 1em 1em 1em;
+    }
+
+    .p-dialog .p-dialog-footer {
+      padding: 1em 1em;
+    }
+
+    .p-dialog .p-dialog-titlebar {
+      padding: 1em 1em;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    p.center {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    label {
+      margin-left: 20px;
+      margin-right: 20px;
+      font-weight: bold;
+    }
+
+  }
+
+  .h4header {
+    margin-bottom: 5px;
+  }
+
+  .pwdbuttons {
+    margin-top: 15px;
+  }
+
+  .timezoneButton {
+    margin-bottom: 15px;
+    margin-top: 20px;
+  }
+
+  .timezone {
+    padding-top: 15px;
+    clear: both;
+  }
+}
+
+.rhu {
+  float: right;
+}

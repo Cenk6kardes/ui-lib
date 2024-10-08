@@ -1,0 +1,91 @@
+@import "variables";
+
+.protect-page-top {
+  min-width: 320px;
+  background-color: $ribbon-specific-topbar-background-color;
+  height: 64px;
+
+  &.p-grid {
+    margin: 0;
+    align-items: center;
+  }
+
+  .protect-navbar-logo {
+    display: inline-flex;
+    padding-left: 20px;
+    align-items: center;
+    .product-info {
+      color: $ribbon-white;
+      font-family: $fontFamily;
+      margin: 0 0px 5px 10px;
+      .product-title {
+        font-size: 22px;
+        letter-spacing: 1.7px;
+        font-weight: 500;
+        line-height: 30px;
+      }
+      .product-description {
+        font-size: 14px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .project-navbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .external {
+      display: flex;
+      button {
+        margin: 0px 3px;
+        color: $ribbon-white;
+        background-color: $ribbon-dark-grey;
+
+        &:hover {
+          color: $primaryColor;
+          background-color: $ribbon-white;
+        }
+        
+      }
+      label{
+        color: $ribbon-white;
+        padding: 5px;
+      }
+    }
+
+    .status-indicators {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 7px 20px;
+      max-width: 200px;
+      margin-right: 30px;
+      .status-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status-title {
+        font-size: 12px;
+        color: $ribbon-white;
+      }
+      .status-circle {
+        width: 15px;
+        height: 15px;
+        border-radius: 100rem;
+        &.success {
+          background-color: $ribbon-green;
+        }
+        &.fault {
+          background-color: $ribbon-red;
+        }
+        &.unknown {
+          background-color: $ribbon-yellow;
+        }
+      }
+    }
+  }
+}

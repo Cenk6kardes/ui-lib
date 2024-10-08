@@ -1,0 +1,900 @@
+<!-- columns hiding simple -->
+<rbn-column-hiding-simple *ngIf="columnHidingMode === ColumnHidingMode.Simple" [config]="colHidingDialogSimpleConfig"
+  (hideColumnDialog)="onHideColumnDialog()" (showColumnDialog)="onShowColumnDialog()" [idSimple]="tableName"
+  [isTableChildren]="tableConfig.isTableChildren" (changeFrozen)="onChangeFrozen($event)">
+</rbn-column-hiding-simple>
+
+<!-- contextmenu -->
+<p-contextMenu  #cm [model]="itemsContextMenu"></p-contextMenu>
+
+<p-contextMenu #frozenCM [model]="frozenMenuItems" [appendTo]="isUsingAppendTo ? dt : 'body'" [styleClass]="'frozen-cm'"></p-contextMenu>
+
+<!-- columns hiding complex -->
+<rbn-column-hiding-dialog-complex *ngIf="columnHidingMode === ColumnHidingMode.Complex" [allowFrozen]="tableConfig.allowFrozenColumn"
+  [config]="colHidingDialogComplexConfig" (closeDialog)="closeDialog($event)" (showColumnDialog)="onShowColumnDialog()"
+  [idComplex]="tableName" [isUsingAppendTo]="isUsingAppendTo">
+</rbn-column-hiding-dialog-complex>
+
+<ng-container *ngIf="showCSVContainer">
+   <rbn-export-table #rbnExportTable [tableHeader]="cols" [allTableHeader]="allCols"
+   [tableData]="dataExport" [currentTableData]="getCurrentRowsOnPage()"
+   (closeDialog)="closeCSVDialog($event)" [filename]="tableName"
+   [showExportColumns]="showExportColumns" [paginatorMode] ="paginatorMode"
+   [maxLimitRecordsExportServer]="maxLimitRecordsExportServer"
+   (exportDataModeServerEvent)="exportDataModeServer($event)"
+   [exportConfig]="tableConfig.exportDataConfig"
+   [buttonConfig]="tableConfig?.tableOptions.btn3DotsConfig">
+  </rbn-export-table>
+</ng-container>
+
+<!-- <p-blockUI [blocked]="loading"></p-blockUI> -->
+
+<rbn-dialog-loader [loading]="loading"></rbn-dialog-loader>
+
+
+<!-- confirm dialog reset default -->
+<ng-container *ngIf="isShowConfirmDialogSettingDefault">
+  <rbn-confirm-dialog #confirmDialogResetDefault [title]="'CONFIRM_DIALOG_RESET_DEFAULT.TITLE' | translate"
+  [content]="'CONFIRM_DIALOG_RESET_DEFAULT.CONTENT' | translate"
+  [titleAccept]="'CONFIRM_DIALOG_RESET_DEFAULT.RESET' | translate"
+  [titleReject]="'CONFIRM_DIALOG_RESET_DEFAULT.CANCEL' | translate"
+  (emitConfirm)="confirmDialog($event)"></rbn-confirm-dialog>
+</ng-container>
+
+
+<div #containerTable class="rbn-table" [ngClass]="isScrollable === false ? 'autolayout-table' : ''">
+  <div class="container-accordian">
+    <!-- header of table -->
+    <rbn-page-header [data]="header" *ngIf="tableConfig.header?.title" (backButtonAction)="onBack()">
+    </rbn-page-header>
+
+    <!-- table -->
+    <p-table #dt [columns]="cols" [value]="data"
+      [reorderableColumns]="true" [dataKey]="tableOptions ? tableOptions?.dataKey : ''" [(selection)]="selectedRows"
+      [filterDelay]="filterDelay"
+      (onFilter)="handleFilterChanged($event)" [paginator]="paginatorMode !== PaginatorMode.Server && paginator"
+      [paginatorDropdownAppendTo]="isUsingAppendTo ? dt : 'body'"
+      [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+      [rows]="numberRowPerPage" [rowsPerPageOptions]="rowsPerPageOptions?.length> 0
+      ? rowsPerPageOptions
+      : [numberRowPerPage, numberRowPerPage + 5, numberRowPerPage + 10]
+      " (onRowSelect)="
+      resetSelectAllPageValue(); onRowSelectInner($event);
+      onRowSelect ? onRowSelect($event, selectedRows) : ''
+      " (onRowUnselect)="
+      resetSelectAllPageValue(); onRowUnselectInner($event);
+      onRowUnselect ? onRowUnselect(dt, selectedRows) : ''
+      " [customSort]="isCustomSort" (onSort)="onSort()" [scrollable]="isScrollable" [first]="first" [id]="tableName"
+      (onRowReorder)="onRowReorder()" (onPage)="onPage($event)"
+      [ngClass]="scrollX || (data && data.length === 0) ? 'scroll-x' : ''"
+      (onHeaderCheckboxToggle)="onCheckboxHeader($event.checked)"
+      [resizableColumns]="isResizableColumns"
+      [autoLayout]="isAutoLayout"
+      [rowExpandMode]="tableConfig.tableOptions?.rowExpandMode ? tableConfig.tableOptions.rowExpandMode : 'single'"
+      (onRowCollapse)="onRowCollapse($event)"
+      (onRowExpand)="onRowExpand($event)"
+      (onColResize)="onColResize($event, dt)"
+      [contextMenu]="cm" [(contextMenuSelection)]="selectedRowData"
+      (contextmenu)="isShowContextMenu ? onRightClick(selectedRowData, cm) : ''"
+      [scrollHeight]="tableConfig.useScrollHeight ? tableConfig.useScrollHeight : ''"
+      [class]="isResizableColumns ? 'resizableColumns' : 'no-resizableColumns'"
+      [expandedRowKeys]="expandedRows"
+      [rowTrackBy]="trackByFunction">
+
+
+      <!-- table caption -->
+      <ng-template pTemplate="caption" *ngIf="caption">
+        <div class="container-caption p-grid">
+
+          <!-- extensible header template -->
+          <div class="container-template" *ngIf="extensibleHeaderTemplate">
+            <ng-container *ngTemplateOutlet="extensibleHeaderTemplate;
+              context: {
+              $implicit: extensibleHeaderData,
+              extensibleHeaderService: extensibleHeaderService
+              }">
+            </ng-container>
+          </div>
+
+          <div class="container-template" *ngIf="extHeaderRghtTmplt">
+            <ng-container *ngTemplateOutlet="extHeaderRghtTmplt; context: { }">
+            </ng-container>
+          </div>
+
+          <!-- row selection message  -->
+          <div class="message-container" *ngIf="messageSelect">
+            <div class="message-contain">
+              <span [innerHTML]="getMessageSelectedRows()"></span>
+            </div>
+            <div class="button-contain" *ngIf="allowSelectAllRows && selectAllRow">
+              <p-button [label]="selectAllRow" class="message-button"
+                (onClick)="onCheckboxHeader(!isSelectAllRows)"
+                [id]="tableName ? tableName + 'SelectAllRowBtn' : 'selectAllRowBtn'">
+              </p-button>
+            </div>
+          </div>
+
+
+          <div class="p-col container-right">
+            <div class="container-search-input" *ngIf="enableSearchGlobal">
+              <!-- search global input -->
+              <rbn-search-global [searchConfig]="searchConfig" (inputValueEvent)="inputValueEvent($event)"
+                (clearBtnEvent)="clearSearchGlobal()">
+              </rbn-search-global>
+            </div>
+
+            <!-- container button -->
+            <div class="container-button" *ngIf="!tableOptions?.hideTableButtons">
+              <div>
+                <!-- button clear -->
+                <p-button *ngIf="tableConfig.tableOptions?.showClearAllRowsButton"
+                  class="table-hdr-btn button-refresh icon-button"
+                  [id]="tableName ? tableName + 'clearTableBtn' : 'clearTableBtn'" icon="pi pi-times"
+                  (onClick)="clearAllRows()" [ariaLabel]="'COMMON.CLEAR_ALL_ROWS' | translate"
+                  [title]="'COMMON.CLEAR_ALL_ROWS' | translate"></p-button>
+                <!-- button refresh -->
+                <p-button class="table-hdr-btn button-refresh icon-button" *ngIf="!tableOptions?.hideRefreshButton" [disabled]="tableConfig.tableOptions?.disabledRefreshButton ? true : false"
+                  [id]="tableName ? tableName + 'RefeshTableBtn' : 'refeshTableBtn'" icon="fa fa-refresh"
+                  (onClick)="refreshDataInner(true)" [ariaLabel]="'COMMON.REFRESH' | translate" [title]="'COMMON.REFRESH' | translate"></p-button>
+
+                <!-- button show hide columns -->
+                <p-button *ngIf="columnHidingMode !== ColumnHidingMode.None"
+                  class="table-hdr-btn button-dialog icon-button"
+                  [id]="tableName ? tableName + 'ShowHideColumns' : 'showHideColumns'" icon="fa fa-columns"
+                  (onClick)="openToggle($event)" [ariaLabel]="'COMMON.SHOWHIDECOLUMNS' | translate" [title]="'COMMON.SHOWHIDECOLUMNS' | translate"
+                  [ngClass]="showColumns ? 'button-focus':''"></p-button>
+
+                <!-- button filter -->
+                <p-button *ngIf="enableFilter" class="table-hdr-btn button-filter icon-button"
+                  [id]="tableName ? tableName + 'ShowHideFilter' : 'showHideFilter'" icon="fa fa-filter"
+                  (onClick)="toggleFilterRow()" [ariaLabel]="'COMMON.SHOW_HIDE_FILTER_ROW' | translate" [title]="'COMMON.SHOW_HIDE_FILTER_ROW' | translate"
+                  [ngClass]="{ 'button-focus': showFilterRow || (colsFilterTable | json) !== '{}'}"></p-button>
+
+                <!-- button 3 dots -->
+                <p-splitButton no-defaultbutton *ngIf="tableConfig.tableOptions?.show3DotsButton"
+                [id]="tableName ? tableName + '3DotsBtn' : '3dotsBtn'" [expandAriaLabel]="'COMMON.MORE' | translate"
+                icon="fa fa-ellipsis-h" [model]="subActionItems" (onDropdownClick)="onClick3DotsBtn()" class="icon-button" [appendTo]="isUsingAppendTo ? dt : 'body'"></p-splitButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup id="pTemplateColgroup">
+          <col *ngIf="tableConfig.expandRows" id="colgroupId-expand" class="colgroup-cols" [ngClass]="[
+            'colgroup-expand']" [ngStyle]="{'width': '25px'}" />
+          <ng-container *ngFor="let col of columns; index as i">
+            <col *ngIf="col.colsEnable" [id]="'colgroupId-' + col.field" class="colgroup-cols" [ngClass]="[
+              'colgroup-' + col.field.toLowerCase()
+              ]" [ngStyle]="getColNgStyle(col)" />
+          </ng-container>
+          <ng-container *ngIf="!tableOptions?.hideColumnClear">
+            <col class="column-clear" *ngIf="!tableOptions?.hideTableButtons" />
+          </ng-container>
+        </colgroup>
+      </ng-template>
+
+      <p-overlayPanel #op5 [showCloseIcon]="false" [dismissable]="true" [appendTo]="'body'" styleClass="headerOL">
+        <p-panel *ngIf="headerOL && headerOL.title" id="panel-headerol" styleClass="p-t-0 panel-title"
+          header="{{ headerOL.title }}">
+          <ng-container *ngFor="let para of headerOL.paras; index as i">
+            <div class="title">
+              <b>{{ para?.header }}</b>
+            </div>
+            <div class="para" *ngFor="let textitem of para?.text; index as j">
+              {{ textitem }}
+            </div>
+          </ng-container>
+        </p-panel>
+      </p-overlayPanel>
+
+      <!-- header table -->
+      <ng-template pTemplate="header" let-columns>
+        <caption *ngIf="tableConfig.tableCaption">{{tableConfig.tableCaption}}</caption>
+        <!-- header of columns -->
+        <tr [ngClass]="{'hasClearCol': !tableOptions?.hideColumnClear && !tableOptions?.hideTableButtons}">
+          <ng-container *ngFor="let col of cols; index as i">
+            <th scope="col" *ngIf="i===0 && tableConfig.expandRows" class="container-checkbox headerExpand" pFrozenColumn [frozen]="col.frozen">
+            </th>
+
+            <ng-container [ngSwitch]="col.field">
+              <!-- col.field === checkbox -->
+              <th *ngSwitchCase="fieldName.Checkbox" scope="col" role="none" [ngClass]="checkboxClass" (click)="onCheckboxChange ?
+                onCheckboxChange($event, selectedRows) : ''" #e class="container-checkbox" pResizableColumn
+                [ngClass]="{'border-right': col.options?.showHeaderBorder}" pFrozenColumn [frozen]="col.frozen">
+                <ng-container *ngIf="!hideCheckboxAll">
+                  <p-checkbox [disabled]="col.options?.disabled || (data && data.length === 0)" [ariaLabel]="'TABLE.SELECT_ALL_ROWS' | translate"
+                    [id]="tableName ? tableName + 'CheckBoxSelectAll' : 'checkBoxSelectAll'" [(ngModel)]="pCheckbox"
+                    [binary]="true" (onChange)="resetSelectAllPageValue(); onCheckboxHeader()" #e></p-checkbox>
+                </ng-container>
+                <span class="hide-header-checkbox">{{'COMMON.SELECTION' | translate }}</span>
+              </th>
+
+              <!-- col.field === rowGroup -->
+              <ng-container *ngSwitchCase="fieldName.RowGroup">
+                <ng-container *ngTemplateOutlet="headerExpandTemp"></ng-container>
+              </ng-container>
+
+              <!-- col.field === expand -->
+              <ng-container *ngSwitchCase="fieldName.Expand">
+                <ng-container *ngTemplateOutlet="headerExpandTemp"></ng-container>
+              </ng-container>
+
+              <!-- col.field === radioButton -->
+              <ng-container *ngSwitchCase="fieldName.RadioButton">
+                <ng-container *ngTemplateOutlet="headerExpandTemp"></ng-container>
+              </ng-container>
+
+              <ng-template #headerExpandTemp>
+                <th scope="col" pResizableColumn pFrozenColumn [frozen]="col.frozen" class="headerExpand">
+                  <p>{{ '' }}</p>
+                </th>
+              </ng-template>
+
+              <!-- col.field === action -->
+              <th  *ngSwitchCase="fieldName.Action"
+                scope="col" [tabindex]="col.frozen === undefined ? -1 : 0"
+                [ngStyle]="{ display: getColumnStyle(col) }" #headerCol pResizableColumn
+                [ngClass]="{ 'col-filtering': colsFilterTable[col.field] && !showFilterRow,
+                            'border-right': col.options?.showHeaderBorder }"
+                [class]="(col.columnClass || '')" pFrozenColumn [alignFrozen]="'right'" [frozen]="col.frozen"
+                (contextmenu)="frozenCol($event, frozenCM, col)">
+                <span [ngClass]="{ 'hd-icon-delete': col.options?.useDeleteIcon, 'hd-action': !col.options?.useDeleteIcon }">
+                  {{ col.header }}
+                </span>
+              </th>
+              <ng-container *ngSwitchDefault>
+                <ng-container *ngIf="col.sort; else elseblock">
+                  <th *ngIf="col.frozen === undefined" scope="col" [pSortableColumn]="col.field" class="{{col.columnClass}} col-ellipsis-{{tableConfig.headerColEllipsisStatus}}" [ngStyle]="{ display:
+                    getColumnStyle(col) }" pResizableColumn (click)="onCustomSort()" (keyup.enter)="onCustomSort()"
+                    [ngClass]="{
+                      'col-filtering': colsFilterTable[col.field] && !showFilterRow,
+                      'border-right': col.options?.showHeaderBorder
+                    }" #headerSortCol>
+                    <ng-container *ngTemplateOutlet="colWithSort, context: { $implicit: headerSortCol }"></ng-container>
+                  </th>
+
+                  <th *ngIf="col.frozen !== undefined" scope="col"  [pSortableColumn]="col.field" class="{{col.columnClass}} col-ellipsis-{{tableConfig.headerColEllipsisStatus}}" [ngStyle]="{ display:
+                    getColumnStyle(col) }" pResizableColumn (click)="onCustomSort()" (keyup.enter)="onCustomSort()"
+                    [ngClass]="{
+                      'col-filtering': colsFilterTable[col.field] && !showFilterRow,
+                      'border-right': col.options?.showHeaderBorder
+                    }" #headerSortCol pFrozenColumn [frozen]="col.frozen" (contextmenu)="frozenCol($event, frozenCM, col)">
+                    <ng-container *ngTemplateOutlet="colWithSort, context: { $implicit: headerSortCol }"></ng-container>
+                  </th>
+
+                  <ng-template #colWithSort let-headerSortCol>
+                    <ng-container *ngIf="isMultiRowHeader(col); then twoRowHeader; else singleRowHeader">
+                    </ng-container>
+                    <ng-template #twoRowHeader>
+                        <span>{{ getFirstRowColHeader(col) }}</span>
+                        <br>
+                        <span>{{ getSecondRowColHeader(col) }}</span>
+                    </ng-template>
+                    <ng-template #singleRowHeader>
+                      <span>{{ col.header }}</span>
+                    </ng-template>
+
+                    <span *ngIf="
+                        col.options &&
+                        col.options.headerOLIcon &&
+                        col.options.headerOLtemplate &&
+                        col.options.headerOLtemplate === 'op5'
+                      ">
+                      <i [class]="col.options?.headerOLIcon || ''" (mouseenter)="op5.show($event)" (mouseout)="op5.hide()"></i>
+                    </span>
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    <span class="ellipsis" [ngStyle]="{'style': tableConfig.setEllipsisElStyleOnColResize ? '' : checkColsEllipsis(headerSortCol, true)}"
+                      tooltipStyleClass="rbn-tooltip rbn-tooltip-ellipsis" pTooltip
+                      (mouseenter)="showEllipsisOverlay($event, col.header)" (mouseleave)="hideEllipsisOverlay()">...</span>
+                  </ng-template>
+                </ng-container>
+                <ng-template #elseblock>
+                  <th *ngIf="col.frozen === undefined" scope="col" [tabindex]="-1" [ngStyle]="{ display: getColumnStyle(col) }" #headerCol
+                    pResizableColumn [ngClass]="{
+                      'col-filtering': colsFilterTable[col.field] && !showFilterRow,
+                      'border-right': col.options?.showHeaderBorder
+                    }" [class]="(col.columnClass || '') + ' col-ellipsis-' + tableConfig.headerColEllipsisStatus">
+                    <ng-container *ngTemplateOutlet="colWithoutSort, context: { $implicit: headerCol }"></ng-container>
+                  </th>
+                  <th *ngIf="col.frozen !== undefined" scope="col" [tabindex]="0" [ngStyle]="{ display: getColumnStyle(col) }" #headerCol
+                    pResizableColumn [ngClass]="{
+                      'col-filtering': colsFilterTable[col.field] && !showFilterRow,
+                      'border-right': col.options?.showHeaderBorder
+                    }" [class]="(col.columnClass || '') + ' col-ellipsis-' + tableConfig.headerColEllipsisStatus"
+                    pFrozenColumn [frozen]="col.frozen" (contextmenu)="frozenCol($event, frozenCM, col)">
+                    <ng-container *ngTemplateOutlet="colWithoutSort, context: { $implicit: headerCol }"></ng-container>
+                  </th>
+                  <ng-template #colWithoutSort let-headerCol>
+                    <span [ngClass]="{'hd-icon-delete': '', 'hd-action': ''}">
+                      {{ col.header }}
+                    </span>
+                    <span class="ellipsis" [ngStyle]="{'style': tableConfig.setEllipsisElStyleOnColResize ? '' : checkColsEllipsis(headerCol, true)}"
+                      tooltipStyleClass="rbn-tooltip rbn-tooltip-ellipsis" pTooltip
+                      (mouseenter)="showEllipsisOverlay($event, col.header)" (mouseleave)="hideEllipsisOverlay()">...</span>
+                  </ng-template>
+                </ng-template>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!tableOptions?.hideColumnClear">
+            <th class="column-clear" *ngIf="!tableOptions?.hideTableButtons" pFrozenColumn alignFrozen="right" [frozen]="frozenColumnClear"></th>
+          </ng-container>
+        </tr>
+
+        <!-- filter row header -->
+        <tr role="none" *ngIf="enableFilter === true && showFilterRow === true" #filterRow class="container-row-filters ui-table-caption"
+          [ngClass]="{'hasClearCol': !tableOptions?.hideColumnClear}">
+          <ng-container *ngFor="let col of columns; index as i" [ngSwitch]="col.type">
+            <th *ngIf="i===0 && tableConfig.expandRows" class="container-checkbox" pFrozenColumn [frozen]="col.frozen">
+            </th>
+            <th *ngIf="col.frozen !== undefined" [ngStyle]="{ display: getColumnStyle(col) }"
+              [ngClass]="{
+                'border-right': col.options?.showHeaderBorder
+              }" pFrozenColumn [alignFrozen]="col.field === fieldName.Action ? 'right' : ''" [frozen]="col.frozen">
+              <ng-container *ngTemplateOutlet="headerCellContent"></ng-container>
+            </th>
+            <th *ngIf="col.frozen === undefined"
+              [ngStyle]="{ display: getColumnStyle(col) }"
+              [ngClass]="{'border-right': col.options?.showHeaderBorder}">
+              <ng-container *ngTemplateOutlet="headerCellContent"></ng-container>
+            </th>
+            <ng-template #headerCellContent>
+              <input *ngSwitchCase="filterTypes.InputText" pInputText [type]="col.options.inputType ?? 'text'" [(ngModel)]="col.options.model"
+                (input)="handleFilterInputChanges($event, $event.target?.value, col)" [attr.aria-label]="col.header + ('COMMON.FILTER' | translate)"
+                [id]="tableConfig.filterIdFromHeader ? 'input_' +getId('',col.header,true) : (tableName ? tableName + 'Filter_' + col.field : 'filter_' + col.field)"
+                [readonly]="loading" [placeholder] = "col.options.placeholder ?? ''"
+                [ngClass]="col.options?.model ? 'filter-box-active':''" [disabled]="col.disableFilterCol"/>
+              <p-dropdown *ngSwitchCase="filterTypes.Dropdown" [options]="optionDropdown(col)" [ariaLabel]="col.header + ('COMMON.FILTER' | translate)"
+                (onChange)="handleFilterChanges($event.value, col)" [(ngModel)]="col.options.model"
+                [filter]="col.options?.selectionFilterDropdown" [appendTo]="isUsingAppendTo ? dt : 'body'"
+                [id]="tableConfig.filterIdFromHeader ? 'select_' +getId('',col.header,true) : (tableName ? tableName + 'Filter_' + col.field : 'filter_' + col.field)"
+                [disabled]="col.disableFilterCol">
+              </p-dropdown>
+              <p-multiSelect *ngSwitchCase="filterTypes.Multiselect" [options]="optionDropdown(col)" [ariaLabel]="col.header + ('COMMON.FILTER' | translate)"
+                (onChange)="handleFilterChanges($event.value, col)" [(ngModel)]="col.options.model"
+                (onPanelShow)="onpanelMultiShow ? onpanelMultiShow() : ''"
+                [resetFilterOnHide]="false" [defaultLabel]="translateResults?.ALL" [style]="{ width: '100%' }"
+                [appendTo]="isUsingAppendTo ? dt : 'body'" [disabled]="col.disableFilterCol"
+                [id]="tableConfig.filterIdFromHeader ? 'select_' +getId('',col.header,true) : (tableName ? tableName + 'Filter_' + col.field : 'filter_' + col.field)">
+                <ng-template let-colFilter pTemplate="item" *ngIf="col.filterMultiselectComponent">
+                  <div class="multiSelect-label">
+                    <div class="icon-filter">
+                      <ng-container
+                        *ngTemplateOutlet="filterColumnComponents[col.filterMultiselectComponent?.keyName];
+                          context: {params: {rowdata:colFilter.label}}">
+                      </ng-container>
+                    </div>
+                    <div class="labelFilter">{{ colFilter.label }}</div>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+              <div *ngSwitchCase="filterTypes.Calendar">
+                <rbn-time-picker #rbntimepicker [newTimeValues]="col.options?.model" [appendToTemplate]="isUsingAppendTo ? dt : 'body'"
+                  [removeMaxDate]="col.options?.removeMaxDate" [isCustomTimePicker]="true" [forceCheckRemoveMaxDate]="true"
+                  (dateChanged)="filterField= col.field; handleFilterChanges($event, col)" [ariaLabelInput]="col.header + ('COMMON.FILTER' | translate)"
+                  [id]="tableConfig.filterIdFromHeader ? 'select_' +getId('',col.header,true) : (tableName ? tableName + 'Filter_' + col.field : 'filter_' + col.field)"
+                  [disabledTimePicker]="col.disableFilterCol"
+                  [isUTCTime]="timezoneFormat?.startsWith('UTC ')"
+                  [hiddenQuickSelect]="col.options?.hiddenQuickSelectTimePicker ? col.options.hiddenQuickSelectTimePicker : false"
+                  >
+                </rbn-time-picker>
+              </div>
+              <div *ngSwitchCase="filterTypes.DateRange">
+                <rbn-time-picker [newTimeValues]="col.options?.model" [appendToTemplate]="isUsingAppendTo ? dt : 'body'"
+                  [removeMaxDate]="col.options?.removeMaxDate" (dateChanged)="filterField= col.field;
+                  onDateChanged($event, col)" [ariaLabelInput]="col.header + ('COMMON.FILTER' | translate)"
+                  [id]="tableConfig.filterIdFromHeader ? 'select_' +getId('',col.header,true) : (tableName ? tableName + 'Filter_' + col.field : 'filter_' + col.field)"
+                  [hiddenQuickSelect]="col.options?.hiddenQuickSelectTimePicker ? col.options.hiddenQuickSelectTimePicker : false"
+                  >
+                </rbn-time-picker>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-container>
+            <ng-container *ngIf="!tableOptions?.hideColumnClear">
+              <th class="column-clear" pFrozenColumn alignFrozen="right" [frozen]="frozenColumnClear">
+                <p-button icon="fa fa-eraser" styleClass="button-grey"
+                  [id]="tableName ? tableName + 'ResetFilter' : 'resetFilter'"
+                  (onClick)="resetFilter(); onResetRowFilter()" [title]="'COMMON.CLEAR_COLUMN_FILTERS' | translate"
+                  [ariaLabel]="'COMMON.CLEAR_COLUMN_FILTERS' | translate">
+                </p-button>
+              </th>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+
+
+      <!-- body table -->
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns" let-rowIndex="rowIndex">
+        <tr *ngIf="rowData" [pContextMenuRow]="rowData" [pContextMenuRowDisabled]="!isShowContextMenu" class="ui-widget-header"
+          [ngClass]="{ trExpand: expanded && !isSupportGrouping || tableConfig.expandRows, 'tr-even': rowIndex % 2 === 1 }"
+          [pReorderableRow]="rowIndex">
+          <ng-container *ngFor="let col of columns; index as i" [ngSwitch]="col.field">
+            <td *ngIf="i===0 && tableConfig.expandRows || (col.field === fieldName.Expand && col.expandTableIntoCol)"
+              class="container-checkbox" pFrozenColumn [frozen]="col.frozen">
+              <a [id]="tableName ? tableName + 'ChevronIcon' : 'chevronIcon'" class="a-row-group"
+                [pRowToggler]="rowData" role="none">
+                <i class="group-icon pi" [ngClass]="{
+                  'pi-chevron-down': expanded,
+                  'pi-chevron-right': !expanded,
+                  'custome-border-expand':(isSupportGrouping && rowData?.dataExpand && rowData.dataExpand.length> 0 &&expanded)}"
+                  (keydown.enter)="$event.target?.click()" (keydown.space)="$event.target?.click()" tabindex="0" role="button"
+                  [attr.aria-label]="expanded ? ('COMMON.COLLAPSE' | translate): ('COMMON.EXPANDED' | translate)"></i>
+              </a>
+            </td>
+            <!-- col.field === radioButton -->
+            <td *ngSwitchCase="fieldName.RadioButton" [id]="tableName ? tableName + 'RadioButton_' + rowIndex : 'radioButton_' + rowIndex" pFrozenColumn [frozen]="col.frozen">
+              <p-tableRadioButton [value]="rowData" (click)="$event.stopPropagation();" [disabled]="rowData.disableSelect || false" [ariaLabel]="'TABLE.SELECT_ROW' | translate">
+              </p-tableRadioButton >
+            </td>
+
+            <!-- col.field === checkbox -->
+            <td *ngSwitchCase="fieldName.Checkbox"
+              role="none" class="container-checkbox" #colExpand pFrozenColumn [frozen]="col.frozen">
+              <div class="contain-checkbox-rgroup">
+                <p-tableCheckbox
+                  [id]="tableName ? tableName + 'Checkbox_' + rowIndex : 'checkbox_' + rowIndex"
+                  [value]="col.options?.disabled || rowData.disableSelect ? {} : rowData"
+                  [disabled]="col.options?.disabled || rowData.disableSelect" [index]="rowIndex"
+                  (click)="$event.stopPropagation()" [ariaLabel]="'TABLE.SELECT_ROW' | translate" #e>
+                </p-tableCheckbox>
+                <ng-container *ngTemplateOutlet="expandIcon, context: { $implicit: colExpand }"></ng-container>
+              </div>
+            </td>
+
+             <!-- col.field === rowgroup -->
+            <ng-container *ngSwitchCase="fieldName.RowGroup">
+              <ng-container *ngTemplateOutlet="expandGroupTemp"></ng-container>
+            </ng-container>
+
+             <!-- col.field === expand -->
+            <ng-container *ngSwitchCase="fieldName.Expand">
+              <ng-container *ngTemplateOutlet="expandGroupTemp"></ng-container>
+            </ng-container>
+
+            <ng-template #expandGroupTemp>
+              <td *ngIf="!col.expandTableIntoCol"  role="none" class="container-checkbox" #colExpand pFrozenColumn [frozen]="col.frozen">
+                <div class="contain-checkbox-rgroup">
+                  <ng-container *ngTemplateOutlet="expandIcon, context: { $implicit: colExpand }"></ng-container>
+                </div>
+              </td>
+            </ng-template>
+
+            <ng-template #expandIcon let-colExpand>
+              <!-- show icon expand or rowGroup or table children -->
+              <a role="none" #tempExpandRow [id]="tableName ? tableName + 'ChevronIconChildren' : 'chevronIconChildren'"
+                [ngClass]="{ 'a-row-group-checkBox': col.field === fieldName.Checkbox,
+                'a-row-group': col.field !== fieldName.Checkbox }" [pRowToggler]="rowData"
+                *ngIf="checkEnableExpandIcon(rowData)"
+                (click)="emitRowData(expanded, rowData, colExpand); setLoadingTable(expanded);
+                  rowData?.children ? '' : parentData = rowData;">
+                <i class="icon-expand" [ngClass]="{'icon-expanded': expanded}"></i>
+                <i class="group-icon pi pi-chevron-right"
+                  [ngClass]="{
+              'expanded': expanded,
+              'custome-border-expand':(isSupportGrouping && rowData.dataExpand
+                && rowData.dataExpand.length > 0 && expanded)}"
+                  top-after-border="31px" (keydown.enter)="tempExpandRow.click()" (keydown.space)="tempExpandRow.click()" tabindex="0"
+                  role="button" [attr.aria-label]="expanded ? ('COMMON.COLLAPSE' | translate): ('COMMON.EXPANDED' | translate)"></i>
+              </a>
+            </ng-template>
+
+            <!-- col.field === reorder -->
+            <ng-container *ngSwitchCase="fieldName.Reorder">
+              <td *ngIf="col.colsEnable" class="reorder-field" pFrozenColumn [frozen]="col.frozen">
+                <span class="pi pi-bars" pReorderableRowHandle [attr.aria-label]="'TABLE.REORDER' | translate" role="button"></span>
+              </td>
+            </ng-container>
+
+            <!-- col.field === action -->
+            <td *ngSwitchCase="fieldName.Action" [ngStyle]="{ display: getColumnStyle(col) }" [class]="col.columnClass || ''"
+              pFrozenColumn [alignFrozen]="'right'" [frozen]="col.frozen"
+              [ngClass]="(rowData.className && (rowData.className)[col.field]) ? (rowData.className)[col.field] : ''">
+              <ng-container *ngTemplateOutlet="actionBlock;
+                context: {
+                $implicit: col,
+                rowIndex: rowIndex,
+                rowData: rowData
+                }">
+              </ng-container>
+            </td>
+
+            <ng-container *ngSwitchDefault>
+              <ng-container *ngIf="col.options?.usingInputText
+                || col.options?.usingInputNumber
+                || col.options?.usingDropdown; else commonCellData">
+                <!--TODO check pFrozenColumnColumn -->
+                <td pEditableColumn *ngIf="col.options?.usingInputText || col.options?.usingInputNumber"
+                  [pSelectableRow]="rowData" [ngStyle]="{ display: getColumnStyle(col) }"
+                  pFrozenColumn [frozen]="col.frozen">
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <input *ngIf="col.options?.usingInputText" pInputText type="text" [(ngModel)]="rowData[col.field]"
+                        (ngModelChange)="onChangeInputText(rowData, col)" [attr.aria-label]="col.header"
+                        [required]="col.options?.isRequired === false ? false : true">
+                      <p-inputNumber *ngIf="col.options?.usingInputNumber" [(ngModel)]="rowData[col.field]"
+                        (ngModelChange)="onChangeInputNumber(rowData, col)"
+                        [required]="col.options?.isRequired === false ? false : true" [ariaLabel]="col.header">
+                      </p-inputNumber>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <div class="text-input">
+                        {{rowData[col.field]}}
+                      </div>
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+                <ng-container *ngIf="col.options?.usingDropdown">
+                  <td *ngIf="col.frozen !== undefined" [ngStyle]="{ display: getColumnStyle(col) }" pFrozenColumn [frozen]="col.frozen">
+                    <ng-container *ngTemplateOutlet="cellUsingDropdown"></ng-container>
+                  </td>
+                  <td *ngIf="col.frozen === undefined" [ngStyle]="{ display: getColumnStyle(col) }">
+                    <ng-container *ngTemplateOutlet="cellUsingDropdown"></ng-container>
+                  </td>
+                  <ng-template #cellUsingDropdown>
+                    <p-dropdown *ngIf="rowData && rowData[col.field]" [options]="rowData[col.field]" [(ngModel)]="rowData[col.field+'DrItemSelected']" optionLabel="label"
+                      (onChange)="onChangeCellDropdown(rowData, col)" [filter]="col.options?.isCellSearchDropdown || tableConfig.tableOptions?.isCellSearchDropdown"
+                      [appendTo]="isUsingAppendTo ? dt : 'body'" [ariaLabel]="col.header">
+                    </p-dropdown>
+                  </ng-template>
+                </ng-container>
+              </ng-container>
+              <ng-template #commonCellData>
+                <td *ngIf="col.frozen !== undefined" [ngStyle]="{ display: getColumnStyle(col) }" [class]="col.columnClass || ''"
+                  pFrozenColumn [frozen]="col.frozen"
+                  [ngClass]="(rowData.className && (rowData.className)[col.field]) ? (rowData.className)[col.field] : ''">
+                  <ng-container *ngTemplateOutlet="cellDataContent"></ng-container>
+                </td>
+                <td *ngIf="col.frozen === undefined" [ngStyle]="{ display: getColumnStyle(col) }" [class]="col.columnClass || ''"
+                  [ngClass]="(rowData.className && (rowData.className)[col.field]) ? (rowData.className)[col.field] : ''">
+                  <ng-container *ngTemplateOutlet="cellDataContent"></ng-container>
+                </td>
+                <ng-template #cellDataContent>
+                  <div *ngIf="(col.options === undefined || col.options.template === undefined)">
+                    <div *ngIf="!expanded || !col.canExpand || !col.mainheader"
+                      [class]="rowData[col.field + 'PreHtml'] || rowData[col.field + 'PostHtml'] || col.options?.isHtml
+                      ? 'col-inner-html' : 'col-ellipsis-' + tableConfig.colEllipsisStatus">
+                      <ng-container *ngTemplateOutlet="basicField;
+                        context: { $implicit: col, data: rowData,  rowIndex: rowIndex }"></ng-container>
+                    </div>
+                  </div>
+
+                  <div *ngIf=" col.mainheader && !expanded && !col.options?.mainheaderGeneral">
+                    <ng-container *ngFor=" let colMain of expandData[col.field]?.colMainHeader; index as i">
+                      <span class="span-right">
+                        {{ colMain.header }}:
+                        {{ colMain.data[rowIndex] }}
+                        <span *ngIf="i < expandData[col.field]?.colMainHeader?.length - 1">|</span>
+                      </span>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="expanded && col.canExpand && col.mesExpand;else interfaceblock">
+                    <span *ngIf="rowData[expandMessage?.actionMessagePreHtml + 'PreHtml']"
+                      [innerHTML]="rowData[expandMessage?.actionMessagePreHtml + 'PreHtml']"></span>
+                  </div>
+                  <ng-template #interfaceblock>
+                    <ng-container *ngIf="expanded && col.canExpand">
+                      <p-table [id]="expandData[col.field]?.tableId"
+                      [value]="expandData[col.field]?.fieldDisplayValue ? rowData[expandData[col.field].fieldDisplayValue] : [] ">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <td *ngFor="let col1 of expandData[col.field]?.cols; index as i">
+                              {{ col1?.header }}
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData1>
+                          <tr>
+                            <td *ngFor="let col1 of expandData[col.field]?.cols; index as i">
+                              <span *ngIf="col1?.isHtml" [innerHTML]="rowData1[col1.field]"></span>
+                              <span *ngIf="!col1?.isHtml">{{ rowData1[col1?.field] }}</span>
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </ng-container>
+                  </ng-template>
+                </ng-template>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+          <td *ngIf="!tableOptions?.hideColumnClear" class="column-clear" pFrozenColumn alignFrozen="right" [frozen]="frozenColumnClear"></td>
+        </tr>
+      </ng-template>
+
+      <!-- action button  -->
+      <ng-template #actionBlock let-col let-rowIndex="rowIndex" let-rowData="rowData">
+        <div aria-hidden="true" [ngStyle]="{'display': !col.loadLocalComponent ? 'flex' : ''}">
+          <div *ngIf="!col.loadLocalComponent" class="container-action-buttons">
+            <ng-container *ngIf="showingConfigActions && showingConfigActions.length > 0">
+              <div *ngFor="let item of showingConfigActions; let i=index" class="action-button" #btn1>
+                <ng-container *ngIf="!item?.hideButton || rowData[item?.hideButton?.field] === item?.hideButton?.value">
+                  <button pButton [icon]="item?.icon" (click)="(item?.onClick && item?.outputParam) ? item?.onClick(rowData,
+                    rowIndex,item?.outputParam): (item?.onClick)? item?.onClick(rowData, rowIndex) : ''"
+                    [disabled]="(item?.disableAction
+                    && rowData[item?.disableAction?.field] === item?.disableAction?.value) || (item?.disabled)"
+                    [pTooltip]="((item?.disableAction
+                      && rowData[item?.disableAction?.field] === item?.disableAction?.value) || (item?.disabled)) ?
+                    ('TABLE.ACTION_IS_DISABLED' | translate) : item?.tooltip"
+                    [attr.data-tooltip]="((item?.disableAction
+                    && rowData[item?.disableAction?.field] === item?.disableAction?.value) || (item?.disabled)) ?
+                    ('TABLE.ACTION_IS_DISABLED' | translate) : item?.tooltip"
+                    [appendTo]="btn1"
+                    [tooltipPosition]="rowIndex !== lastRowIndex ? 'bottom' : rowIndex !== 0
+                    && rowIndex % rowPerPage !== 0 ? 'top': 'right'"
+                    [id]="tableName ? tableName + 'ConfigActionBtn_' + i + '_row_' + rowIndex :
+                    'configActionBtn_' + i + '_row_' + rowIndex">
+                  </button>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="rowData.showingActions && rowData.showingActions.length> 0
+              || rowData.dropdownActions && rowData.dropdownActions.length > 0">
+              <!-- show list action -->
+              <div *ngFor="let item of rowData.showingActions; let i=index" class="action-button" #btn2>
+                <button pButton [icon]="item?.icon" (click)="
+                  item?.onClick ? item?.onClick(rowData, rowIndex) : ''
+                " data-toggle="tooltip" [disabled]="item?.disabled"
+                  [pTooltip]="item?.disabled ? ('TABLE.ACTION_IS_DISABLED' | translate) : item?.tooltip"
+                  [attr.data-tooltip]="item?.disabled ? ('TABLE.ACTION_IS_DISABLED' | translate) : item?.tooltip"
+                  [appendTo]="btn2"
+                  [tooltipPosition]="rowIndex !== lastRowIndex ? 'bottom' : rowIndex !== 0
+                    && rowIndex % rowPerPage !== 0 ? 'top': 'right'"
+                  [id]="tableName ? tableName + 'ActionBtn_' + i + '_row_' + rowIndex :
+                    'actionBtn_' + i + '_row_' + rowIndex">
+                </button>
+              </div>
+              <!-- show icon '...' if action > 3 -->
+              <div *ngIf="rowData.dropdownActions && rowData.dropdownActions.length> 0" class="action-button">
+                <p-splitButton no-defaultbutton icon="pi pi-ellipsis-h" [model]="rowData.dropdownActions" [appendTo]="'body'"
+                  menuStyleClass="actionMenu" (onDropdownClick)="onDropdownClick(rowData, rowIndex)"
+                  [id]="tableName ? tableName + 'DropdownActionMenu_' + rowIndex : 'dropdownActionMenu_' + rowIndex"
+                  [expandAriaLabel]="'COMMON.MORE' | translate">
+                </p-splitButton>
+              </div>
+            </ng-container>
+          </div>
+
+          <ng-container *ngIf="col.loadLocalComponent">
+            <ng-container *ngTemplateOutlet="tableColumnComponents[col.loadLocalComponent?.keyName];
+              context: { params: { rowdata: rowData } }">
+            </ng-container>
+          </ng-container>
+        </div>
+      </ng-template>
+
+      <!-- filed serverity -->
+      <ng-template #basicField let-col let-rowData="data" let-rowIndex="rowIndex">
+        <!-- span with button and text -->
+        <span *ngIf="col.showCustomSpan">
+          <ng-container *ngFor="let echSpan of col.showCustomSpan">
+            <ng-container *ngIf="rowData[echSpan?.field] === echSpan?.value">
+              <span [class]="echSpan?.class"></span>
+              <span>&nbsp;{{echSpan?.spanText}}</span>
+            </ng-container>
+          </ng-container>
+        </span>
+
+        <ng-container *ngIf="col.loadLocalComponent">
+          <ng-container
+            *ngTemplateOutlet="tableColumnComponents[col.loadLocalComponent?.keyName]; context: {params: {rowdata:
+            rowData}}">
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="rowData[col.field + 'PreHtml']">
+          <ng-container *ngIf="!isNgTemplate(rowData[col.field + 'PreHtml']); else preHtmlTemp">
+            <span [innerHTML]="rowData[col.field + 'PreHtml'] | sanitizeHtml"></span>
+          </ng-container>
+          <ng-template #preHtmlTemp>
+            <ng-container *ngTemplateOutlet="rowData[col.field + 'PreHtml']"></ng-container>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="col.field === fieldName.Severity">
+          <span *ngIf="rowData.severity === fieldName.Info" class="iconSpan-info"></span>
+          <span *ngIf="rowData.severity === fieldName.Warning" class="iconSpan-warning"></span>
+          <span *ngIf="rowData.severity === fieldName.Error" class="iconSpan-error"></span>
+        </ng-container>
+
+        <span *ngIf="col.type !== filterTypes.Calendar &&
+          col.type !== filterTypes.Icon &&
+          !col.options?.usingInputSwitch &&
+          !col.options?.usingInputText &&
+          !col.options?.usingInputNumber &&
+          !col.options?.usingDropdown &&
+          !col.options?.usingElipsis;
+          else dataCalendarPipe" [ngClass]="{ link: col.options?.usingLink  && !disableUsingLink(col.field, rowData) }"
+          (click)="col.options?.usingLink  && !disableUsingLink(col.field, rowData) && onLinkClick && !isArray(rowData[col.field])
+          ? onLinkClick(rowData, col.field) : ''" [tabindex]="col.options?.usingLink && !isArray(rowData[col.field]) ? 0 : -1" (keydown.enter)="$event.target.click()">
+          <span *ngIf="!col.loadLocalComponent &&
+            !col.showCustomSpan &&
+            !col.options?.hideText &&
+            !col.options?.isHtml &&
+            !rowData[col.field + 'PreHtml']" class="text" #tempTxt>
+            <span [id]="(tableName ? tableName + 'Link_' : 'link_') + formatIdLink(col.header + '_' + rowData[col.field])" *ngIf="!isArray(rowData[col.field])">{{ rowData[col.field] }}</span>
+            <span *ngIf="isArray(rowData[col.field])">
+              <span *ngFor="let valueCol of rowData[col.field]; let i = index">
+                <span [id]="(tableName ? tableName + 'Link_' : 'link_') + formatIdLink(col.header + '_' + valueCol)" class="usingLinkSpan"
+                (click)="col.options?.usingLink && isArray(rowData[col.field]) ? onLinkClick(rowData, col.field, valueCol) : ''"
+                [tabindex]="col.options?.usingLink && isArray(rowData[col.field]) ? 0 : -1" (keydown.enter)="handleEnterArrayLinkOfCell($event)">{{ valueCol }}</span>
+                <span>{{ i !== rowData[col.field]?.length - 1 ? ', ' : ''}}</span>
+              </span>
+            </span>
+
+            <span class="ellipsis" [ngStyle]="{'style': tableConfig.setEllipsisElStyleOnColResize ? '' : checkColsEllipsis(tempTxt)}"
+              tooltipStyleClass="rbn-tooltip rbn-tooltip-ellipsis" (mouseenter)="showEllipsisOverlay($event, rowData[col.field])" (mouseleave)="hideEllipsisOverlay()" pTooltip>...</span>
+          </span>
+
+          <span *ngIf="!col.options?.hideText && col.options?.isHtml" [innerHTML]="rowData[col.field]"></span>
+        </span>
+        <ng-template #dataCalendarPipe class="container-switch">
+          <span *ngIf="col.type === filterTypes.Calendar" class="text" #tempTxt2>{{ rowData[col.field] }}
+            <span class="ellipsis" [ngStyle]="{'style': tableConfig.setEllipsisElStyleOnColResize ? '' : checkColsEllipsis(tempTxt2)}"
+              (mouseenter)="showEllipsisOverlay($event, rowData[col.field])" (mouseleave)="hideEllipsisOverlay()"
+              tooltipStyleClass="rbn-tooltip rbn-tooltip-ellipsis" pTooltip>...</span>
+          </span>
+
+          <div *ngIf="col.options?.usingInputSwitch && rowData[col.field] !== undefined" class="col-switch">
+            <p-inputSwitch [(ngModel)]="rowData[col.field]" (click)="$event.stopPropagation();
+              onSwitchChange(rowData, col)" [disabled]="col.options?.disabled || rowData.disableSwitch"
+              [id]="tableName ? tableName + 'Inputswitch_' + col.field + '_' + rowIndex :
+              'inputswitch_' + col.field + '_' + rowIndex">
+            </p-inputSwitch>
+            <span class="switch-text">
+              {{rowData[col.field] ? col.options?.activeSwitchString : col.options?.inActiveSwitchString}}
+            </span>
+          </div>
+        </ng-template>
+        <span *ngIf="rowData[col.field + 'PostHtml']"
+          (click)="col.onClickPostHTML ? col.onClickPostHTML(rowData) : ''"
+          [innerHTML]="rowData[col.field + 'PostHtml'] | sanitizeHtml"></span>
+
+        <span *ngIf="col.options?.usingElipsis">
+          <div class="container-ellipsis" *ngIf="col.options?.numberOfDisplay">
+            <div class="overlay-ellipsis">
+              <div *ngFor="let item of rowData[col.field]; let i = index" class="overlay-ellipsis">
+                <span [ngClass]="{'value': col.options?.isLinkColor}" *ngIf="i <col.options?.numberOfDisplay"
+                  (click)="itemEllipsis(item, rowData)"
+                  [id]="tableName ? tableName + 'EllipsisItem_' + i + '_row_' + rowIndex :
+                  'ellipsisItem_' + i + '_row_' + rowIndex">{{ item?.name ? item.name : item }}</span>
+                <div class="line" *ngIf="(i <col.options?.numberOfDisplay) && (rowData[col.field]?.length>
+                  col.options?.numberOfDisplay)"></div>
+                <div class="line" *ngIf="(i <(rowData[col.field]?.length - 1)) && (rowData[col.field]?.length <=
+                  col.options?.numberOfDisplay)"></div>
+              </div>
+            </div>
+            <button *ngIf="rowData[col.field]?.length> col.options?.numberOfDisplay" pButton type="button"
+              icon="pi pi-ellipsis-h" (click)="op.toggle($event)" [attr.aria-label]="'COMMON.MORE' | translate"
+              [id]="tableName ? tableName + 'EllipsisBtn_' + rowIndex : 'ellipsisBtn_' + rowIndex"></button>
+          </div>
+          <div class="container-ellipsis" *ngIf="!col.options?.numberOfDisplay">
+            <div class="overlay-ellipsis">
+              <div *ngFor="let item of rowData[col.field]; let i = index" class="overlay-ellipsis">
+                <span [ngClass]="{'value': col.options?.isLinkColor}" (click)="itemEllipsis(item, rowData)">
+                  {{ item?.name ? item.name : item }}
+                </span>
+                <div class="line" *ngIf="i <rowData[col.field]?.length - 1"></div>
+              </div>
+            </div>
+          </div>
+          <p-overlayPanel #op [appendTo]="dt">
+            <ng-template pTemplate>
+              <div class="overlay-ellipsis">
+                <div *ngFor="let item of rowData[col.field]; let i = index" class="overlay-ellipsis">
+                  <ng-container *ngIf="i >= col.options?.numberOfDisplay">
+                      <span [ngClass]="{'value': col.options?.isLinkColor}" (click)="itemEllipsis(item, rowData)">
+                          {{ item?.name ? item.name : item }}
+                      </span>
+                      <div class="line" *ngIf="i <rowData[col.field]?.length - 1"></div>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-template>
+          </p-overlayPanel>
+        </span>
+      </ng-template>
+
+      <!-- row expansion -->
+      <ng-template pTemplate="rowexpansion" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+        <!-- row has children -->
+        <tr *ngIf="rowExpansionTpl && !extensibleTemplateTableChildren">
+          <td [attr.colspan]="columns.length + 1">
+            <ng-container *ngTemplateOutlet="rowExpansionTpl; context: {params: {rowdata: rowData}}"></ng-container>
+          </td>
+        </tr>
+        <tr #tr *ngFor="let child of rowData.children; index as childIndex" class="child-row" [ngClass]="{
+          'child-row-selected': checkItemExist(
+          selectedChilds,
+          child,
+          tableOptions?.dataKey
+          ),
+          'last-child-row': childIndex === rowData.children?.length - 1,
+          'tr-even': rowIndex % 2 === 1
+          }" (click)="triggerCheckbox(child); selectChildRow($event, rowData, rowIndex)">
+          <ng-container *ngFor="let col of cols; index as i">
+            <td *ngIf="col.field === fieldName.Checkbox" class="container-checkbox">
+              <p-checkbox #checkbox [value]="child" [(ngModel)]="selectedChilds" (click)="$event.stopPropagation();
+                selectChildRow($event, rowData, rowIndex)" [ariaLabel]="'TABLE.SELECT_ROW' | translate">
+              </p-checkbox>
+            </td>
+            <td *ngIf="col.field !== fieldName.Action &&
+              col.field !== fieldName.Checkbox" [ngStyle]="{ display: getColumnStyle(col) }">
+              <ng-container *ngTemplateOutlet="basicField;
+                context: { $implicit: col, data: child}"></ng-container>
+            </td>
+            <td *ngIf="col.field === fieldName.Action" [ngStyle]="{ display: getColumnStyle(col) }">
+              <ng-container *ngTemplateOutlet="actionBlock;
+                context: {
+                $implicit: col,
+                rowIndex: rowIndex,
+                rowData: rowData
+                }">
+              </ng-container>
+            </td>
+          </ng-container>
+          <ng-container *ngIf="!tableOptions?.hideColumnClear">
+            <td class="column-clear"></td>
+          </ng-container>
+        </tr>
+        <!-- row has data expand -->
+        <tr *ngIf="rowData.dataExpand && rowData.dataExpand.length> 0 && !extensibleTemplateTableChildren">
+          <td [attr.colspan]="colSpanOfRowGroup" class="row-expanded">
+            <p-tabView>
+              <p-tabPanel *ngFor="let data of rowData.dataExpand; index as childIndex" [header]="data?.title">
+                {{data?.value}}
+              </p-tabPanel>
+            </p-tabView>
+          </td>
+        </tr>
+        <!-- expand with table children -->
+        <tr *ngIf="extensibleTemplateTableChildren">
+          <td [attr.colspan]="colSpanOfRowGroup" class="row-expanded">
+            <ng-container *ngTemplateOutlet="extensibleTemplateTableChildren;">
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- No records -->
+      <ng-template pTemplate="emptymessage">
+        <span></span>
+        <tr *ngIf="tableConfig.emptyMessageContent">
+          <td [attr.colspan]="colSpanOfRowGroup" class="empty-message-content">
+            <p><i>{{tableConfig.emptyMessageContent}}</i></p>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <span *ngIf="dataTable && dataTable.isEmpty() && !dataTable.loading">
+          {{'COMMON.NO_RECORDS' | translate}}
+        </span>
+      </ng-template>
+    </p-table>
+
+
+    <!-- pagination -->
+    <p-paginator #paginatorMode *ngIf="paginatorMode === PaginatorMode.Server && paginator"
+      [totalRecords]="totalRecords" [rows]="numberRowPerPage" [dropdownAppendTo]="isUsingAppendTo ? dt : 'body'"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="rowsPerPageOptions?.length > 0 ? rowsPerPageOptions : [numberRowPerPage, numberRowPerPage + 5, numberRowPerPage + 10]"
+      (onPageChange)="onPageChanged($event)" currentPageReportTemplate="{first} - {last} of {totalRecords}"
+      [templateLeft]="noRecordModeServer">
+      <ng-template #noRecordModeServer>
+        <span *ngIf="dataTable && dataTable.isEmpty() && !dataTable.loading">
+          {{'COMMON.NO_RECORDS' | translate}}
+        </span>
+      </ng-template>
+    </p-paginator>
+    <div class="clear-both"></div>
+  </div>
+  <div #trigger></div>
+</div>
+<p-overlayPanel id="ellipsis-overlay-panel" #opEllipsis [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"
+  [focusOnShow]="false" [appendTo]="overlayAppendElement ? overlayAppendElement : 'body'" [styleClass]="'ellipsis-overlaypanel'">
+  <ng-template pTemplate>
+     <div>{{contentEllipsisOverlay}}</div>
+  </ng-template>
+</p-overlayPanel>

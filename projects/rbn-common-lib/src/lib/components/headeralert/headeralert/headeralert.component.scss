@@ -1,0 +1,27 @@
+@import 'variables';
+
+.title {
+  color: $primaryTextColor;
+  font-size: 16px;
+  padding: 0 15px 0 0;
+  font-weight: $fontWeightSemiBold;
+}
+
+.info {
+  color: $ribbon-blue;
+}
+
+.debug {
+  color: $ribbon-dark-yellow;
+}
+
+.error {
+  color: $ribbon-red;
+}
+
+.cnt {
+  color: $ribbon-white;
+  font-size: 17px;
+  padding: 0 10px 0 5px;
+  font-weight: $fontWeightSemiBold;
+}

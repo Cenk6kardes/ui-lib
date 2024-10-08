@@ -1,0 +1,54 @@
+<div id="notification" class="container">
+  <div class="p-g bell-container">
+    <button pButton class="bell rbn-normal-icon p-button-text p-button-icon-only p-button-rounded"
+      icon="fa fa-bell" *ngIf="isEnableToastMsg === true" (click)="disableMessages()"
+      [pTooltip]="'COMMON.DISABLE_MESSAGES' | translate" tooltipPosition="bottom">
+    </button>
+    <button pButton class="bell rbn-normal-icon p-button-text p-button-icon-only p-button-rounded disabled"
+      icon="fa fa-bell-slash" *ngIf="isEnableToastMsg === false"
+      (click)="enableMessages()" [pTooltip]="'COMMON.ENABLE_MESSAGES' | translate" tooltipPosition="bottom">
+    </button>
+    <div *ngIf="numberMessage > 0"
+      [class]="(isEnableToastMsg === false) ? 'bell-slash-msg sup-message-number': 'sup-message-number'"
+      (click)="toggleMsg()" [pTooltip]="(isEnableToastMsg === true) ? ('COMMON.SHOW_MESSAGES' | translate) : ''"
+      tooltipPosition="bottom">
+      <div class="message-number">
+        <span>
+          {{ (numberMessage > maxNumberMsgDisplay)? maxNumberMsgDisplay : numberMessage }}
+          <sup *ngIf="numberMessage > maxNumberMsgDisplay" class="plus">+</sup>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button id="button-clear" class="button-outline" *ngIf="isDisplayClearAll()" type="button" pButton
+      (click)="onClearAll()" label="{{'COMMON.CLEAR_ALL'|translate}}" 
+      [ngStyle]="{ 'z-index': getToastZIndex() }"></button>
+  </div>
+
+  <p-toast [ngClass]="'notification-toast' + (isDisplayClearAll() ? '' : ' only-toast')"
+    [hidden]="isEnableToastMsg === false" (onClose)="closeToasts($event)">
+    <!-- <p-toast (onClose)="closeToasts($event)"> -->
+    <ng-template let-message pTemplate="message">
+      <span class="p-toast-icon pi" [ngClass]="{
+        'pi-info-circle': message.severity === 'info',
+        'pi-exclamation-triangle': message.severity === 'warn',
+        'pi-times-circle': message.severity === 'error',
+        'pi-check-circle': message.severity === 'success'
+      }"></span>
+      <div class="p-toast-message-text" *ngIf="message.summary">
+        <div class="p-toast-summary p-text-bold p-mb-1">{{ message.summary }}</div>
+        <div class="p-toast-detail">{{ message.detail }}</div>
+      </div>
+      <div class="p-toast-message-text" *ngIf="!message.summary">
+        <div class="p-toast-detail">{{ message.detail }}</div>
+      </div>
+      <button class="icon-close" type="button" (click)="customCloseToasts(message)" *ngIf="message.data &&
+        message.data.from === TFrom.SERVER &&
+        message.closable === false" [ngClass]="{'as-center': !message.summary, 'as-start': 'message.summary'}">
+        <span><i class="pi pi-times"></i></span>
+      </button>
+    </ng-template>
+  </p-toast>
+</div>

@@ -1,0 +1,51 @@
+@import 'variables';
+
+$icon-width: 2em;
+
+.container-icon {
+  width: max-content;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  i {
+    font-size: 1.5em;
+    color: $ribbon-dark-grey;
+    cursor: pointer;
+
+    &:hover {
+      color: $linkHoverColor;
+    }
+  }
+
+  // &:active {
+  //   .icon-notification-global {
+  //     // color: darken($color: $ribbon-white, $amount: 40%)
+  //   }
+  // }
+
+  // .icon-notification-global {
+  //   // font-size: 1.5em;
+  //   // color: $ribbon-white;
+  //   // padding-top: $icon-width / 4;
+  //   // padding-right: $icon-width / 2;
+  //   // background-color: transparent;
+  // }
+
+  .total-noti {
+    min-width: $icon-width;
+    height: $icon-width;
+    border-radius: calc($icon-width / 2);
+    background-color: transparent;
+    border: 2px solid $ribbon-blue;
+    color: $ribbon-blue;
+    // font-size: 1em;
+    // // padding: 4px;
+    // // margin-left: -$icon-width;
+    // // vertical-align: top;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}

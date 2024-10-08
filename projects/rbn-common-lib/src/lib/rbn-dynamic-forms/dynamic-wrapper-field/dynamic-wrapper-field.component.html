@@ -1,0 +1,49 @@
+<!-- <div class="form-group">
+  <div [attr.for]="id" class="container-label left" *ngIf="to.label && to.positionLabel !== 'right'">
+    {{ to.label }}
+    <span class="asterisk" *ngIf="to.required && to.hideRequiredMarker !== true || to.integerRequired">*</span>
+    <span *ngIf="to.description"><i class="fa fa-info-circle" [pTooltip]="to.description"></i></span>
+  </div>
+
+  <div class="container-input ui-g ui-g-nopad">
+    <div class="input-field ">
+      <ng-template #fieldComponent></ng-template>
+    </div>
+  </div>
+
+  <div [attr.for]="id" class="container-label right" *ngIf="to.label && to.positionLabel === 'right'">
+    {{ to.label }}
+    <span class="asterisk" *ngIf="to.required && to.hideRequiredMarker !== true || to.integerRequired">*</span>
+    <span *ngIf="to.description"><i class="fa fa-info-circle" [pTooltip]="to.description"></i></span>
+  </div>
+
+  <div *ngIf="showError" class="error" [id]="id + '_errorDiv'">
+    <formly-validation-message [field]="field" [id]="id + '_error'"></formly-validation-message>
+  </div>
+</div> -->
+
+<div class="rbn-field-dynamic">
+  <!-- label for field  -->
+  <label [for]="key" [ngClass]="{'right': to.positionLabel === 'right'}">
+    {{ to.label }}
+    <span *ngIf="to.required && to.hideRequiredMarker !== true || to.integerRequired" class="asterisk">*</span>
+    <span *ngIf="to.description" class="info-icon">
+      <i class="fa fa-info-circle" [pTooltip]="to.description" tooltipStyleClass="rbn-tooltip" tooltipPosition="bottom"></i>
+    </span>
+    <span *ngIf="to.icon" class="action-icon" tooltipStyleClass="rbn-tooltip" [id]="to.icon.id"
+      [pTooltip]="to.icon.description" tooltipPosition="bottom">
+      <i [class]="to.icon.class" [ngClass]="{'disabled': to.icon.disabled}"></i>
+    </span>
+    <span *ngIf="to.button" class="action-icon">
+      <button [id]="to.button.id" [class]="to.button.class" [ngStyle]="{'visibility': (to.button.hide) ? 'hidden' : ''}">{{to.button.label}}</button>
+    </span>
+  </label>
+
+  <!-- field  -->
+  <ng-template #fieldComponent></ng-template>
+
+  <!-- error message  -->
+  <div *ngIf="showError" class="error" [id]="id + '_errorDiv'">
+    <formly-validation-message [field]="field" [id]="id + '_error'"></formly-validation-message>
+  </div>
+</div>

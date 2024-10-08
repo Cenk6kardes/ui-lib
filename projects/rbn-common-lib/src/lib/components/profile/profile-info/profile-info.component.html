@@ -1,0 +1,143 @@
+<p-dialog [id]="idProfileInfo" *ngIf="showingConfigs" [header]="'PROFILE_INFO.HEADER'|translate"
+  [(visible)]="showProfileInfo" modal="modal" responsive="true" class="profile-info-dialog"
+  [closeOnEscape]="!(expiredPassword || forcedToResetPassword)" [closeAriaLabel]="'COMMON.CLOSE' | translate"
+  [dismissableMask]="!(expiredPassword || forcedToResetPassword)"
+  [blockScroll]="(expiredPassword || forcedToResetPassword)" [closable]="!(expiredPassword || forcedToResetPassword)"
+  [draggable]="!(expiredPassword || forcedToResetPassword)" (onHide)="closeDialog()">
+
+  <ng-container *ngFor="let message of pwdDangerMessages">
+    <div *ngIf="message" class="profile-message">
+      <span class="danger-message">{{ message }}</span>
+    </div>
+  </ng-container>
+
+  <p-tabView>
+    <!-- Edit General Info panel -->
+    <p-tabPanel [id]="idProfileInfo ? (idProfileInfo + '-general-panel') : 'general-panel'"
+      *ngIf="showingConfigs?.general" [header]="'PROFILE_INFO.GENERAL' | translate">
+      <div class="profile-content">
+        <div class="form-elements" [formGroup]="generalForm">
+          <div class="p-grid p-col-12 p-field field">
+            <label class="p-col-4" for="username">
+              {{ 'PROFILE_INFO.USER_NAME' | translate }}:<span class="asterisk">*</span>
+            </label>
+            <div class="p-col-8">
+              <input type="text" pInputText [attr.disabled]="true" formControlName="username"
+                [id]="idProfileInfo ? (idProfileInfo + '-username') : 'username'" />
+              <small class="error" *ngIf="generalForm.get('username').invalid && generalForm.get('username').errors
+                && (generalForm.get('username').touched || generalForm.get('username').dirty)">
+                <ng-container *ngIf="generalForm.get('username').hasError('required')">
+                  {{'VALIDATION.REQUIRED' | translate}}
+                </ng-container>
+                <ng-container *ngIf="generalForm.get('username').hasError('maxlength')">
+                  {{ valiMessage('maxlength', 'username') }}
+                </ng-container>
+                <ng-container *ngIf="generalForm.get('username').hasError('minlength')">
+                  {{ valiMessage('minlength', 'username') }}
+                </ng-container>
+              </small>
+            </div>
+          </div>
+          <div class="p-grid p-col-12 p-field field">
+            <label class="p-col-4" for="fullname">
+              {{ 'PROFILE_INFO.FULL_Name' | translate }}:
+              <span class="asterisk">*</span>
+            </label>
+            <div class="p-col-8">
+              <input [id]="idProfileInfo ? (idProfileInfo + '-fullname') : 'fullname'"
+                type="text" pInputText formControlName="fullname" />
+              <small id="fullname-help" class="error"
+                *ngIf="generalForm.get('fullname').invalid && generalForm.get('fullname').errors
+                  && (generalForm.get('fullname').touched || generalForm.get('fullname').dirty)">
+                <ng-container *ngIf="generalForm.get('fullname').hasError('required')">
+                  {{'VALIDATION.REQUIRED' | translate}}
+                </ng-container>
+                <ng-container *ngIf="generalForm.get('fullname').hasError('minlength')">
+                  {{ valiMessage('minlength', 'fullname') }}
+                </ng-container>
+                <ng-container *ngIf="generalForm.get('fullname').hasError('maxlength')">
+                  {{ valiMessage('maxlength', 'fullname') }}
+                </ng-container>
+              </small>
+            </div>
+          </div>
+          <div class="p-grid p-col-12 p-field field">
+            <label class="p-col-4" for="description">
+              {{ 'PROFILE_INFO.DESCRIPTION' | translate }}:
+            </label>
+            <div class="p-col-8">
+              <input [id]="idProfileInfo ? (idProfileInfo + '-description') : 'description'"
+                type="text" pInputText formControlName="description" />
+              <small id="fullname-help" class="error"
+                *ngIf="generalForm.get('description').invalid && generalForm.get('description').errors
+                  && (generalForm.get('description').touched || generalForm.get('description').dirty)">
+                <ng-container *ngIf="generalForm.get('description').hasError('minlength')">
+                  {{ valiMessage('minlength', 'description') }}
+                </ng-container>
+              </small>
+            </div>
+          </div>
+        </div>
+        <rbn-form-toolbar [toolbarId]="idProfileInfo ? (idProfileInfo + '-toolbar') : 'profile-toolbar'"
+          [disabledPrimary]="!generalForm || generalForm.invalid"
+          (buttonClickedEmit)="onButtonClick($event, 'generalForm')"></rbn-form-toolbar>
+      </div>
+    </p-tabPanel>
+    <!-- Change password panel -->
+    <p-tabPanel [id]="idProfileInfo ? (idProfileInfo + '-password-panel') : 'password-panel'"
+      *ngIf="showingConfigs?.changePassword" [header]="'PROFILE_INFO.CHANGEPWD' | translate">
+      <div class="profile-content">
+        <rbn-change-password [idChangePwd]="idProfileInfo ? (idProfileInfo + '-change-password') : 'change-password'"
+          [emitDataWithoutSubmit]="true" (passworDataEmit)="onPassworDataEmit($event)"></rbn-change-password>
+      </div>
+    </p-tabPanel>
+    <!-- Edit timezone panel -->
+    <p-tabPanel [id]="idProfileInfo ? (idProfileInfo + '-timezone-panel') : 'timezone-panel'"
+      *ngIf="showingConfigs?.timezone" [header]="'PROFILE_INFO.TIMEZONE' | translate">
+      <div class="profile-content">
+        <div class="form-elements timezone-content" [formGroup]="timezoneForm">
+          <div class="p-grid p-col-12 timezone-title">{{'PROFILE_INFO.SET_TIMEZONE_OF_SYS' | translate}}: </div>
+          <div class="p-grid p-col-12 p-field field">
+            <label class="p-col-8 content">{{'PROFILE_INFO.LOCAL' | translate}}: </label>
+            <div class="p-col-4 timezone-item">
+              <p-inputSwitch formControlName="local" class="rbn-switch"
+                [id]="idProfileInfo ? (idProfileInfo + '-local') : 'local'">
+              </p-inputSwitch>
+            </div>
+          </div>
+          <div class="p-grid p-col-12 p-field field">
+            <label class="p-col-8 content">{{'PROFILE_INFO.COORDINATED_UNI_TIME' | translate}}: </label>
+            <div class="p-col-4 timezone-item">
+              <p-inputSwitch formControlName="coordinated" class="rbn-switch"
+                [id]="idProfileInfo ? (idProfileInfo + '-coordinated') : 'coordinated'"></p-inputSwitch>
+            </div>
+          </div>
+          <div class="p-grid p-col-12 p-field field">
+            <label class="p-col-8 content">{{'PROFILE_INFO.ANOTHER_TIMEZONE' | translate}}: </label>
+            <div class="p-col-4 timezone-item">
+              <p-inputSwitch formControlName="another" class="rbn-switch"
+                [id]="idProfileInfo ? (idProfileInfo + '-another') : 'another'">
+              </p-inputSwitch>
+            </div>
+          </div>
+        </div>
+        <rbn-form-toolbar [toolbarId]="idProfileInfo ? (idProfileInfo + '-toolbar') : 'profile-toolbar'"
+          (buttonClickedEmit)="onButtonClick($event, 'timezoneForm')"></rbn-form-toolbar>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+
+  <p-toolbar class="bottom">
+    <div class="p-toolbar-group-left"></div>
+    <div class="p-toolbar-group-right">
+      <button type="button" pButton pRipple [label]="'COMMON.CLOSE' | translate"
+        class="rbn-button rbn-button-secondary" [disabled]="(expiredPassword || forcedToResetPassword)"
+        (click)="closeDialog()"></button>
+    </div>
+  </p-toolbar>
+</p-dialog>
+
+<rbn-confirm-dialog [title]="'PROFILE_INFO.CONFIRMATION' | translate"
+  [content]="'PROFILE_INFO.DO_YOU_WANT_TO_SAVE_THE_NEW_CHANGE' | translate"
+  [titleAccept]="'COMMON.SAVE_CLOSE' | translate" [titleReject]="'COMMON.CLOSE' | translate"
+  (emitConfirm)="onComfirmation($event)" [isShowConfirmDialog]="showConfirmation"></rbn-confirm-dialog>

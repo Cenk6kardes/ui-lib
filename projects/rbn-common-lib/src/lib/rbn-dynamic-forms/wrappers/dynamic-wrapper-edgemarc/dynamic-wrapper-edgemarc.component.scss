@@ -1,0 +1,26 @@
+.ev-wrapper {
+  display: flex;
+
+  .checkbox-wrapper {
+      padding: 0.6rem 1rem;
+      background-color: #e3eaef;
+      min-width: 70px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      
+  }
+
+  .checkbox-wrapper > span {
+      font-weight: 600;
+      color: #1D1F21;
+  }
+
+}
+
+.ev-wrapper > span {
+  padding-left: 25px;
+  padding-top: .6rem;
+  font-weight: 600;
+  color: #1D1F21;
+}

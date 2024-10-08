@@ -1,0 +1,145 @@
+// Theme Specific Variables
+//Ribbon color scheme
+$ribbon-black:#1D1F21;
+$ribbon-dark-grey:#5a5a5a;
+$ribbon-grey:#8a8a8a;
+$ribbon-light-grey:#CBCBCB;
+$ribbon-lighter-grey:#E6E6E6;
+$ribbon-cream:#F5F5F6;
+$ribbon-white: #ffffff;
+$ribbon-purple:#C0059E;
+$ribbon-dark-pink: #e90575;
+$ribbon-light-pink: #E8A3C5;
+$ribbon-red:#DC143C;
+$ribbon-dark-red:#DC143C;
+$ribbon-light-red:#FFA8BA;
+$ribbon-blue:#008EFA;
+$ribbon-dark-blue:#008EFA;
+$ribbon-lighter-blue:#E2F4F9;
+$ribbon-teal:#b7e5f0;
+$ribbon-light-blue:#B7E5F0;
+$ribbon-green:#4F8A0F;
+$ribbon-dark-green:#4F8A0F;
+$ribbon-light-green:#D6E9BB;
+$ribbon-yellow:#efc063;
+$ribbon-dark-yellow:#F7B500;
+$ribbon-light-yellow:#FDE196;
+
+// Shades for highlighting the defined colors // ********* we are still not sure **********
+// Ribbon
+$ribbon-dark-pink-highlight: #d30468;
+$ribbon-dark-pink-lowlight: #af0356;
+$ribbon-light-pink-highlight: #F068AA;
+$ribbon-light-pink-lowlight: #A8517C;
+$ribbon-danger-red: #DC143C;
+$ribbon-danger-red-highlight: #FFA8BA;
+$ribbon-teal-highlight: #e2f4f9;
+$ribbon-topbar-background-color: #1D1F21;
+$secondaryColorHighlight:$ribbon-teal-highlight;
+$ribbon-disbaled-background: #f5f5f6;
+$ribbon-disbaled-color: #6d7278;
+
+// #region color for themes
+$ribbon-specific-dark-highlight: #7a7a7a;
+$ribbon-specific-dark-lowlight: #3a3a3a;
+$ribbon-specific-light-highlight: #949494;
+$ribbon-specific-light-lowlight: #4a4a4a;
+$ribbon-specific-danger: $ribbon-dark-red;
+$ribbon-specific-danger-highlight: #ed5565;
+$ribbon-specific-highlight: #d7d7d7;
+$ribbon-specific-topbar-background-color: #1D1F21;
+$ribbon-specific-secondaryColorHighlight:$ribbon-specific-highlight;
+$ribbon-specific-disbaled-background: #f5f5f6;
+$ribbon-specific-disbaled-color: #6d7278;
+$ribbon-specific-text-active: $ribbon-black;
+
+$primaryColor:$ribbon-dark-grey;
+$primaryLightColor:$ribbon-light-grey;
+$primaryDarkColor:$ribbon-dark-grey;
+$primaryDarkerColor:$ribbon-specific-light-lowlight;
+$primaryTextColor:$ribbon-white;
+$secondaryColor:#a1a1a1;
+// #endregion
+
+//Global
+$fontFamily:"Open Sans","Helvetica Neue",sans-serif;
+$fontAwesome:"FontAwesome";
+$fontAwesome5:"Font Awesome 5 Free";
+$fontPrimeIcons:"primeicons";
+$fontSize:14px;
+$textColor:$ribbon-black;
+$textSecondaryColor:$ribbon-dark-grey;
+$borderRadius:3px;
+$transitionDuration:.2s;
+$primeIconFontSize:1.25em;
+
+//anchors
+$linkColor:$primaryColor;
+$linkHoverColor:$primaryDarkerColor;
+$linkActiveColor:$primaryDarkerColor;
+
+//highlight
+$highlightBgColor:$primaryDarkerColor;
+$highlightBgSecondaryColor:$ribbon-lighter-grey;
+$highlightColorText:$primaryTextColor;
+$highlightColorTab: $primaryDarkerColor;
+$selectedHighlightBgColor: $ribbon-light-grey;
+
+//focus
+$focusOutlineColor: transparent;
+$focusOutline: 0 none;
+$focusOutlineOffset: 0;
+$focusShadow: 0 0 0 0.1em $focusOutlineColor;
+
+//input field (e.g. inputtext, spinner, inputmask)
+$inputPadding:0.429em;
+$inputBgColor:$ribbon-white;
+$inputBorder:1px solid $ribbon-light-grey;
+$inputHoverBorderColor:$ribbon-dark-grey;
+$inputFocusBorderColor:none;
+$inputErrorBorder:1px solid $ribbon-dark-grey;
+$inputPlaceholderTextColor:$ribbon-dark-grey;
+$inputTransition:border-color $transitionDuration, box-shadow $transitionDuration;
+
+//input groups
+$inputGroupBorderColor:#a6a6a6;
+$inputGroupBgColor:#eaeaea;
+$inputGroupTextColor:$textSecondaryColor;
+
+//extensions
+$borderLighterGrey: #dee2e6;
+$sidebarWidth: 290px;
+$sidebarCollapsedWidth: 60px;
+$headerHeight: 64px;
+
+// font-weight
+$fontWeightRegular: 400;
+$fontWeightSemiBold: 600;
+$fontWeightBold: 700;
+
+
+// Mandatory Designer Variables
+@import './variables/general';
+@import './variables/form';
+@import './variables/button';
+@import './variables/panel';
+@import './variables/_data';
+@import './variables/_overlay';
+@import './variables/_message';
+@import './variables/_menu';
+@import './variables/_media';
+@import './variables/_misc';
+
+:root {
+    --surface-a:#ffffff;
+    --surface-b:#f8f9fa;
+    --surface-c:#e9ecef;
+    --surface-d:#dee2e6;
+    --surface-e:#ffffff;
+    --surface-f:#ffffff;
+    --text-color: $textColor;
+    --text-color-secondary:#6c757d;
+    --primary-color:#2196F3;
+    --primary-color-text:#ffffff;
+    --font-family:"Open Sans","Helvetica Neue",sans-serif;
+}

@@ -1,0 +1,31 @@
+<p-dialog id="securityRealm-enable" header=" {{ 'ADMIN.ENABLE_SECURITY_REALM' | translate }}" styleClass="w-700"
+  [(visible)]="isShowContent" [modal]="true" (onHide)="securityRealmCloseDialogEnableDisable()" *ngIf="isEnableSelected"
+  [focusOnShow]="false" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <span>
+    {{ "ADMIN.ENABLE_SECURITY_REALM_SURE" | translate }}
+    <b>{{ realm?.name }}</b> ?</span>
+  <p-footer>
+    <div class="ui-dialog-buttonpane">
+      <button type="button" pButton icon="fa fa-times" (click)="closeDialog()" label="{{ 'COMMON.NO' | translate }}"
+        class="p-button-secondary"></button>
+      <button type="button" pButton icon="pi pi-pw pi-check" (click)="enableSecurityRealm()"
+        label="{{ 'COMMON.YES' | translate }}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog id="securityRealm-disable" header=" {{ 'ADMIN.DISABLE_SECURITY_REALM' | translate }}" styleClass="w-700"
+  [(visible)]="isShowContent" [modal]="true" (onHide)="securityRealmCloseDialogEnableDisable()"
+  *ngIf="isDisableSelected" [focusOnShow]="false" [closeAriaLabel]="'COMMON.CLOSE' | translate">
+  <span>
+    {{ "ADMIN.DISABLE_SECURITY_REALM_SURE" | translate }}
+    <b>{{ realm?.name }}</b> ?</span>
+  <p-footer>
+    <div class="ui-dialog-buttonpane">
+      <button type="button" pButton icon="fa fa-times" (click)="closeDialog()" label="{{ 'COMMON.NO' | translate }}"
+        class="p-button-secondary"></button>
+      <button type="button" pButton icon="pi pi-pw pi-check" (click)="disableSecurityRealm()"
+        label="{{ 'COMMON.YES' | translate }}"></button>
+    </div>
+  </p-footer>
+</p-dialog>

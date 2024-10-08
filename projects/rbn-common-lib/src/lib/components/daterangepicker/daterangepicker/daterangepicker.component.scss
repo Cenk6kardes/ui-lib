@@ -1,0 +1,104 @@
+@import 'variables';
+
+::ng-deep {
+  .p-dialog .p-dialog-footer {
+    padding: 0.571em 1em;
+    border-top: none;
+  }
+  div .p-button.p-button-icon-only {
+    border: 1px solid $primaryColor;
+  }
+
+  div[role="dialog"].daterangepicker-dialog {
+    width: auto !important;
+
+    .pi-chevron-down:before {
+      color: unset;
+    }
+
+    .p-datepicker.p-datepicker-inline {
+      border: 1px solid $ribbon-light-grey;
+    }
+
+    .p-calendar {
+      .p-datepicker-inline {
+        display: unset;
+      }
+    }
+
+    .p-datepicker table td>span {
+      border-radius: 3px;
+    }
+
+    .p-datepicker table td>span.p-highlight {
+      color: $ribbon-white;
+      background: $highlightBgColor;
+    }
+  }
+
+  .p-dialog {
+    .p-dialog-content {
+      padding: 0.571em 1em;
+
+      .p-datepicker {
+        .p-datepicker-header {
+          padding: 0;
+          border-bottom: none;
+          font-weight: normal;
+
+          .p-datepicker-prev:enabled:hover {
+            background-color: transparent;
+            color: $linkHoverColor;
+          }
+
+          .p-datepicker-next:enabled:hover {
+            background-color: transparent;
+            color: $linkHoverColor;
+          }
+        }
+
+        table td {
+          padding: 0.5em;
+
+          &>span {
+            width: 2rem;
+            height: 2rem;
+          }
+        }
+
+        .p-timepicker {
+          button:enabled:hover {
+            color: $linkHoverColor;
+            background: transparent;
+          }
+        }
+      }
+    }
+
+    .p-button {
+      border-radius: 3px;
+    }
+  }
+}
+
+.crop {
+  border: 1px solid $ribbon-light-grey;
+  border-radius: 3px;
+  text-overflow: ellipsis;
+  height: 33px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right-width: 0;
+  padding: 6px;
+  font-size: $fontSize;
+  min-width: 310px;
+  outline: none;
+}
+
+.txt-cter {
+  text-align: center;
+
+  .rbn-calendar-title {
+    text-align: left;
+  }
+}

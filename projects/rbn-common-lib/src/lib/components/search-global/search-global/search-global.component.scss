@@ -1,0 +1,145 @@
+@import "../../../../../../../src/sass/themes/ribbontheme/variables";
+$defaultWidth: 2.5rem;
+$btnShadow: 0 0px 6px 0 rgba(0, 0, 0, 0.16);
+
+@mixin rbn-table-btn-icon {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+.rbn-search-container {
+  margin-right: 12px;
+  position: relative;
+  display: inline-flex;
+  float: right;
+
+  .input-search {
+    position: absolute;
+    right: 0;
+    // top: 2px;
+
+    font-size: 14px;
+    font-family: $fontFamily;
+    box-shadow: $btnShadow;
+
+    border: none;
+    outline: none;
+    background: $ribbon-white;
+    color: transparent;
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: $defaultWidth;
+    // padding-right: 2.5rem;
+
+    cursor: pointer;
+
+    // opacity: 0;
+    // visibility: hidden;
+
+    transition: width 0.4s;
+    transition-duration: 0.4s;
+    -moz-transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s;
+    -o-transition-duration: 0.4s;
+
+    &.active {
+      box-shadow: $btnShadow;
+      width: 15rem;
+      height: 32px;
+      padding: 0 0.75rem;
+
+      color: $ribbon-black;
+      background: $ribbon-white;
+      cursor: text;
+
+      opacity: 1;
+      border-radius: $defaultWidth;
+
+      // visibility: visible;
+
+      transition-duration: 0.4s;
+      -moz-transition-duration: 0.4s;
+      -webkit-transition-duration: 0.4s;
+      -o-transition-duration: 0.4s;
+      z-index: 0;
+      padding-right: 2rem;
+    }
+  }
+
+  .button-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+
+    border: 1px solid $ribbon-light-grey;
+    background-color: $ribbon-white;
+    cursor: pointer;
+    // box-shadow: $btnShadow;
+    @include rbn-table-btn-icon;
+    transition: width 4s;
+    z-index: 0;
+
+    &.active {
+      box-shadow: none;
+      background-color: unset;
+      border: none;
+
+      i.fa {
+        color: $primaryColor;
+      }
+    }
+
+    i.fa {
+      color: lighten($color: $ribbon-black, $amount: 20);
+      font-size: 14px;
+      font-weight: 900;
+      font-family: $fontAwesome5;
+
+      &:hover {
+        color: $primaryColor;
+      }
+    }
+  }
+
+  [placeholder]::-webkit-input-placeholder {
+    color: $ribbon-light-grey;
+  }
+
+  [placeholder]:focus::-webkit-input-placeholder {
+    color: #666;
+  }
+
+  #searchInputWrapper::ng-deep {
+    .p-overlaypanel {
+      top: 33px !important;
+      left: -190px !important;
+
+      .p-overlaypanel-content {
+        padding: 0;
+        overflow: auto;
+        max-height: 80vh;
+
+        .searchItem {
+          padding: 8px 12px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $secondaryColor;
+
+            .highlight {
+              background-color: $highlightBgSecondaryColor;
+            }
+          }
+
+          .highlight {
+            background-color: $ribbon-specific-highlight;
+          }
+        }
+      }
+    }
+  }
+}

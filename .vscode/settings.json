@@ -1,0 +1,6 @@
+{
+    "window.autoDetectColorScheme": true,   
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#2d6bb3"
+    }
+}

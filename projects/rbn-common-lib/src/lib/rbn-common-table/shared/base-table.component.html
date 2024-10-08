@@ -1,0 +1,533 @@
+<rbn-column-hiding-simple [config]="colHidingDialogSimpleConfig" (hideColumnDialog)="onHideColumnDialog()">
+</rbn-column-hiding-simple>
+
+<div id="container-common-table" [ngClass]="theme">
+  <div class="container-accordian">
+    <div class="accordian-header">
+      <span *ngIf="header" class="header-title" id="header_{{ header }}">{{
+        header
+        }}</span>
+      <p-button *ngIf="showCloseTableButton" icon="fa fa-times" class="button-close-accordian"
+        (onClick)="onCloseTable ? onCloseTable() : ''"></p-button>
+    </div>
+    <p-button *ngIf="topButton" class="button-add-action" styleClass="p-button-primary" [label]="topButton?.label"
+      [icon]="topButton?.icon" [disabled]="topButton?.disabled" [iconPos]="topButton?.iconPos"
+      (onClick)="topButton?.onClick($event)" title="{{ topButton?.title }}" id="{{ topButton?.id }}">
+    </p-button>
+    <p-table #dt [columns]="cols" (onPage)="paginate($event)" [value]="data"
+      [selectionMode]="tableOptions ? tableOptions?.selectionMode : ''"
+      [dataKey]="tableOptions ? tableOptions?.dataKey : ''" [(selection)]="selectedRows" (onFilter)="
+        checkScrollHeader($event);
+        onFilter ? onFilter($event) : '';
+        setDataTableToStorage();
+        onFilterDropdown()"
+      [paginator]="paginator" [showCurrentPageReport]="showCurrentPageReport"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [rows]="numberRowPerPage" [rowsPerPageOptions]="
+        rowsPerPageOptions.length > 0
+          ? rowsPerPageOptions
+          : [numberRowPerPage, numberRowPerPage + 5, numberRowPerPage + 10]
+      " (onRowSelect)="
+        onRowSelectInner($event);
+        onRowSelect ? onRowSelect($event, selectedRows) : ''
+      " (onRowUnselect)="
+        onRowUnselectInner($event);
+        onRowUnselect ? onRowUnselect(dt, selectedRows) : ''
+      " (sortFunction)="onCustomSort($event)" [customSort]="isCustomSort" (onSort)="onSort()"
+      [scrollable]="isScrollable" [first]="first" [id]="tableName" (onRowReorder)="onRowReorder()" (onPage)="onPage()"
+      [ngClass]="scrollX || (data && data.length === 0) ? 'scroll-x' : ''">
+      <ng-template pTemplate="caption" *ngIf="caption">
+        <div class="container-caption p-grid">
+          <div class="container-table-dropdown">
+            <p-dropdown *ngIf="tableActions !== undefined && showTableActionDropdown"
+              [scrollHeight]="getDropdownHeight(tableActions)" [appendTo]="isUsingAppendTo ? dt : 'body'"
+              panelStyleClass="table-action-dropdown-panel"
+              (click)="onClickTableActions ? onClickTableActions($event) : ''" (onChange)="
+                onChangeTableActions ? onChangeTableActions($event) : ''
+              " [options]="tableActions" [(ngModel)]="selectedTableAction"
+              [placeholder]="translateResults?.SELECT_ACTION" styleClass="first-capitalize" class="drop-bulk-action"
+              [disabled]="disabledTableActions" id="{{ tableName + 'ActionDropdown' }}">
+              <ng-template let-option pTemplate="item" class="container-item">
+                <div [ngClass]="option?.className">
+                  <span *ngIf="option?.preHtml" [innerHTML]="option?.preHtml" class="container-prehtml"></span>
+                  <option title="{{ option.title }}" id="{{ option?.id }}" *ngIf="
+                      !tableOptions || !tableOptions.tableActionsTitlecaseNo
+                    ">{{ option.label | titlecase }}</option>
+                  <option title="{{ option.title }}" id="{{ option?.id }}"
+                    *ngIf="tableOptions && tableOptions.tableActionsTitlecaseNo">{{ option.label }}</option>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <p-button *ngIf="headerButton" class="button-header-action" [label]="headerButton?.label"
+              [icon]="headerButton?.icon" [disabled]="headerButton?.disabled" [iconPos]="headerButton?.iconPos"
+              (onClick)="headerButton?.onClick($event)" title="{{ headerButton?.title }}" id="{{ headerButton?.id }}">
+            </p-button>
+          </div>
+
+
+          <div class="p-col container-right">
+
+            <!-- extensible header right template -->
+            <div class="container-template" *ngIf="extHeaderRghtTmplt">
+              <ng-container *ngTemplateOutlet="extHeaderRghtTmplt; context: { }">
+              </ng-container>
+            </div>
+            <div class="container-search-input">
+              <div class="search-input">
+                <span class="icon-inside"><i class="fa fa-search"></i></span>
+                <input #searchInput class="table-hdr-srch" type="text"
+                  [placeholder]="searchPlaceholderText || 'ADD_BK_SEARCH_TOOLTIP' | translate" [(ngModel)]="searchData"
+                  pInputText (input)="dt.filterGlobal($event.target.value, 'contains'); resetPageFirst();
+                  " />
+
+                <p-button [disabled]="!searchData" [ngStyle]="{ opacity: !searchData ? 0 : 1 }"
+                  [id]="tableName ? tableName + 'CancelSearchInput' : 'cancelSearchInput'"
+                  class="button-text-only icon-inside" icon="fa fa-times"
+                  (onClick)="searchData = ''; dt.filterGlobal('', 'contains'); resetPageFirst();">
+                </p-button>
+              </div>
+            </div>
+            <div class="container-button" *ngIf="!tableOptions?.hideTableButtons">
+              <div>
+                <p-button class="table-hdr-btn button-filter" icon="fa fa-sliders" (onClick)="toggleFilterRow()"
+                  [ngClass]="{ 'button-focus': showFilterRow }" [ariaLabel]="'COMMON.SHOW_HIDE_FILTER_ROW' | translate" title="{{ translateResults?.SHOW_HIDE_FILTER_ROW }}"
+                  id="{{ tableName + 'ShowHideFilter' }}">
+                </p-button>
+                <p-button class="table-hdr-btn button-refresh" icon="fa fa-refresh" (onClick)="refreshDataInner(true)"
+                [ariaLabel]="'COMMON.REFRESH' | translate" title="{{ 'COMMON.REFRESH' | translate }}" id="{{ tableName + 'RefeshTableBtn' }}">
+                </p-button>
+                <p-button class="table-hdr-btn button-dialog" icon="fa fa-cog" (onClick)="showColumnDialog()"
+                  [ariaLabel]="'COMMOM.SHOWHIDECOLUMNS' | translate" title="{{ translateResults?.SHOWHIDECOLUMNS }}" id="{{ tableName + 'ShowHideColumns ' }}"></p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <ng-container *ngFor="let col of columns; index as i">
+            <col *ngIf="col.colsEnable" class="colgroup-cols" [ngClass]="[
+                'colgroup-' + col.field.toLowerCase(),
+                col.field === fieldName.Checkbox &&
+                tableOptions?.usingTriStateCheckbox
+                  ? 'container-tri-checkbox'
+                  : ''
+              ]" [ngStyle]="{
+                width: col.autoSetWidth !== false ? setWidthCol(col) : ''
+              }" />
+          </ng-container>
+          <col class="column-clear" *ngIf="!tableOptions?.hideTableButtons" />
+        </colgroup>
+      </ng-template>
+
+      <p-overlayPanel #op5 [showCloseIcon]="false" [dismissable]="true" [appendTo]="'body'" styleClass="headerOL">
+        <p-panel *ngIf="headerOL && headerOL.title" id="panel-headerol" styleClass="p-t-0 panel-title"
+          header="{{ headerOL.title }}">
+          <ng-container *ngFor="let para of headerOL.paras; index as i">
+            <div class="title">
+              <b>{{ para.header }}</b>
+            </div>
+            <div class="para" *ngFor="let textitem of para.text; index as j">
+              {{ textitem }}
+            </div>
+          </ng-container>
+        </p-panel>
+      </p-overlayPanel>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <ng-container *ngFor="let col of cols; index as i">
+            <th *ngIf="col.sort; else elseblock" [pSortableColumn]="col.field"
+              [ngStyle]="{ display: getColumnStyle(col) }">
+              <span class="{{ theme }}">{{ col.header }}</span>
+              <span *ngIf="
+                  col.options &&
+                  col.options.headerOLIcon &&
+                  col.options.headerOLtemplate &&
+                  col.options.headerOLtemplate === 'op5'
+                ">
+                <i class="{{ col.options.headerOLIcon }}" (mouseenter)="op5.show($event)" (mouseout)="op5.hide()"></i>
+              </span>
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <ng-template #elseblock>
+              <th *ngIf="
+                  col.field !== fieldName.Checkbox &&
+                  col.field !== fieldName.RowGroup
+                " [ngStyle]="{ display: getColumnStyle(col) }">
+                <span [ngClass]="{
+                    'hd-icon-delete':
+                      col.field === 'action' && col?.options?.useDeleteIcon,
+                    'hd-action':
+                      col.field === 'action' && !col?.options?.useDeleteIcon
+                  }" class="{{ theme }}">
+                  {{ col.header }}
+                </span>
+              </th>
+              <th *ngIf="col.field === fieldName.Checkbox" [ngClass]="checkboxClass" #e class="container-checkbox">
+                <ng-container *ngIf="tableOptions?.usingTriStateCheckbox">
+                  <p-triStateCheckbox [disabled]="col.options?.disabled" id="selectAll" [formControl]="triStateCheckbox"
+                    [label]="labelTriCheckbox" (onChange)="onCheckboxHeader($event.value)" [pTooltip]="tooltipCheckbox">
+                  </p-triStateCheckbox>
+                </ng-container>
+                <ng-container *ngIf="!tableOptions?.usingTriStateCheckbox">
+                  <p-tableHeaderCheckbox [disabled]="col.options?.disabled" id="selectAll"
+                    (click)="onCheckboxHeader(e.checked)" #e></p-tableHeaderCheckbox>
+                </ng-container>
+              </th>
+              <th *ngIf="col.field === fieldName.RowGroup">
+                <p>{{ "" }}</p>
+              </th>
+            </ng-template>
+          </ng-container>
+          <th class="column-clear" *ngIf="!tableOptions?.hideTableButtons"></th>
+        </tr>
+        <tr *ngIf="showFilterRow" #filterRow class="container-row-filters ui-table-caption">
+          <ng-container *ngFor="let col of columns; index as i" [ngSwitch]="col.type">
+            <th [ngStyle]="{ display: getColumnStyle(col) }">
+              <input *ngSwitchCase="filterTypes.InputText" pInputText type="text" [(ngModel)]="col.options.model"
+                (input)="dt.filter($event.target.value, col.field, 'contains');resetPageFirst();" style="width: 100%;"
+                id="filter_{{ col.field }}" />
+              <p-dropdown *ngSwitchCase="filterTypes.Dropdown" [options]="optionDropdown(col)" (onChange)="
+                  dt?.filter($event.value, col.field, 'equals');resetPageFirst();
+                  onDropdownFilterChanged(col.field, $event.value)
+                " [(ngModel)]="col.options.model" [filter]="
+                  col.options.selectionFilterDropdown
+                    ? col.options.selectionFilterDropdown
+                    : false
+                " [appendTo]="isUsingAppendTo ? dt : 'body'" id="filter_{{ col.field }}"></p-dropdown>
+              <p-multiSelect *ngSwitchCase="filterTypes.Multiselect" [options]="optionDropdown(col)"
+                (onChange)="dt?.filter($event.value, col.field, 'inorcontains');resetPageFirst();"
+                [(ngModel)]="col.options.model" [resetFilterOnHide]="false"
+                (onPanelShow)="onpanelMultiShow ? onpanelMultiShow() : ''" [defaultLabel]="translateResults?.ALL"
+                [style]="{ width: '100%' }" [appendTo]="isUsingAppendTo ? dt : 'body'" id="filter_{{ col.field }}">
+              </p-multiSelect>
+              <div *ngSwitchCase="filterTypes.Calendar">
+                <rbn-time-picker #rbntimepicker [newTimeValues]="col.options.model" [appendToTemplate]="dt"
+                  (dateChanged)="
+                    filterField = col.field; resetPageFirst();onDateChanged($event, col)
+                  " id="filter_{{ col.field }}">
+                </rbn-time-picker>
+              </div>
+              <div *ngSwitchCase="filterTypes.DateRange">
+                <rbn-time-picker [newTimeValues]="col.options.model" [appendToTemplate]="dt" (dateChanged)="
+                    filterField = col.field; resetPageFirst();onDateChanged($event, col)
+                  " id="filter_{{ col.field }}">
+                </rbn-time-picker>
+              </div>
+            </th>
+          </ng-container>
+          <ng-container>
+            <th class="column-clear">
+              <p-button icon="fa fa-times" styleClass="button-grey" id="resetFilter"
+                (onClick)="resetFilter(); onResetRowFilter()">
+              </p-button>
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header" [ngClass]="{
+            trExpand: expanded && !isSupportGrouping,
+            'tr-even': rowIndex % 2 === 1
+          }" [pReorderableRow]="rowIndex">
+          <ng-container *ngFor="let col of columns; index as i">
+            <td *ngIf="
+                col.field === fieldName.RowGroup ||
+                col.field === fieldName.Expand
+              ">
+              <a id="chevronIcon" [pRowToggler]="rowData" *ngIf="
+                  !isSupportGrouping || (isSupportGrouping && rowData.children)
+                ">
+                <i class="group-icon" [ngClass]="
+                    expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
+                  "></i>
+              </a>
+            </td>
+            <td *ngIf="col.field === fieldName.Reorder" [ngStyle]="{ display: getColumnStyle(col) }">
+              <i class="fa fa-bars" pReorderableRowHandle></i>
+            </td>
+            <td *ngIf="col.field === fieldName.Checkbox" class="container-checkbox">
+              <p-tableCheckbox [value]="
+                  col.options?.disabled || rowData.disableSelect ? {} : rowData
+                " [disabled]="col.options?.disabled || rowData.disableSelect" id="checkbox_{{ rowIndex }}"
+                [index]="rowIndex" (click)="$event.stopPropagation();" #e>
+              </p-tableCheckbox>
+            </td>
+            <td [ngStyle]="{ display: getColumnStyle(col) }"
+              [ngClass]="rowData?.className && (rowData?.className)[col.field]" *ngIf="
+                col.field !== fieldName.Checkbox &&
+                col.field !== fieldName.Reorder &&
+                col.field !== fieldName.RowGroup &&
+                col.field !== fieldName.Expand
+              ">
+              <div *ngIf="
+                  col.options !== undefined &&
+                  col.options.template !== undefined &&
+                  col.options.template === 'customTemplate1'
+                ">
+                <ng-container *ngTemplateOutlet="customTemplate1"></ng-container>
+              </div>
+              <div *ngIf="col.field === fieldName.Expand; else notExpandBlock">
+                <span [pRowToggler]="rowData" (click)="$event.stopPropagation()">
+                  <i [ngClass]="
+                      expanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right'
+                    " style="cursor: pointer;"></i>
+                </span>
+              </div>
+              <ng-template #notExpandBlock>
+                <div *ngIf="
+                    col.field !== fieldName.Action &&
+                    (col.options === undefined ||
+                      col.options.template === undefined)
+                  ">
+                  <div *ngIf="!expanded || !col.canExpand || !col.mainheader">
+                    <ng-container *ngTemplateOutlet="
+                        basicField;
+                        context: { $implicit: col, data: rowData }
+                      "></ng-container>
+                  </div>
+                  <div *ngIf="
+                      col.mainheader &&
+                      !expanded &&
+                      col?.options?.mainheaderGeneral
+                    ">
+                    <span>{{ rowData.mainHeaderSummary }}</span>
+                  </div>
+                  <div *ngIf="
+                      col.mainheader &&
+                      !expanded &&
+                      !col?.options?.mainheaderGeneral
+                    ">
+                    <ng-container *ngFor="
+                        let colMain of expandData.colMainHeader;
+                        index as i
+                      ">
+                      <span class="span-right">
+                        {{ colMain.header }}:
+                        {{ colMain.data[rowIndex] }}
+                        <span *ngIf="i < expandData.colMainHeader.length - 1">|</span>
+                      </span>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="
+                      expanded && col.canExpand && col.mesExpand;
+                      else interfaceblock
+                    ">
+                    <span *ngIf="
+                        rowData[expandMessage.actionMessagePreHtml + 'PreHtml']
+                      " [innerHTML]="
+                        rowData[expandMessage.actionMessagePreHtml + 'PreHtml']
+                      "></span>
+                  </div>
+
+                  <ng-template #interfaceblock>
+                    <ng-container *ngIf="expanded && col.canExpand">
+                      <p-table id="{{ expandData?.tableId }}" [value]="
+                          expandData?.fieldDisplayValue
+                            ? rowData[expandData.fieldDisplayValue]
+                            : []
+                        ">
+                        <ng-template pTemplate="header">
+        <tr>
+          <td *ngFor="let col1 of expandData.cols; index as i">
+            {{ col1?.header }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData1>
+        <tr>
+          <td *ngFor="let col1 of expandData.cols; index as i">
+            <span *ngIf="col1.isHtml" [innerHTML]="rowData1[col1.field]"></span>
+            <span *ngIf="!col1.isHtml">{{
+              rowData1[col1.field]
+              }}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    </ng-container>
+    </ng-template>
+  </div>
+  <ng-container *ngTemplateOutlet="
+                    actionBlock;
+                    context: {
+                      $implicit: col,
+                      rowIndex: rowIndex,
+                      rowData: rowData
+                    }
+                  ">
+  </ng-container>
+  </ng-template>
+  </td>
+  </ng-container>
+  <td *ngIf="!tableOptions?.hideTableButtons" class="column-clear"></td>
+  </tr>
+  </ng-template>
+
+  <ng-template #actionBlock let-col let-rowIndex="rowIndex" let-rowData="rowData">
+    <ng-container *ngIf="col.field === fieldName.Action">
+      <ng-container *ngIf="col?.options?.useDeleteIcon; else dropdownBlock">
+        <p-button class="btn-action-delete" styleClass="button-grey" icon="fa fa-trash" (onClick)="
+                onDeleteButtonClick ? onDeleteButtonClick($event, rowData) : '';
+                $event.stopPropagation()
+              " id="delete_{{ rowIndex }}" [disabled]="!col || !col.options || !col.options.actionEnabled">
+        </p-button>
+      </ng-container>
+      <ng-template #dropdownBlock>
+        <p-dropdown class="cl-drop-action" [scrollHeight]="getDropdownHeight(rowData.actions)"
+          [appendTo]="isUsingAppendTo ? dt : 'body'" [panelStyleClass]="
+                tableOptions?.panelStyleClass
+                  ? tableOptions?.panelStyleClass + ' minWidthOverride'
+                  : 'minWidthOverride'
+              " (click)="onClickDropdownActions($event)" [optionLabel]="col.useOptionLabel ? col.useOptionLabel : ''"
+          (onChange)="
+                onChangeActions(rowData, $event, rowIndex);
+                setCurrentDropAction(rowData)
+              " [options]="rowData.actions" [(ngModel)]="rowData.ngModel" [placeholder]="
+                dropdownTablePlaceholderText || translateResults?.SELECT_ACTION
+              " [styleClass]="
+                tableOptions ? tableOptions?.actionColStyle : 'first-capitalize'
+              " id="dropdown_{{ rowIndex }}">
+          <ng-template let-option pTemplate="item" class="container-item">
+            <div [ngClass]="option?.className">
+              <span *ngIf="option?.preHtml" [innerHTML]="option?.preHtml" class="container-prehtml"></span>
+              <option title="{{
+                      col.useOptionLabel
+                        ? option.value.description
+                        : option.title
+                    }}" *ngIf="
+                      tableOptions === undefined ||
+                      tableOptions.actionColStyle === undefined
+                    ">{{ option.label | titlecase }}
+              </option>
+              <option title="{{
+                      col.useOptionLabel
+                        ? option.value.description
+                        : option.title
+                    }}" *ngIf="
+                      tableOptions !== undefined &&
+                      tableOptions.actionColStyle !== undefined
+                    ">{{ option.label }}</option>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </ng-template>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #basicField let-col let-rowData="data">
+    <span *ngIf="rowData[col.field + 'PreHtml']" [innerHTML]="rowData[col.field + 'PreHtml']"></span>
+    <span class="iconSpan-info" *ngIf="
+            col.field === fieldName.Severity &&
+            rowData.severity === fieldName.Info
+          "></span>
+    <span class="iconSpan-warning" *ngIf="
+            col.field === fieldName.Severity &&
+            rowData.severity === fieldName.Warning
+          "></span>
+    <span class="iconSpan-error" *ngIf="
+            col.field === fieldName.Severity &&
+            rowData.severity === fieldName.Error
+          "></span>
+    <span *ngIf="
+            col.type !== filterTypes.Calendar &&
+              !col?.options?.usingInputSwitch &&
+              col.type !== filterTypes.Icon;
+            else dataCalendarPipe
+          " [ngClass]="{ link: col?.options?.usingLink }" id="link_{{ rowData[col.field] }}" (click)="
+            col?.options?.usingLink
+              ? onLinkClick
+                ? onLinkClick(rowData)
+                : ''
+              : ''
+          ">
+      <span *ngIf="
+              !col?.options?.hideText &&
+              !col?.options?.isHtml &&
+              !rowData[col.field + 'PreHtml']
+            ">{{ rowData[col.field] }}</span>
+      <span *ngIf="!col?.options?.hideText && col?.options?.isHtml" [innerHTML]="rowData[col.field]"></span>
+    </span>
+    <ng-template #dataCalendarPipe>
+      <span *ngIf="col.type === filterTypes.Calendar">{{
+        rowData[col.field]
+        }}</span>
+      <p-inputSwitch *ngIf="
+              col?.options?.usingInputSwitch && rowData[col.field] !== undefined
+            " [(ngModel)]="rowData[col.field]" (click)="
+              $event.stopPropagation();
+              onSwitchChange(rowData, col)
+            ">
+      </p-inputSwitch>
+    </ng-template>
+    <span *ngIf="rowData[col.field + 'PostHtml']" (click)="col?.onClickPostHTML ? col?.onClickPostHTML(rowData) : ''"
+      [innerHTML]="rowData[col.field + 'PostHtml'] | sanitizeHtml"></span>
+  </ng-template>
+
+  <ng-template pTemplate="summary" *ngIf="showTemplateSummary"></ng-template>
+  <ng-template pTemplate="rowexpansion" let-rowIndex="rowIndex" let-rowData let-columns="columns">
+    <tr class="rowGroup" *ngIf="!isSupportGrouping && rowData?.dataExpand">
+      <td colSpan="{{ colSpanOfRowGroup }}">
+        <div class="rowGroup-content">
+          <div class="p-grid" *ngFor="let item of rowData?.dataExpand; let index = index">
+            <div class="key p-col-12 p-md-2">{{ item.title }}</div>
+            <div class="value p-col-12 p-md-10">
+              <p-button *ngIf="item.type === 'button'" (onClick)="item?.action(rowData)" [label]="item.value">
+              </p-button>
+              <span *ngIf="item.type === 'string'" [innerHTML]="item?.value"></span>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <ng-container *ngIf="isSupportGrouping">
+      <tr #tr *ngFor="let child of rowData.children; index as childIndex" class="child-row" [ngClass]="{
+              'child-row-selected': checkItemExist(
+                selectedChilds,
+                child,
+                tableOptions.dataKey
+              ),
+              'tr-even': rowIndex % 2 === 1
+            }" (click)="
+              triggerCheckbox(child); selectChildRow($event, rowData, rowIndex)
+            ">
+        <ng-container *ngFor="let col of cols; index as i">
+          <td *ngIf="col.field === fieldName.Checkbox" class="container-checkbox">
+            <p-checkbox #checkbox [value]="child" [(ngModel)]="selectedChilds" (click)="
+                    $event.stopPropagation();
+                    selectChildRow($event, rowData, rowIndex)
+                  ">
+            </p-checkbox>
+          </td>
+          <td *ngIf="
+                  col.field !== fieldName.Action &&
+                  col.field !== fieldName.Checkbox
+                " [ngStyle]="{ display: getColumnStyle(col) }">
+            <ng-container *ngTemplateOutlet="
+                    basicField;
+                    context: { $implicit: col, data: child }
+                  "></ng-container>
+          </td>
+          <td *ngIf="col.field === fieldName.Action" [ngStyle]="{ display: getColumnStyle(col) }">
+            <ng-container *ngTemplateOutlet="
+                    actionBlock;
+                    context: {
+                      $implicit: col,
+                      rowIndex: rowIndex,
+                      rowData: rowData
+                    }
+                  ">
+            </ng-container>
+          </td>
+        </ng-container>
+        <td class="column-clear"></td>
+      </tr>
+    </ng-container>
+  </ng-template>
+  </p-table>
+</div>
+<div #trigger></div>
+</div>

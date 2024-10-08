@@ -1,0 +1,55 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/dist-grey
+/storybook-static
+documentation.json
+/tmp
+/out-tsc
+src/generated
+/generated
+src/resources/styles/generated/
+.history
+/projects/rbn-common-lib/coverage
+/projects/rbn-common-lib/junit
+.scannerwork
+src/sass/themes/ribbontheme/_variables.scss
+# dependencies
+/node_modules
+debug.log
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.angular/cache
+/package-lock.json
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+lint.xml
+/junit
+/coverage
+
+# System Files
+.DS_Store
+Thumbs.db

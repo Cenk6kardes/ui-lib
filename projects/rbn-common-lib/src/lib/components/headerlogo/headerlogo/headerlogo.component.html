@@ -1,0 +1,5 @@
+<div class="headerlogo">
+  <span [class]="noneUppercase ? 'productName txt-transform-none' : 'productName'">
+    {{productName ? productName : '&nbsp;'}}</span>
+  <sup *ngIf="productNameSup" [innerHTML]="productNameSup"></sup>
+</div>

@@ -1,0 +1,19 @@
+<div class="container-accordion-object">
+  <p-accordion *ngIf="!to?.isChildOfArray" [ngClass]="field.className ? field.className : 'grey-header'"
+    (onClose)="to.onTabClose && to.onTabClose(field)" (onOpen)="to.onTabOpen && to.onTabOpen(field)">
+    <p-accordionTab [header]="to.label" [selected]="!to.collapse">
+      <p-header>
+        <span class="label">{{to.label}}</span>
+        <ng-container>
+          <p-button *ngIf="to.isShowRemove" icon="fa fa-minus-circle" 
+          (click)="$event.stopPropagation();to.remove && to.remove(field)">
+          </p-button>
+        </ng-container>
+      </p-header>
+      <formly-field *ngFor="let f of field.fieldGroup" [field]="f"></formly-field>
+    </p-accordionTab>
+  </p-accordion>
+  <div *ngIf="to?.isChildOfArray">
+    <formly-field *ngFor="let f of field.fieldGroup" [field]="f"></formly-field>
+  </div>
+</div>

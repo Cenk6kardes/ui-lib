@@ -1,0 +1,102 @@
+@import "variables";
+
+#menu-bar ::ng-deep {
+  font-family: $fontFamily;
+  position: relative;
+
+  .p-overlaypanel {
+    left: unset;
+    right: 0;
+    top: 40px;
+    z-index: 1015;
+    transform-origin: center bottom;
+    --overlayArrowLeft: 238px;
+    .p-overlaypanel-content {
+      padding: 0;
+      background-color: $ribbon-white;
+      box-shadow: -1px -2px 7px 0 rgba(0, 0, 0, 0.16);
+      .p-panelmenu {
+        .p-menuitem-icon,
+        .p-panelmenu-icon {
+          font-family: $fontAwesome;
+        }
+
+        &.panelMenu {
+          width: 19.5em;
+
+          .p-panelmenu-panel {
+            .p-panelmenu-header {
+              > a {
+                padding: 0.75rem;
+              }
+              a[aria-expanded="true"] {
+                border: none;
+                background-color: $ribbon-cream;
+                cursor: default;
+                pointer-events: none;
+
+                &:hover {
+                  background-color: $ribbon-cream;
+                }
+
+                .p-panelmenu-icon {
+                  display: none;
+                }
+
+                .p-menuitem-icon {
+                  color: $primaryColor;
+                  font-family: $fontPrimeIcons, $fontAwesome;
+                }
+
+                .p-menuitem-text {
+                  text-transform: uppercase;
+                  color: $ribbon-dark-grey;
+                }
+              }
+            }
+          }
+        }
+
+        .p-panelmenu-content {
+          border: none;
+          .p-menuitem-icon {
+            font-weight: normal;
+            font-family: $fontPrimeIcons, $fontAwesome;
+          }
+        }
+      }
+    }
+  }
+
+  .p-overlaypanel::after,
+  .p-overlaypanel::before {
+    left: calc(var(--overlayArrowLeft, 0) + 1.05rem);
+  }
+
+  button.p-button-text {
+    margin: 0px 3px;
+    color: $ribbon-white;
+    border-radius: 50%;
+    background-color: $ribbon-dark-grey;
+
+    &:hover {
+      color: $primaryColor;
+      background-color: $ribbon-white;
+    }
+  }
+
+  button.none-background {
+    margin: 0px 3px;
+    color: $ribbon-dark-grey;
+    background: transparent;
+
+    &:hover {
+      color: $ribbon-white;
+      box-shadow: unset;
+    }
+  }
+
+  .p-disabled {
+    opacity: 1;
+  }
+}

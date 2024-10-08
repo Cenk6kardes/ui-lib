@@ -1,0 +1,179 @@
+@import 'variables';
+
+.page-header-container ::ng-deep {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid $ribbon-light-grey;
+  font-family: $fontFamily;
+
+  .left-header {
+    .header-title {
+      font-size: 20px;
+      margin-bottom: 0.5rem;
+      margin-top: 0;
+      display: inline-block;
+      color: $primaryColor;
+      font-weight: $fontWeightSemiBold;
+    }
+
+    .breadcrumb-wrapper {
+      display: flex;
+      align-items: center;
+
+      .fa {
+        color: $ribbon-black;
+
+        &:hover {
+          cursor: pointer;
+          color: $linkHoverColor;
+          transition: 0.2s all ease-in-out;
+        }
+      }
+
+      .p-breadcrumb {
+        border: none;
+        padding: 0;
+        background: none;
+
+        ul {
+          margin: 0;
+
+          li:not(:last-child) a.p-menuitem-link {
+            &:hover {
+              span {
+                color: $linkHoverColor;
+              }
+            }
+            span {
+              text-decoration: underline;
+            }
+          }
+          li:last-child a.p-menuitem-link{
+            cursor: unset;
+          }
+        }
+
+        .pi-chevron-right:before {
+          content: "/";
+          line-height: 18px;
+          color: $textColor;
+        }
+      }
+
+      .back-button {
+        border: none;
+        background: transparent;
+        padding: 0;
+        font-size: 14px;
+        width: fit-content;
+        margin-right: 0.5rem;
+        &:hover {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .right-header {
+    align-items: center;
+    .btn, .m-r-dot-75-rem {
+      margin-right: 0.75rem;
+    }
+    .add-button {
+      color: $primaryColor;
+      background-color: $ribbon-white;
+      .p-button {
+        background: $ribbon-white;
+        border: solid 1px $primaryColor;
+      }
+      .p-button-icon-left {
+        font-size: $fontSize;
+        color: $primaryColor;
+      }
+      .p-button-label {
+        color: $primaryColor;
+      }
+    }
+
+    .container-button {
+      margin-right: 0.75rem;
+      .p-button {
+        box-shadow: 0 0px 6px 0 rgba(0, 0, 0, 0.16);
+        background-color: $ribbon-white;
+        width: 2rem;
+        height: 2rem;
+        .p-button-icon {
+          font-weight: bolder;
+          color: $ribbon-black;
+          &:hover {
+            color: $primaryColor;
+          }
+        }
+      }
+    }
+    
+    .header-dropdown .p-dropdown-panel {
+      max-width: 250px;
+      .p-dropdown-items .p-dropdown-item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .header-button {
+      display: flex;
+      float: right;
+    }
+  }
+}
+
+.overlay-button ::ng-deep {
+  .country-item {
+    width: auto;
+    min-width: 120px;
+    display: flex;
+    .label {
+      margin-left: 0.75rem;
+    }
+  }
+
+  .p-overlaypanel-content {
+    padding: 0;
+  }
+
+  .p-listbox {
+    &.p-component {
+      border: none;
+    }
+
+    & .p-listbox-list {
+      padding: 0;
+      border: 0.5px solid $ribbon-light-grey;
+      border-radius: 0.25rem;
+      .p-listbox-item:not(:first-child ){
+        border-top: 0.5px solid $ribbon-light-grey;
+      }
+
+      & .p-listbox-item {
+        padding: 10px;
+        display: flex;
+
+        &:first-child {
+          border-radius: 0.25rem;
+        }
+
+        &.p-highlight {
+          background: none;
+          color: $ribbon-black;
+
+          & div {
+            display: flex;
+          }
+        }
+      }
+    }
+  }
+}

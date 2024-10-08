@@ -1,0 +1,36 @@
+.container-checkbox-input::ng-deep {
+  formly-group {
+    display: flex;
+
+    .rbn-checkbox {
+      margin-right: 0px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    formly-field:not(:first-child) {
+      // support for input
+      .rbn-field-dynamic {
+        flex-direction: row;
+        align-items: center;
+
+        input.p-inputtext {
+          min-width: auto;
+          margin: 0 5px;
+        }
+        > label {
+          font-weight: 400;
+          font-size: 14px;
+          margin: 0 5px;
+
+          &.right {
+            order: 2;
+          }
+        }
+        > .error {
+          order: 3;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,144 @@
+.p-multiselect {
+    background: $inputBg;
+    border: $inputBorder;
+    transition: $formElementTransition;
+    border-radius: $borderRadius;
+
+    &:not(.p-disabled):hover {
+        border-color: $inputHoverBorderColor;
+    }
+
+    &:not(.p-disabled).p-focus {
+        @include focused-input();
+    }
+
+    .p-multiselect-label {
+        padding: $inputPadding;
+        transition: $formElementTransition;
+
+        &.p-placeholder {
+            color: $inputPlaceholderTextColor;
+        }
+    }
+
+    .p-multiselect-trigger {
+        background: transparent;
+        color: $inputIconColor;
+        width: $inputGroupAddOnMinWidth;
+        border-top-right-radius: $borderRadius;
+        border-bottom-right-radius: $borderRadius;
+    }
+
+    &.p-error,
+    &.p-invalid {
+        @include invalid-input();
+    }
+
+    .p-multiselect-trigger-icon {
+      transition: transform 0.65s ease-in-out;
+    }
+
+    &.p-multiselect-open {
+      .p-multiselect-trigger-icon {
+        transform: rotate(180deg);
+        transition: transform 0.65s ease-in-out;
+
+      }
+    }
+}
+
+.p-multiselect-panel {
+    background: $inputOverlayBg;
+    color: $inputListTextColor;
+    border: $inputOverlayBorder;
+    border-radius: $borderRadius;
+    box-shadow: $inputOverlayShadow;
+
+    .p-multiselect-header {
+        padding: $inputListHeaderPadding;
+        border-bottom: $inputListHeaderBorder;
+        color: $inputListHeaderTextColor;
+        background: $ribbon-white;
+        margin: $inputListHeaderMargin;
+        border-top-right-radius: $borderRadius;
+        border-top-left-radius: $borderRadius;
+
+        .p-multiselect-filter-container {
+            .p-inputtext {
+                padding-right: nth($inputPadding, 2) + $primeIconFontSize;
+            }
+
+            .p-multiselect-filter-icon {
+                right: nth($inputPadding, 2);
+                color: $inputIconColor;
+            }
+        }
+
+        .p-checkbox {
+            margin-right: $inlineSpacing;
+        }
+
+        .p-multiselect-close {
+            display: none;
+        }
+    }
+
+    .p-multiselect-items {
+        padding: $inputListPadding;
+
+        .p-multiselect-item {
+            margin: $inputListItemMargin;
+            padding: $inputListItemPadding;
+            border: $inputListItemBorder;
+            color: $inputListItemTextColor;
+            background: $inputListItemBg;
+            transition: $listItemTransition;
+            border-radius: $inputListItemBorderRadius;
+
+            &.p-highlight {
+                background-color: $ribbon-light-grey;
+            }
+
+            &:not(.p-highlight):not(.p-disabled):hover {
+                background-color: $ribbon-lighter-grey;
+            }
+
+            &:focus {
+                // @include focused-listitem();
+                outline: $focusOutline;
+            }
+
+            .p-checkbox {
+                margin-right: $inlineSpacing;
+            }
+        }
+
+        .p-multiselect-empty-message {
+            padding: $inputListItemPadding;
+            color: $inputListItemTextColor;
+            background: $inputListItemBg;
+        }
+    }
+}
+
+p-multiselect.ng-dirty.ng-invalid > .p-multiselect {
+    @include invalid-input();
+}
+
+.p-input-filled {
+    .p-multiselect {
+        background: $inputFilledBg;
+
+        &:not(.p-disabled):hover {
+            background-color: $inputFilledHoverBg;
+        }
+
+        &:not(.p-disabled).p-focus {
+            background-color: $inputFilledFocusBg;
+        }
+    }
+}
+
+.p-inputwrapper-filled .p-multiselect {
+  border-color: $inputHoverBorderColor;
+}

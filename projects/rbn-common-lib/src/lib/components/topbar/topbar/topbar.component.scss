@@ -1,0 +1,174 @@
+@import 'variables';
+
+.topheaderContainer {
+  $padding-left: 16px;
+
+  min-width: 320px;
+  background-color: $ribbon-specific-topbar-background-color;
+  height: 64px;
+  padding-left: $padding-left;
+  padding-right: 10px;
+
+  &.p-grid {
+    margin: 0;
+    align-items: center;
+
+    .p-col {
+      padding: 0;
+    }
+  }
+
+  ::ng-deep {
+    .icon-button {
+      .p-button {
+        background: transparent;
+        border: 0;
+
+        .fa {
+          font-size: 1.5em;
+        }
+      }
+    }
+
+    .menu {
+      padding-right: 1em;
+      padding-left: 1em;
+      display: none;
+    }
+
+    .product-name {
+      .icon-button {
+        $width: 32px;
+        width: $width;
+        height: $width;
+        border-radius: calc($width / 2);
+      }
+    }
+
+    .headerlogo {
+      display: inline-flex;
+      padding-left: 20px;
+      align-items: center;
+
+      // width: calc(240px - #{$padding-left});
+      .product-label {
+        color: $ribbon-white;
+        margin-left: 10px;
+      }
+    }
+
+    .container-right {
+      $avatar-width: 30px;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .avatar {
+        display: flex;
+        align-items: center;
+        color: $primaryTextColor;
+
+        .welcome {
+          padding-left: 1em;
+          width: max-content;
+
+          .name {
+            line-height: 19px;
+            text-align: right;
+            color: #acacac;
+          }
+
+          .email {
+            font-size: 13px;
+            color: #acacac;
+            line-height: 18px;
+          }
+
+          .last-login {
+            font-size: 13px;
+            color: $inputGroupBorderColor;
+            line-height: 18px;
+            cursor: pointer;
+          }
+        }
+
+        img {
+          width: $avatar-width;
+          height: $avatar-width;
+          border-radius: 50%;
+          margin-left: 1em;
+        }
+
+        .show-more {
+          margin-left: -$avatar-width;
+          .container-topbar-menu{
+            left: -120px !important;
+          }
+
+          .p-splitbutton-defaultbutton {
+            display: none;
+          }
+
+          .p-splitbutton-menubutton {
+            width: 2 * $avatar-width;
+
+            .pi-chevron-down {
+              font-size: 1em;
+              color: $primaryColor;
+              left: auto;
+              right: 0;
+              position: absolute;
+
+              &::before {
+                color: $ribbon-white;
+              }
+            }
+          }
+        }
+      }
+
+      .content-right-text {
+        color: $primaryTextColor;
+        margin-left: 20px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .topheaderContainer {
+    height: 50px;
+
+    ::ng-deep {
+      .menu {
+        display: block;
+      }
+
+      .welcome {
+        display: none;
+      }
+
+      .headerlogo {
+        justify-content: center;
+        width: unset;
+      }
+    }
+  }
+}
+
+::ng-deep .container-topbar-menu {
+  li.p-menuitem {
+    line-height: 18px;
+
+    .p-menuitem-link[target="separator"] {
+      height: 0;
+      display: block;
+      padding: 0;
+      min-height: 0;
+      border: 0;
+      border-bottom: $menuBorder;
+      border-radius: 0;
+    }
+  }
+}

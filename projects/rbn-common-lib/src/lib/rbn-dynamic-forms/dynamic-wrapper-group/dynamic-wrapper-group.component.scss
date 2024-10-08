@@ -1,0 +1,26 @@
+.form-accordion {
+  padding: 10px;
+  .accordion-panel ::ng-deep {
+    .p-accordion-tab {
+      .p-disabled {
+        cursor: not-allowed !important;
+        pointer-events: unset;
+      }
+    }
+  }
+}
+
+.changes-made-text {
+  line-height: 1;
+  color: #afadad;
+  margin-left: 10px;
+  font-size: 13px;
+
+  span {
+    margin-left: 10px;
+  }
+
+  i {
+    color: #4F8A0F;
+  }
+}

@@ -1,0 +1,59 @@
+<form [formGroup]="keyValueForm" *ngIf="needFormTag">
+  <div formArrayName="mappings">
+
+    <div *ngIf="isDropdownRequired">
+      <div *ngFor="let item of settingBlock.controls; let pointIndex=index" [formGroupName]="pointIndex">
+        <div class="p-grid">
+          <div class="p-md-2 p-sm-4">
+            <p-dropdown id="{{ idPrefix }}key_root" name="{{ idPrefix }}key_root" formControlName="key_root"
+              [options]="keyOption" [placeholder]="placeholderTextKey">
+              <ng-template let-option pTemplate="item ">
+                <option (click)="selectedOptionEvent(option.value)">{{option.label}}</option>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <div class="p-md-2 p-sm-4">
+            <p-dropdown id="{{ idPrefix }}valuePair_root" name="{{ idPrefix }}valuePair_root"
+              formControlName="valuePair_root" [options]="valueOption" [placeholder]="placeholderTextValue">
+              <ng-template let-option pTemplate="item ">
+                <option (click)="selectedOptionEvent(option.value)">{{option.label}}</option>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <div class="p-md-2 p-sm-2 button-container">
+            <button type="button" (click)="removeConfigBlock(pointIndex)" [disabled]="isMinusDisabled[pointIndex]">
+              <span><i class="fa fa-minus minus"></i></span>
+            </button>
+            <button type="button" (click)="addConfigBlock()" *ngIf="isDisplayAdd[pointIndex]">
+              <span><i class="fa fa-plus plus"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isDropdownRequired">
+      <div *ngFor="let item of settingBlock.controls; let pointIndex=index" [formGroupName]="pointIndex">
+        <div class="p-grid">
+          <div class="p-md-2 p-sm-4">
+            <input pInputText id="{{ idPrefix }}key_root" name="{{ idPrefix }}key_root" formControlName="key_root"
+              [placeholder]="placeholderTextKey" (blur)="onBlurInput()" />
+          </div>
+          <div class="p-md-2 p-sm-4">
+            <input pInputText id="{{ idPrefix }}valuePair_root" name="{{ idPrefix }}valuePair_root"
+              formControlName="valuePair_root" [placeholder]="placeholderTextValue" (blur)="onBlurInput()" />
+          </div>
+          <div class="p-md-2 p-sm-2 button-container">
+            <button type="button" (click)="removeConfigBlock(pointIndex)" [disabled]="isMinusDisabled[pointIndex]">
+              <span><i class="fa fa-minus minus"></i></span>
+            </button>
+            <button type="button" (click)="addConfigBlock()" *ngIf="isDisplayAdd[pointIndex]">
+              <span><i class="fa fa-plus plus"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>

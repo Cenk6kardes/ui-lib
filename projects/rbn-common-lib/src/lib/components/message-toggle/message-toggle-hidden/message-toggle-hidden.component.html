@@ -1,0 +1,12 @@
+<div id="toastMessageHidden" style="display: none;">
+  <div *ngIf="message">
+    <span id="toastMessageHiddenKey">{{ key }}</span>
+    <span id="toastMessageHiddenSeverity">{{ message?.severity }}</span>
+    <span id="toastMessageHiddenSummary">{{ message?.summary }}</span>
+    <span id="toastMessageHiddenDetail">{{ message?.detail }}</span>
+  </div>
+  <button id="toastMessageHiddenButton" (click)="clearMessage()"></button>
+  <div *ngIf="!message">
+    <span id="toastMessageHiddenNone"></span>
+  </div>
+</div>

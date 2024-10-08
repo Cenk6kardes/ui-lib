@@ -1,0 +1,28 @@
+<div class="pannel-toast-message" [ngClass]="
+typeOfMessage === enumTypeOfMessage.INFO ? 'pannel-toast-message-info': ''||
+typeOfMessage === enumTypeOfMessage.SUCCESS ? 'pannel-toast-message-success': ''||
+typeOfMessage === enumTypeOfMessage.ERROR ? 'pannel-toast-message-error': ''||
+typeOfMessage === enumTypeOfMessage.WARN ? 'pannel-toast-message-warn': ''
+">
+  <div class="pannel-toast-message-content">
+    <span class="pannel-toast-icon pi" [ngClass]="
+    typeOfMessage === enumTypeOfMessage.INFO ? 'pi-info-circle': ''||
+    typeOfMessage === enumTypeOfMessage.SUCCESS ? 'pi-check-circle': ''||
+    typeOfMessage === enumTypeOfMessage.ERROR ? 'pi-times-circle': ''||
+    typeOfMessage === enumTypeOfMessage.WARN ? 'pi-exclamation-triangle': ''
+    "></span>
+    <div class="pannel-toast-content">
+      <div class="pannel-toast-content-main">
+        <div class="pannel-toast-message-text">
+          <div *ngIf="title" class="pannel-toast-summary pannel-text-bold">{{title}}</div>
+          <div *ngIf="content" class="pannel-toast-detail" [innerHTML]="content"></div>
+        </div>
+        <button type="button" class="icon-close" *ngIf="isClosable" (click)="closeMessages()">
+          <span>
+            <i class="pi pi-times"></i>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,202 @@
+@import 'variables';
+
+%btnCloseIcon {
+  font-size: 12px;
+  color: $ribbon-black;
+}
+
+:host ::ng-deep {
+  // Button Clear-All
+  .p-button.button-outline {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+
+    color: $primaryColor;
+    background-color: $ribbon-white;
+    border: 1px solid $primaryColor;
+
+    &:enabled:hover,
+    &:enabled:active,
+    &:enabled:focus {
+      color: $primaryColor;
+      background-color: $ribbon-white;
+      border: 1px solid $primaryColor;
+    }
+  }
+
+  // Message Number
+  .message {
+    &-number {
+      width: 2rem;
+      height: 2rem;
+      color: $ribbon-white;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
+    }
+
+    &-success {
+      background: limegreen;
+    }
+
+    &-info {
+      background: cornflowerblue;
+    }
+
+    &-warn {
+      background: $ribbon-dark-yellow;
+    }
+
+    &-error {
+      background: $ribbon-red;
+    }
+  }
+
+  .p-toast {
+    width: 25rem;
+    opacity: 1;
+    &.p-toast-top-right {
+      top: 4rem;
+      right: 1rem;
+    }
+
+    .p-toast-message {
+      overflow: inherit;
+      color: $ribbon-black;
+
+      &-content {
+        display: flex;
+        padding: 1rem;
+      }
+
+      // Severity
+      &.p-toast-message {
+        &-success {
+          background: #f6ffed;
+          border: 1px solid limegreen;
+          border-radius: 6px;
+
+          .pi:not(.pi-times) {
+            color: limegreen;
+          }
+
+          .p-toast-close-icon {
+            @extend %btnCloseIcon;
+          }
+        }
+
+        &-info {
+          background: #e6f7ff;
+          border: 1px solid cornflowerblue;
+          border-radius: 6px;
+
+          .pi:not(.pi-times) {
+            color: cornflowerblue;
+          }
+
+          .p-toast-close-icon {
+            @extend %btnCloseIcon;
+          }
+        }
+
+        &-warn {
+          background: #fffbe6;
+          border: 1px solid darkorange;
+          border-radius: 6px;
+
+          .pi:not(.pi-times) {
+            color: darkorange;
+          }
+
+          .p-toast-close-icon {
+            @extend %btnCloseIcon;
+          }
+        }
+
+        &-error {
+          background: #fff1f0;
+          border: 0.5px solid red;
+          border-radius: 6px;
+
+          .pi:not(.pi-times) {
+            color: red;
+          }
+
+          .p-toast-close-icon {
+            @extend %btnCloseIcon;
+          }
+        }
+      }
+
+      &-text {
+        flex: 1 1 auto;
+        margin: 0 1rem;
+
+        .p-toast-summary {
+          padding: 0;
+          font-size: 15px;
+        }
+
+        .p-toast-detail {
+          color: $ribbon-black;
+          margin: auto;
+          word-break: break-word;
+        }
+      }
+
+      &-icon {
+        font-size: 1.25rem;
+      }
+
+      // Button Close
+      .icon-close {
+        color: $ribbon-black;
+        display: contents;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+
+        &:hover {
+          cursor: pointer;
+          transition: 0.3s all ease-in-out;
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        .pi {
+          font-size: 12px;
+        }
+      }
+
+    }
+  }
+
+  .as {
+    &-start {
+      align-self: flex-start;
+      .p-toast-close-icon {
+        top: 1.25em;
+        right: 1.25em;
+        position: absolute;
+      }
+    }
+
+    &-center {
+      align-self: center;
+      .p-toast-close-icon {
+        top: 50%;
+        right: 1.25em;
+        position: absolute;
+      }
+    }
+  }
+
+}
+

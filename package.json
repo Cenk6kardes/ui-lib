@@ -1,0 +1,164 @@
+{
+  "name": "rbn-common",
+  "version": "14.1.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "buildlib-base": "ng build --project=rbn-common-lib && npm run copy-css && npm run copy-scss && npm run copy-scss-variables && npm run copy-font && npm run copy-images && npm run copy-language && npm run copy-designer",
+    "prebuildlib": "npm run set-theme-ribbon && npm run build:css",
+    "buildlib": "npm run buildlib-base",
+    "prebuildlib-grey": "npm run set-theme-grey && npm run build:css",
+    "buildlib-grey": "npm run buildlib-base && npm run renamedistgrey",
+    "packlib": "cd dist/rbn-common-lib && npm pack",
+    "publishlocal": "npm run buildlib && npm run packlib",
+    "copy-language": "copyfiles -f -a projects/rbn-common-lib/src/lib/assets/i18n/*.json dist/rbn-common-lib/assets/i18n",
+    "copy-font": "copyfiles -f -a src/sass/themes/ribbontheme/fonts/*.* dist/rbn-common-lib/assets/styles/ribbontheme/fonts",
+    "copy-css": "copyfiles -f -a src/generated/*.css dist/rbn-common-lib/assets/styles/ribbontheme",
+    "copy-scss": "copyfiles -f -a src/sass/themes/ribbontheme/*.scss dist/rbn-common-lib/assets/styles/ribbontheme",
+    "copy-scss-variables": "copyfiles -f -a src/sass/themes/ribbontheme/variables/*.scss dist/rbn-common-lib/assets/styles/ribbontheme/variables",
+    "copy-images": "copyfiles -f -a src/assets/images/*.png dist/rbn-common-lib/assets/images",
+    "set-theme-ribbon": "del-cli tmp && mkdirp tmp && copyfiles -f src/sass/themes/ribbontheme/_variables-ribbon.scss tmp && npm run renameribbon && copyfiles -f tmp/_variables.scss src/sass/themes/ribbontheme && del-cli tmp",
+    "set-theme-grey": "del-cli tmp && mkdirp tmp && copyfiles -f src/sass/themes/ribbontheme/_variables-grey.scss tmp && npm run renamegrey && copyfiles -f tmp/_variables.scss src/sass/themes/ribbontheme && del-cli tmp",
+    "renameribbon": "node -e \"require('fs').rename('tmp/_variables-ribbon.scss', 'tmp/_variables.scss', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\"",
+    "renamegrey": "node -e \"require('fs').rename('tmp/_variables-grey.scss', 'tmp/_variables.scss', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\"",
+    "renamedistgrey": "node -e \"require('fs').rename('dist', 'dist-grey', function(err) { if (err) console.log(err); console.log('Dir successfully renamed!') })\"",
+    "copy-designer": "recursive-copy ./src/sass/designer ./dist/rbn-common-lib/assets/designer",
+    "ngbuilddebug": "npm run set-theme-ribbon && ng build",
+    "ngbuild": "npm run set-theme-ribbon && ng build",
+    "builddebug": "npm run build:css && npm run ngbuilddebug",
+    "buildcssonly": "npm run build:css",
+    "test": "ng test rbn-common-lib --code-coverage",
+    "lint": "ng lint rbn-common-lib --format junit >./eslint_out.xml",
+    "e2e": "ng e2e --preserve-symlinks",
+    "premakecss": "node-sass --include-path node_modules/ --output-style uncompressed src/sass/themes/ribbontheme/theme.scss -o src/generated/",
+    "makecss": "postcss src/generated/theme.css --use autoprefixer -d src/generated/",
+    "prebuild:css": "npm run makecss",
+    "build:css": "postcss src/generated/theme.css --use cssnano -r > src/generated/theme.min.css",
+    "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.app.json",
+    "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
+    "storybook": "npm run prebuildlib && npm run docs:json && start-storybook -p 6006",
+    "build-storybook": "npm run prebuildlib && npm run docs:json && build-storybook",
+    "start-storybook-remote": "npm run prebuildlib && npm run docs:json && start-storybook -p 6009"
+  },
+  "private": false,
+  "dependencies": {
+    "@angular/animations": "^14.2.0",
+    "@angular/cdk": "^14.2.0",
+    "@angular/common": "^14.2.0",
+    "@angular/compiler": "^14.2.0",
+    "@angular/core": "^14.2.0",
+    "@angular/forms": "^14.2.0",
+    "@angular/platform-browser": "^14.2.0",
+    "@angular/platform-browser-dynamic": "^14.2.0",
+    "@angular/router": "^14.2.0",
+    "@compodoc/compodoc": "^1.1.11",
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@ngx-formly/core": "^6.0.0",
+    "@ngx-formly/primeng": "^6.0.0",
+    "@ngx-formly/schematics": "^6.0.0",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "~6.0.0",
+    "@storybook/addon-knobs": "^6.1.14",
+    "browserslist": "^4.16.0",
+    "calculate-size": "^1.1.1",
+    "core-js": "^3.6.5",
+    "font-awesome": "^4.7.0",
+    "http-proxy": "^1.18.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.23",
+    "moment": "^2.29.3",
+    "ngx-translate-multi-http-loader": "^3.0.0",
+    "primeflex": "^2.0.0",
+    "primeicons": "^5.0.0",
+    "primeng": "^14.2.2",
+    "recursive-copy-cli": "^1.0.15",
+    "rxjs": "~6.6.0",
+    "serialize-javascript": "^3.1.0",
+    "tslib": "^2.4.0",
+    "websocket-extensions": "^0.1.4",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^14.2.0",
+    "@angular-eslint/builder": "14.0.3",
+    "@angular-eslint/eslint-plugin": "14.0.3",
+    "@angular-eslint/eslint-plugin-template": "14.0.3",
+    "@angular-eslint/schematics": "14.0.3",
+    "@angular-eslint/template-parser": "14.0.3",
+    "@angular/cli": "^14.2.0",
+    "@angular/compiler-cli": "^14.2.0",
+    "@angular/language-service": "^14.2.0",
+    "@storybook/addon-a11y": "^6.5.15",
+    "@storybook/addon-actions": "^6.5.15",
+    "@storybook/addon-controls": "^6.5.15",
+    "@storybook/addon-docs": "^6.5.15",
+    "@storybook/addon-essentials": "^6.5.15",
+    "@storybook/addon-links": "^6.5.15",
+    "@storybook/angular": "^6.5.15",
+    "@storybook/builder-webpack5": "^6.5.15",
+    "@storybook/manager-webpack5": "^6.5.15",
+    "@types/jasmine": "~3.6.0",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "autoprefixer": "~9.8.0",
+    "babel-loader": "^8.1.0",
+    "copyfiles": "~1.2.0",
+    "cssnano": "^5.1.7",
+    "del-cli": "^3.0.1",
+    "eslint": "^8.18.0",
+    "eslint-plugin-storybook": "^0.5.12",
+    "jasmine-core": "^4.4.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "karma": "^6.4.0",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-coverage-istanbul-reporter": "^3.0.3",
+    "karma-firefox-launcher": "^2.1.2",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.0.0",
+    "karma-junit-reporter": "^2.0.1",
+    "mkdirp": "~0.5.1",
+    "ng-packagr": "^14.2.0",
+    "node-sass": "^8.0.0",
+    "postcss": "~8.4",
+    "postcss-cli": "^8.3.1",
+    "react-is": "^16.13.1",
+    "ts-node": "~8.3.0",
+    "typescript": "^4.7.4"
+  },
+  "overrides": {
+    "@storybook/angular": {
+      "webpack": {
+        "watchpack": {
+          "watchpack-chokidar2": {
+            "chokidar": "^3.5.3"
+          }
+        }
+      },
+      "@storybook/core": {
+        "@storybook/core-server": {
+          "cpy": {
+            "globby": {
+              "fast-glob": {
+                "glob-parent": "^5.1.2"
+              }
+            }
+          }
+        }
+      }
+    },
+    "@storybook/addon-docs": {
+      "@storybook/mdx1-csf": {
+        "@mdx-js/mdx": {
+          "remark-parse": {
+            "trim": "^1.0.1"
+          }
+        }
+      }
+    },
+    "meow@3.1.0": {
+      "trim-newlines": "^3.0.1"
+    }
+  }
+}

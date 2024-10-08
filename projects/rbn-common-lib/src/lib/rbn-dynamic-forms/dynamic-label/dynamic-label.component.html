@@ -1,0 +1,6 @@
+<div class="dynamic-label">
+  <p *ngIf="to.label && field.type === 'rbn-label'">{{to.label}}</p>
+</div>
+<ng-container *ngIf="field.type === 'rbn-label-field'">
+  <p>{{props?.defaultValue || model[key[0]]}}</p>
+</ng-container>

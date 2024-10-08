@@ -1,0 +1,34 @@
+@import 'variables';
+
+.container-checkbox ::ng-deep {
+  margin-left: 25px;
+  margin-top: 15px;
+
+  .p-checkbox {
+    .p-checkbox-box {
+      border: 1px solid $ribbon-dark-grey;
+
+      .p-checkbox-icon {
+        font-size: 14px;
+        color: $primaryDarkerColor;
+      }
+    }
+  }
+
+  .p-checkbox .p-checkbox-box.p-highlight {
+    background-color: $ribbon-white;
+  }
+
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    border-color: $ribbon-dark-grey;
+  }
+
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+    border-color: $ribbon-dark-grey;
+    background: $ribbon-white;
+  }
+
+  .p-checkbox-label {
+    color: $ribbon-black;
+  }
+}

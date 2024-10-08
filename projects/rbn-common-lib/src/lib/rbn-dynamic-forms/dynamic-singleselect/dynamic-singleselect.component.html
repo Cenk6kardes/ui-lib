@@ -1,0 +1,22 @@
+<div id="single-select">
+  <p-dropdown
+  [placeholder]="props.placeholder"
+  [options]="props.options | formlySelectOptions: field | async"
+  [formControl]="formControl"
+  [formlyAttributes]="field"
+  [showClear]="!props.required && !props.hideClear"
+  (onChange)="props.change && props.change(field, $event)"
+  filter="true"
+  [appendTo]="props.appendTo"
+  >
+  <ng-template let-item pTemplate="selectedItem">
+    <span>{{item.label}}</span>
+  </ng-template>
+  <ng-template let-element pTemplate="item">
+    <div class="container-item">
+      <div class="label">{{element.label}}</div>
+      <div>{{getDescription(element)}}</div>
+    </div>
+  </ng-template>
+</p-dropdown>
+</div>

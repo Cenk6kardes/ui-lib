@@ -1,0 +1,40 @@
+<form [formGroup]="keyValueForm">
+  <div class="content p-grid">
+    <div class="rows-edit-form p-col-12" formArrayName="mappings"
+      *ngFor="let setting of settingBlock.controls; let i = index;">
+      <div class="p-grid container-row">
+        <div [formGroupName]="i" class="container-dropdown">
+          <div class="p-grid" *ngIf="isDropdownRequired">
+            <div class="p-col-6">
+              <p-dropdown appendTo="body" [formControlName]="keyName" name="key" [options]="keyOption"
+                (onChange)="changeKeyValue()">
+              </p-dropdown>
+            </div>
+            <div class="p-col-6">
+              <p-dropdown appendTo="body" [formControlName]="valueName" name="value" [options]="valueOption"
+                (onChange)="changeKeyValue()">
+              </p-dropdown>
+            </div>
+          </div>
+          <div *ngIf="!isDropdownRequired" class="p-grid">
+            <div class="p-col-6">
+              <input pInputText [formControlName]="keyName" name="key" [placeholder]="placeholderTextKey"
+                (onChange)="changeKeyValue()"/>
+            </div>
+            <div class="p-col-6">
+              <input pInputText [formControlName]="valueName" name="value" [placeholder]="placeholderTextValue"
+                (onChange)="changeKeyValue()"/>
+            </div>
+          </div>
+        </div>
+        <div class="container-button">
+          <button type="button" class="fa fa-minus minus" id={{i}} (click)="removeFormFieldBlock(i)" aria-hidden="true"
+            [disabled]="isMinusDisabled[i]"></button>
+          <button type="button" class="fa fa-plus plus" aria-hidden="true" (click)="addFormFieldBlock(i)"
+            *ngIf="isDisplayAdd[i]"></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
